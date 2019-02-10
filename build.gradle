@@ -1,0 +1,84 @@
+plugins {
+    // https://docs.gradle.org/current/userguide/application_plugin.html
+    // https://github.com/DV8FromTheWorld/JDA/wiki/2%29-IntelliJ-IDEA-Setup
+    // 'mainClassName' attribute is used by this
+    id 'application'
+
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '2.0.1' // for bundling jar with all dependencies
+
+    id 'war'
+
+    id "net.ltgt.apt-idea" version "0.21"
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+mainClassName = "pogo.assistance.bot.manager.BotStarter"
+
+repositories {
+    mavenCentral()
+    jcenter() // For DV8FromTheWorld/JDA
+}
+
+dependencies {
+    ////////////////////////// CODE GENERATORS + DI ///////////////////////////
+
+    // Repo: https://projectlombok.org/setup/gradle
+    // Need the annotation processor to get past some issue in Gradle 4.10+ and Lombok 1.18.4
+    // See: https://github.com/rzwitserloot/lombok/issues/1821#issuecomment-462074543
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+
+    // Repo: https://mvnrepository.com/artifact/org.immutables/value
+    // Uses apt-idea plugin: https://github.com/tbroyer/gradle-apt-plugin
+    compileOnly 'org.immutables:value-annotations:2.7.5'
+    annotationProcessor 'org.immutables:value:2.7.5'
+    annotationProcessor 'org.immutables:builder:2.7.5'
+    annotationProcessor 'org.immutables:gson:2.7.5'
+
+    // Uses apt-idea plugin: https://github.com/tbroyer/gradle-apt-plugin
+    compile 'com.google.dagger:dagger:2.19'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.19'
+
+    //////////////////////////////// UTILITIES ////////////////////////////////
+
+    // Guava: https://github.com/google/guava#adding-guava-to-your-build
+    compile 'com.google.guava:guava:27.0.1-jre'
+
+    ////////////////////////////// UI LIBRARIES ///////////////////////////////
+
+    // Command parsing/handling: https://picocli.info/#_gradle
+    compile 'info.picocli:picocli:3.9.3'
+
+    // Communicating with Discord: https://github.com/DV8FromTheWorld/JDA
+    compile 'com.jagrosh:jda-utilities:2.1.5'
+    compile ('net.dv8tion:JDA:3.8.1_448') {
+        exclude module: 'opus-java'
+    }
+
+    // Logging backed by Log4J2: https://logging.apache.org/log4j/2.x/maven-artifacts.html
+    compile 'org.apache.logging.log4j:log4j-api:2.11.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.2'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
+
+    ///////////////////////////////// TESTING /////////////////////////////////
+
+    // Ref: https://docs.gradle.org/current/userguide/java_testing.html#compiling_and_executing_junit_jupiter_tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.2' // for parameterized tests
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+
+    // Ref: https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testCompile 'org.mockito:mockito-core:2.24.0'
+    testCompile 'org.mockito:mockito-junit-jupiter:2.24.0'
+
+    // Ref: http://hamcrest.org/JavaHamcrest/distributables
+    testImplementation 'org.hamcrest:hamcrest:2.1'
+}
+
+test {
+    // Enables JUnit 5 platform support - a must have to run JUnit 5 tests
+    useJUnitPlatform()
+}
