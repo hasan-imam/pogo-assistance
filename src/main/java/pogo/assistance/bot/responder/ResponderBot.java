@@ -1,6 +1,7 @@
 package pogo.assistance.bot.responder;
 
 import com.google.common.base.Verify;
+import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
@@ -74,6 +75,15 @@ public class ResponderBot extends TimerTask {
                     jda.getStatus());
             jda.shutdownNow();
             Thread.currentThread().interrupt();
+        }
+
+        // Check if registered listeners still have all the listeners this bot registered. This is based on the handler
+        // behavior that if there's anything critically wrong with a handler, it will unregister itself. If our
+        // listeners have unregistered themselves, there's no point keeping the application alive.
+        final List<Object> listeners = jda.getRegisteredListeners();
+        if (!listeners.contains(repHandler)) {
+            log.error("Rep handler has unregistered itself. Responder bot terminating.");
+            System.exit(1);
         }
     }
 

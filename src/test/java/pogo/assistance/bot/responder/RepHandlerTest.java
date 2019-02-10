@@ -101,7 +101,8 @@ class RepHandlerTest {
     private static Object[][] validRepAttributionMsgCases() {
         return new Object[][]{
                 new Object[] {"dēˈkōdər", "@Zαƒΐrε"},
-                new Object[] {"Am i Visible° ͜ʖ ͡ -:question:", "@heartbreak \uD83D\uDC94 hoTrell \uD83D\uDE0F"}
+                new Object[] {"Am i Visible° ͜ʖ ͡ -:question:", "@stuff \uD83D\uDC94 stuff \uD83D\uDE0F"},
+                new Object[] {"ֆɨxՇђֆɛռֆɛ", "@\uD83C\uDDEA\uD83C\uDDEC✊\uD83C\uDFFD person \uD83E\uDD19\uD83C\uDFFD\uD83C\uDDFA\uD83C\uDDF8"}
         };
     }
 

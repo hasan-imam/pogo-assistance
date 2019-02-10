@@ -98,20 +98,29 @@ public class RepHandler extends ListenerAdapter {
      *      This doesn't get called (and the validations aren't run) if the event listener is registered after the JDA
      *      is done loading. Also notable that there's no guarantee that this will get called before any event triggers
      *      {@link #onGuildMessageReceived(GuildMessageReceivedEvent)}.
+     *
+     * @implSpec
+     *      If there's any verification error, the method unregisters this handler from JDA to prevent getting invoked
+     *      on subsequent events.
      */
     @Override
     public void onReady(final ReadyEvent event) {
-        final Guild targetGuild = event.getJDA().getGuildById(targetGuildId);
-        Verify.verifyNotNull(targetGuild, "Expected to have access to target guild");
+        try {
+            final Guild targetGuild = event.getJDA().getGuildById(targetGuildId);
+            Verify.verifyNotNull(targetGuild, "Expected to have access to target guild");
 
-        final TextChannel repActivityChannel = targetGuild.getTextChannelById(repChannelId);
-        Verify.verifyNotNull(repActivityChannel, "Expected to have access to rep activity channel");
-        Verify.verify(repActivityChannel.canTalk(), "Expected to have write permission to rep activity channel");
+            final TextChannel repActivityChannel = targetGuild.getTextChannelById(repChannelId);
+            Verify.verifyNotNull(repActivityChannel, "Expected to have access to rep activity channel");
+            Verify.verify(repActivityChannel.canTalk(), "Expected to have write permission to rep activity channel");
 
-        final Message rankMessage = repActivityChannel.sendMessage("!daily").complete();
-        Verify.verifyNotNull(rankMessage, "Should be able to send message to rep activity channel");
+            final Message rankMessage = repActivityChannel.sendMessage("!daily").complete();
+            Verify.verifyNotNull(rankMessage, "Should be able to send message to rep activity channel");
+        } catch (final RuntimeException e) {
+            log.error("Verification error - this listener cannot function correctly. Unregistering myself from JDA.", e);
+            event.getJDA().removeEventListener(this);
+        }
 
-        log.info("Rep responder online...");
+        log.info("Rep responder online!");
     }
 
     @Override
