@@ -44,7 +44,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Getter(value = AccessLevel.PACKAGE)
+@Getter(value = AccessLevel.PACKAGE) // visible for testing
 public class RepHandler extends ListenerAdapter {
 
     private static final Long POKEDEX_100_GUILD_ID = 252776251708801024L;
@@ -79,14 +79,14 @@ public class RepHandler extends ListenerAdapter {
     private final Set<Member> usersWhoRequestedRep = Collections.synchronizedSet(Collections.newSetFromMap(new LinkedHashMap<>()));
 
     private final long targetGuildId;
-    private final long repChannelId;
+    private final long targetChannelId;
     private final long repAttributorId;
 
     @Inject
     public RepHandler() {
         // Production setup
         targetGuildId = POKEDEX_100_GUILD_ID;
-        repChannelId = POKEDEX_100_TATSUMAKI_CHANNEL;
+        targetChannelId = POKEDEX_100_TATSUMAKI_CHANNEL;
         repAttributorId = POKEDEX_100_TATSUMAKI_ID;
 
 //        // Use for testing on some dummy channel
@@ -109,7 +109,7 @@ public class RepHandler extends ListenerAdapter {
             final Guild targetGuild = event.getJDA().getGuildById(targetGuildId);
             Verify.verifyNotNull(targetGuild, "Expected to have access to target guild");
 
-            final TextChannel repActivityChannel = targetGuild.getTextChannelById(repChannelId);
+            final TextChannel repActivityChannel = targetGuild.getTextChannelById(targetChannelId);
             Verify.verifyNotNull(repActivityChannel, "Expected to have access to rep activity channel");
             Verify.verify(repActivityChannel.canTalk(), "Expected to have write permission to rep activity channel");
 
@@ -126,7 +126,7 @@ public class RepHandler extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(final GuildMessageReceivedEvent event) {
         final TextChannel eventChannel = event.getChannel();
-        if (eventChannel.getIdLong() != repChannelId) {
+        if (eventChannel.getIdLong() != targetChannelId) {
             return;
         }
 
@@ -201,9 +201,9 @@ public class RepHandler extends ListenerAdapter {
 
     @VisibleForTesting
     void giveCookie(final Member member, final GuildMessageReceivedEvent event) {
-        Verify.verify(event.getChannel().getIdLong() == repChannelId,
+        Verify.verify(event.getChannel().getIdLong() == targetChannelId,
                 "Expected to get attribution message only on channel: %s",
-                repChannelId);
+                targetChannelId);
         final String memberName = member.getEffectiveName();
         Verify.verifyNotNull(member);
         final long variableDelay = 10 + Math.round(Math.random() * 10);

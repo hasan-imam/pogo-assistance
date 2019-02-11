@@ -1,7 +1,9 @@
 package pogo.assistance.bot.manager;
 
+import java.util.Set;
 import lombok.Getter;
 import picocli.CommandLine.Option;
+import pogo.assistance.bot.responder.ListenerId;
 
 @Getter
 class BotStarterInput {
@@ -17,5 +19,8 @@ class BotStarterInput {
 
     @Option(names = "-responder", description = "starts off responder bot")
     private boolean responder;
+
+    @Option(names = "-listener", description = "adds one/more listener(s) to responder bot", arity = "1..*")
+    private Set<ListenerId> listenerIds;
 
 }

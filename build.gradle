@@ -18,8 +18,9 @@ sourceCompatibility = 1.8
 mainClassName = "pogo.assistance.bot.manager.BotStarter"
 
 repositories {
-    mavenCentral()
     jcenter() // For DV8FromTheWorld/JDA
+    maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 dependencies {
@@ -46,6 +47,9 @@ dependencies {
 
     // Guava: https://github.com/google/guava#adding-guava-to-your-build
     compile 'com.google.guava:guava:27.0.1-jre'
+
+    // Handling GPS data in GPX format: https://github.com/jenetics/jpx
+    implementation 'com.github.jenetics:jpx:master-SNAPSHOT'
 
     ////////////////////////////// UI LIBRARIES ///////////////////////////////
 

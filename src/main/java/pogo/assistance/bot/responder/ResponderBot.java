@@ -1,9 +1,14 @@
 package pogo.assistance.bot.responder;
 
 import com.google.common.base.Verify;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +16,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDA.Status;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.hooks.EventListener;
 import pogo.assistance.bot.di.DiscordEntityModule;
 
 /**
@@ -30,13 +36,19 @@ import pogo.assistance.bot.di.DiscordEntityModule;
 public class ResponderBot extends TimerTask {
 
     private final JDABuilder jdaBuilder;
-    private final RepHandler repHandler;
+    private final Set<EventListener> listeners;
     private final AtomicReference<JDA> jdaAtomicReference = new AtomicReference<>();
 
     @Inject
-    public ResponderBot(@NonNull final JDABuilder jdaBuilder, @NonNull final RepHandler repHandler) {
+    public ResponderBot(
+            @NonNull final JDABuilder jdaBuilder,
+            @NonNull final Set<EventListener> listeners) {
         this.jdaBuilder = jdaBuilder;
-        this.repHandler = repHandler;
+        this.listeners = listeners;
+//        final List<EventListener> listeners = new ArrayList<>();
+//        Optional.ofNullable(repHandler).ifPresent(listeners::add);
+//        Optional.ofNullable(cooldownDataScraper).ifPresent(listeners::add);
+//        this.listeners = Collections.unmodifiableList(listeners);
     }
 
     @Override
@@ -54,7 +66,7 @@ public class ResponderBot extends TimerTask {
         }
 
         if (jdaAtomicReference.get() == null) {
-            jdaBuilder.addEventListener(repHandler);
+            jdaBuilder.addEventListener(listeners.toArray());
             jdaAtomicReference.set(DiscordEntityModule.provideJda(jdaBuilder));
             Verify.verifyNotNull(jdaAtomicReference.get());
         }
@@ -78,11 +90,12 @@ public class ResponderBot extends TimerTask {
         }
 
         // Check if registered listeners still have all the listeners this bot registered. This is based on the handler
-        // behavior that if there's anything critically wrong with a handler, it will unregister itself. If our
-        // listeners have unregistered themselves, there's no point keeping the application alive.
-        final List<Object> listeners = jda.getRegisteredListeners();
-        if (!listeners.contains(repHandler)) {
-            log.error("Rep handler has unregistered itself. Responder bot terminating.");
+        // behavior that if there's anything critically wrong with a handler, it will unregister itself. If any of our
+        // listeners have unregistered themselves, we kill the application instead of running in the partially
+        // functional state.
+        final List<Object> registeredListeners = jda.getRegisteredListeners();
+        if (!registeredListeners.containsAll(listeners)) {
+            log.error("One or more event listeners have unregistered themselves. Responder bot terminating.");
             System.exit(1);
         }
     }

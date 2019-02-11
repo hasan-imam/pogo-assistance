@@ -49,8 +49,8 @@ class RepHandlerTest {
     void setUp() {
         when(attributionMessageEvent.getJDA().getSelfUser()).thenReturn(selfUser);
         // Set right channel
-        lenient().when(commandMessageEvent.getChannel().getIdLong()).thenReturn(repHandler.getRepChannelId());
-        lenient().when(attributionMessageEvent.getChannel().getIdLong()).thenReturn(repHandler.getRepChannelId());
+        lenient().when(commandMessageEvent.getChannel().getIdLong()).thenReturn(repHandler.getTargetChannelId());
+        lenient().when(attributionMessageEvent.getChannel().getIdLong()).thenReturn(repHandler.getTargetChannelId());
         // Mention self-user in the messages
         when(commandMessageEvent.getMessage().getMentionedUsers()).thenReturn(Collections.singletonList(selfUser));
         when(attributionMessageEvent.getMessage().getMentionedUsers()).thenReturn(Collections.singletonList(selfUser));
@@ -99,8 +99,8 @@ class RepHandlerTest {
     }
 
     private static Object[][] validRepAttributionMsgCases() {
-        return new Object[][]{
-                new Object[] {"dēˈkōdər", "@Zαƒΐrε"},
+        return new Object[][] {
+                new Object[] {"\uD83C\uDF38 յσ\\~ςί ςհίηψᶜᴿᴬᵞეRႩჄ\uD83C\uDF38\uD83D\uDC95", "@Zαƒΐrε"},
                 new Object[] {"Am i Visible° ͜ʖ ͡ -:question:", "@stuff \uD83D\uDC94 stuff \uD83D\uDE0F"},
                 new Object[] {"ֆɨxՇђֆɛռֆɛ", "@\uD83C\uDDEA\uD83C\uDDEC✊\uD83C\uDFFD person \uD83E\uDD19\uD83C\uDFFD\uD83C\uDDFA\uD83C\uDDF8"}
         };
