@@ -45,10 +45,6 @@ public class ResponderBot extends TimerTask {
             @NonNull final Set<EventListener> listeners) {
         this.jdaBuilder = jdaBuilder;
         this.listeners = listeners;
-//        final List<EventListener> listeners = new ArrayList<>();
-//        Optional.ofNullable(repHandler).ifPresent(listeners::add);
-//        Optional.ofNullable(cooldownDataScraper).ifPresent(listeners::add);
-//        this.listeners = Collections.unmodifiableList(listeners);
     }
 
     @Override
