@@ -6,11 +6,12 @@ import java.util.Set;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import net.dv8tion.jda.core.AccountType;
-import pogo.assistance.bot.di.DiscordEntityModule;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+import pogo.assistance.bot.di.DiscordEntityModule;
+import pogo.assistance.data.exchange.spawn.PokemonSpawnExchangeModule;
 
 @Singleton
-@Component(modules = { DiscordEntityModule.class, ResponderBotModule.class })
+@Component(modules = { DiscordEntityModule.class, ResponderBotModule.class, PokemonSpawnExchangeModule.class})
 public interface ResponderBotComponent {
 
     ResponderBot getResponderBot();
@@ -18,10 +19,11 @@ public interface ResponderBotComponent {
     @Component.Builder
     interface Builder {
         /**
-         * {@link net.dv8tion.jda.core.JDA} will use this token to login.
+         * {@link net.dv8tion.jda.core.JDA} will use this token to login. Limitation here is that everything under this
+         * component will use the same token.
          */
         @BindsInstance
-        Builder userToken(@Named(DiscordEntityConstants.NAME_TOKEN) final String userName);
+        Builder userToken(@Named(DiscordEntityConstants.NAME_OWNING_USER_TOKEN) final String owningUserToken);
 
         @BindsInstance
         Builder accountType(final AccountType accountType);

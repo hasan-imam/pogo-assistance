@@ -1,15 +1,12 @@
 package pogo.assistance.bot.responder;
 
 import com.google.common.base.Verify;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
@@ -17,6 +14,7 @@ import net.dv8tion.jda.core.JDA.Status;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
+import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.bot.di.DiscordEntityModule;
 
 /**
@@ -41,7 +39,7 @@ public class ResponderBot extends TimerTask {
 
     @Inject
     public ResponderBot(
-            @NonNull final JDABuilder jdaBuilder,
+            @NonNull @Named(DiscordEntityConstants.NAME_JDA_BUILDER_OWNING_USER) final JDABuilder jdaBuilder,
             @NonNull final Set<EventListener> listeners) {
         this.jdaBuilder = jdaBuilder;
         this.listeners = listeners;
@@ -63,13 +61,13 @@ public class ResponderBot extends TimerTask {
 
         if (jdaAtomicReference.get() == null) {
             jdaBuilder.addEventListener(listeners.toArray());
-            jdaAtomicReference.set(DiscordEntityModule.provideJda(jdaBuilder));
+            jdaAtomicReference.set(DiscordEntityModule.provideUserJda(jdaBuilder));
             Verify.verifyNotNull(jdaAtomicReference.get());
         }
     }
 
     /**
-     * Blocks until {@link JDA} reaches {@link Status#CONNECTED} state. If interrupted, tries to shutdown JDA and reset
+     * Blocks until {@link JDA} reaches {@link Status#CONNECTED} state. If interrupted, tries to shutdown JDA and set
      * the interrupted state.
      */
     private void ensureRunningState() {
