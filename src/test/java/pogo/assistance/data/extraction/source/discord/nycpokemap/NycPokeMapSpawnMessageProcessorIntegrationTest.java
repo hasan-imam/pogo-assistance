@@ -26,7 +26,7 @@ class NycPokeMapSpawnMessageProcessorIntegrationTest {
 
     private static JDA jda;
 
-    private final NycPokeMapSpawnMessageProcessor processor = new NycPokeMapSpawnMessageProcessor();
+    private static final NycPokeMapSpawnMessageProcessor PROCESSOR = new NycPokeMapSpawnMessageProcessor();
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
@@ -45,59 +45,69 @@ class NycPokeMapSpawnMessageProcessorIntegrationTest {
     @ParameterizedTest
     @MethodSource(value = {"nyc0ivMessages"})
     void process_MessageFromIv0Channel_ReturnsExpected(final Message message) {
-        final Optional<PokemonSpawn> pokemonSpawn = processor.process(message);
-        assertThat("Failed message: " + message.getJumpUrl(),
-                pokemonSpawn.get().getIv().orElse(-1.0), equalTo(0.0));
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(0.0));
     }
 
     @Disabled
     @ParameterizedTest
     @MethodSource(value = {"nyc90ivMessages"})
     void process_MessageFromIv90Channel_ReturnsExpected(final Message message) {
-        final Optional<PokemonSpawn> pokemonSpawn = processor.process(message);
-        assertThat("Failed message: " + message.getJumpUrl(),
-                pokemonSpawn.get().getIv().orElse(-1.0), greaterThanOrEqualTo(90.0));
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), greaterThanOrEqualTo(90.0));
     }
 
     @Disabled
     @ParameterizedTest
     @MethodSource(value = {"nyc95ivMessages"})
     void process_MessageFromIv95Channel_ReturnsExpected(final Message message) {
-        final Optional<PokemonSpawn> pokemonSpawn = processor.process(message);
-        assertThat("Failed message: " + message.getJumpUrl(),
-                pokemonSpawn.get().getIv().orElse(-1.0), greaterThanOrEqualTo(95.0));
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), greaterThanOrEqualTo(95.0));
     }
 
     @Disabled
     @ParameterizedTest
     @MethodSource(value = {"nyc100ivMessages", "nyc100ivLevel30Messages"})
     void process_MessageFromIv100Channels_ReturnsExpected(final Message message) {
-        final Optional<PokemonSpawn> pokemonSpawn = processor.process(message);
-        assertEquals(Double.valueOf(100), pokemonSpawn.get().getIv().orElse(-1.0), "Failed message: " + message.getJumpUrl());
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
+        assertEquals(Double.valueOf(100), pokemonSpawn.getIv().orElse(-1.0), failureMsgWithJumpUrl);
     }
 
     private static Stream<Message> nyc0ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_NYCPOKEMAP_IV0))
+                .filter(PROCESSOR::canProcess)
                 .limit(675);
     }
 
     private static Stream<Message> nyc90ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_NYCPOKEMAP_IV90))
+                .filter(PROCESSOR::canProcess)
                 .limit(13000);
     }
 
     private static Stream<Message> nyc95ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_NYCPOKEMAP_IV95))
+                .filter(PROCESSOR::canProcess)
                 .limit(29000);
     }
 
     private static Stream<Message> nyc100ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_NYCPOKEMAP_IV100))
+                .filter(PROCESSOR::canProcess)
                 .limit(11800);
     }
 
     private static Stream<Message> nyc100ivLevel30Messages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_NYCPOKEMAP_IV100_LEVEL30))
+                .filter(PROCESSOR::canProcess)
                 .limit(400);
     }
 

@@ -4,6 +4,7 @@ import java.util.Set;
 import lombok.Getter;
 import picocli.CommandLine.Option;
 import pogo.assistance.bot.responder.ListenerId;
+import pogo.assistance.bot.job.WorkflowId;
 
 @Getter
 class BotStarterInput {
@@ -22,5 +23,11 @@ class BotStarterInput {
 
     @Option(names = "-listener", description = "adds one/more listener(s) to responder bot", arity = "1..*")
     private Set<ListenerId> listenerIds;
+
+    @Option(names = "-job", description = "runs one or more jobs")
+    private boolean job;
+
+    @Option(names = "-workflow", description = "adds one/more workflow(s) to job execution bot", arity = "1..*")
+    private Set<WorkflowId> workflowIds;
 
 }
