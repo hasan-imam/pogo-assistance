@@ -37,7 +37,10 @@ dependencies {
     compileOnly 'org.immutables:value-annotations:2.7.5'
     annotationProcessor 'org.immutables:value:2.7.5'
     annotationProcessor 'org.immutables:builder:2.7.5'
-    annotationProcessor 'org.immutables:gson:2.7.5'
+    compileOnly 'org.immutables:gson:2.7.5'
+
+    // GSON: https://github.com/google/gson
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     // Uses apt-idea plugin: https://github.com/tbroyer/gradle-apt-plugin
     compile 'com.google.dagger:dagger:2.19'
