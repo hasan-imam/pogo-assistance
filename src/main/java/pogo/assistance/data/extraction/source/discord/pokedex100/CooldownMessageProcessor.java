@@ -1,5 +1,6 @@
 package pogo.assistance.data.extraction.source.discord.pokedex100;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Verify;
 import io.jenetics.jpx.Latitude;
 import io.jenetics.jpx.Length;
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 
@@ -28,17 +30,35 @@ public class CooldownMessageProcessor implements MessageProcessor<CooldownRecord
             Pattern.compile("The distance between ([-\\d\\.]+),([-\\d\\.]+) and ([-\\d\\.]+),([-\\d\\.]+)"
                     + " is ([-\\d\\.]+ [\\w]+)\\. (The suggested )*[C|c]ooldown time is (?<cooldown>.*)[,|\\.] (.*)");
 
+    /**
+     * Format (v1) up to message ID 416905502786846735 (on 24/02/2018) was:
+     * "... Cooldown time is 59 min. @MemberName"
+     */
+    @VisibleForTesting
+    static final String FORMAT_DIST_CMD_RESPONSE_V1 = "The distance between %s,%s and %s,%s is %s."
+            + " The suggested cooldown time is %s, @memberName.";
+
+    /**
+     * Format (v2) at message ID 416906664755593226 (on 24/02/2018) and beforehand was:
+     * "... The suggested cooldown time is 106 minutes (1 hours and 46 minutes), @MemberName."
+     * Trivia: @trungnguyen19, one of the developers, seem to have deployed the switch. And although this is called 'v2'
+     * its actually the old formatting of these messages. It was just handled later and named 'v2'.
+     */
+    @VisibleForTesting
+    static final String FORMAT_DIST_CMD_RESPONSE_V2 = "The distance between %s,%s and %s,%s is %s."
+            + " Cooldown time is %s @memberName";
+
     private static final Pattern DECIMAL_EXTRACTION_PATTERN = Pattern.compile("[\\D]*([-\\d\\.]+)[\\D]*");
 
     @Override
-    public boolean canProcess(final Message message) {
+    public boolean canProcess(@NotNull final Message message) {
         return message.getChannel().getIdLong() == DiscordEntityConstants.CHANNEL_ID_PDEX100_BOT_COMMAND
                 && message.getAuthor().isBot()
                 && PATTERN_DIST_CMD_RESPONSE.matcher(message.getContentStripped()).matches();
     }
 
     @Override
-    public Optional<CooldownRecord> process(final Message message) {
+    public Optional<CooldownRecord> process(@NotNull final Message message) {
         return fromResponseMessage(message);
     }
 

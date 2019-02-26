@@ -22,7 +22,6 @@ public class ResponderBotModule {
     @Provides
     public static Set<EventListener> providesEventListeners(
             final Set<ListenerId> listenerIds,
-            final Provider<CooldownDataScraper> cooldownDataScraperProvider,
             final Provider<RepHandler> repHandlerProvider,
             final Provider<DiscordPokemonSpawnListener> discordPokemonSpawnListenerProvider) {
         final Set<EventListener> listeners = new LinkedHashSet<>();
@@ -30,9 +29,6 @@ public class ResponderBotModule {
             switch (listenerId) {
                 case REP_HANDLER:
                     listeners.add(repHandlerProvider.get());
-                    break;
-                case COOLDOWN_SCRAPER:
-                    listeners.add(cooldownDataScraperProvider.get());
                     break;
                 case RELAY_PDEX100:
                     listeners.add(discordPokemonSpawnListenerProvider.get());
