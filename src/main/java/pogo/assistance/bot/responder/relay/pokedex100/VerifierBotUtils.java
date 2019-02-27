@@ -7,13 +7,14 @@ import pogo.assistance.data.model.pokemon.PokedexEntry.Form;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 @UtilityClass
-class VerifierBotUtils {
+public class VerifierBotUtils {
 
     /**
      * @return
      *      100iv post command for SuperBotP. Example command: "geodude cp445 m 44.5555,55.4444"
      */
     public static String toVerifierBotCommand(final PokemonSpawn pokemonSpawn) {
+        Preconditions.checkArgument(pokemonSpawn.getIv().isPresent());
         Preconditions.checkArgument(pokemonSpawn.getCp().isPresent());
         return String.format("%s cp%d %s %f,%f",
                 getNameSegment(pokemonSpawn.getPokedexEntry()),

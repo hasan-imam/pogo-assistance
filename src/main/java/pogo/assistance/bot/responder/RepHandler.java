@@ -120,7 +120,7 @@ public class RepHandler extends ListenerAdapter {
             event.getJDA().removeEventListener(this);
         }
 
-        log.info("Rep responder online!");
+        log.info("Rep responder is online!");
     }
 
     @Override
@@ -130,7 +130,7 @@ public class RepHandler extends ListenerAdapter {
             return;
         }
 
-        logIfAttributionMessage(event);
+//        logIfAttributionMessage(event);
 
         if (!mentionsSelfUser(event)) {
             // Both !rep command and response contains the user who's the target of the command

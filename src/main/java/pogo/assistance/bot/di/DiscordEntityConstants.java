@@ -24,7 +24,9 @@ public class DiscordEntityConstants {
 
     // Users/bots
 
+    public static final long USER_ID_H13M = 471666614857629696L;
     public static final long USER_ID_QN234 = 520113608978333706L;
+    public static final long USER_ID_JOSH = 289560054708043777L;
 
     public static final String NAME_PDEX100_SUPER_BOT_P = "superbot-p";
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;

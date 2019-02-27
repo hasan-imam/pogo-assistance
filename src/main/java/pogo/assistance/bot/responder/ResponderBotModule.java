@@ -55,8 +55,8 @@ public class ResponderBotModule {
     @Provides
     @Named(DiscordEntityConstants.NAME_PDEX100_SUPER_BOT_P)
     public static User providesSuperBotPUser(@Named(DiscordEntityConstants.NAME_JDA_OWNING_USER) final JDA jda) {
-//        return jda.getUserById(DiscordEntityConstants.USER_ID_PDEX100_SUPER_BOT_P); // real super bot user
-        return jda.getUserById(DiscordEntityConstants.USER_ID_QN234);
+        return jda.getUserById(DiscordEntityConstants.USER_ID_PDEX100_SUPER_BOT_P); // real super bot user
+//        return jda.getUserById(DiscordEntityConstants.USER_ID_QN234);
     }
 
 }

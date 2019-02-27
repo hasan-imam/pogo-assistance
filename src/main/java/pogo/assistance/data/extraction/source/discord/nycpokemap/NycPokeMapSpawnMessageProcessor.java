@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import net.dv8tion.jda.core.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
@@ -58,7 +59,7 @@ public class NycPokeMapSpawnMessageProcessor implements MessageProcessor<Pokemon
     }
 
     @Override
-    public Optional<PokemonSpawn> process(final Message message) {
+    public Optional<PokemonSpawn> process(@NotNull final Message message) {
         if (!message.getAuthor().isBot()) {
             return Optional.empty();
         }
