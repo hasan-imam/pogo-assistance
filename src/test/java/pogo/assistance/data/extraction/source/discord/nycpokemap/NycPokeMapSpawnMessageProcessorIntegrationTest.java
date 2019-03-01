@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -26,7 +27,7 @@ class NycPokeMapSpawnMessageProcessorIntegrationTest {
 
     private static JDA jda;
 
-    private static final NycPokeMapSpawnMessageProcessor PROCESSOR = new NycPokeMapSpawnMessageProcessor();
+    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new NycPokeMapSpawnMessageProcessor();
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {

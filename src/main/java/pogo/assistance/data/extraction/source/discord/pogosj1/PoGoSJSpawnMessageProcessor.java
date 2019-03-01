@@ -13,24 +13,24 @@ import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
+import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
-    // Example title: Kricketot ♀ 100.0% CP:252 (L22) Palo Alto
-    private static final Pattern MESSAGE_TITLE_PATTERN =
-            Pattern.compile("(?<pokemon>[\\w\\s'♀♂\\-]+) " +
-                    "(?<gender>[♀♂⚲]+) 100\\.0% " +
-                    "CP:(?<cp>[\\d]+) " +
-                    "\\(L(?<level>[\\d]+)\\)" +
-                    "([\\w ]+)");
-
     /*
-     * Example thumbnail URLs:
-     *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/401.png
-     *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/88-73.png?5
+     * Example titles:
+     *  - "Kricketot ♀ 100.0% CP:252 (L22) Palo Alto"
+     *  - "Nidoran♂ ♂ 100.0% CP:418 (L17) San Jose"
+     *
+     * For simplicity, we replace gender signs from the title and then match it against this pattern.
      */
-    private static final Pattern EMBED_THUMBNAIL_URL_PATTERN = Pattern.compile("(.+)/(\\d+)(.*)(\\.png)");
+    private static final Pattern MESSAGE_TITLE_PATTERN =
+            Pattern.compile("(?<pokemon>([\\w\\s'\\-]*(?![\\d\\.]+%)))" + "(\\s*)" +
+                    "((?<iv>[\\d\\.]+)%)?" + "(\\s*)" +
+                    "(CP:(?<cp>[\\d]+))?" + "(\\s*)" +
+                    "(\\(L(?<level>[\\d]+)\\))?" + "([\\-\\s]*)" +
+                    "([\\w ]+)");
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
@@ -47,12 +47,13 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
         }
 
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
-        final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(messageEmbed.getTitle());
+        final String embedTitleWithoutGenderSigns = messageEmbed.getTitle().replaceAll("[♀♂⚲]", "").trim();
+        final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(embedTitleWithoutGenderSigns);
         Verify.verify(titleMatcher.find());
         final PokedexEntry pokedexEntry = ImmutablePokedexEntry.builder()
-                .id(parsePokemonIdFromThumbnailUrl(messageEmbed.getThumbnail().getUrl()))
-                .name(titleMatcher.group("pokemon"))
-                .gender(SpawnMessageParsingUtils.parseGenderFromSign(titleMatcher.group("gender")))
+                .id(SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl()))
+                .name(titleMatcher.group("pokemon").trim())
+                .gender(parseGenderFromEmbedTitle(messageEmbed.getTitle()))
                 .build();
 
         // Some extra verification on the description so we detect (i.e. throw error) if message format changes
@@ -66,15 +67,20 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
                 .pokedexEntry(pokedexEntry)
                 .level(Integer.parseInt(titleMatcher.group("level")))
                 .cp(Integer.parseInt(titleMatcher.group("cp")))
-                .iv(100)
+                .iv(Double.parseDouble(titleMatcher.group("iv")))
                 .locationDescription(descriptionLines[2].replaceFirst("Location:", "").trim())
                 .build());
     }
 
-    private static int parsePokemonIdFromThumbnailUrl(final String url) {
-        final Matcher thumbnailUrlMatcher = EMBED_THUMBNAIL_URL_PATTERN.matcher(url);
-        Verify.verify(thumbnailUrlMatcher.find());
-        return Integer.parseInt(thumbnailUrlMatcher.group(2));
+    private static Gender parseGenderFromEmbedTitle(final String title) {
+        if (title.contains("♂")) {
+            return Gender.MALE;
+        } else if (title.contains("♀")) {
+            return Gender.FEMALE;
+        } else if (title.contains("⚲")) {
+            return Gender.NONE;
+        }
+        return Gender.NONE;
     }
 
 }

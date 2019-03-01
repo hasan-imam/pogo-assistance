@@ -85,6 +85,25 @@ class PoGoSJSpawnMessageProcessorTest {
                                 .level(32)
                                 .locationDescription("475 Hyde Park Drive (Edenvale, San Jose)")
                                 .build()
+                },
+                new Object[] {
+                        mockMessageWithContent(
+                                "Nidoran♂ ♂ 0.0% CP:1 (L1) San Jose",
+                                "Poison Sting/Sludge Bomb till 09:05:29pm (verified) (18m 54s).\n" +
+                                        "Weather Boost: Cloudy ☁️ \n" +
+                                        "Location:unkn Lake Cunningham Inner Lake Path (East San Jose, San Jose) \n" +
+                                        "Coordinates: 37.33702,-121.80461\n" +
+                                        "http://maps.google.com/maps?q=37.3370226766417,-121.804612027665",
+                                "http://maps.google.com/maps?q=37.3370226766417,-121.804612027665",
+                                "https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/32.png"),
+                        ImmutablePokemonSpawn.builder()
+                                .from(WayPoint.of(37.3370226766417, -121.804612027665))
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Nidoran").id(32).gender(Gender.MALE).build())
+                                .iv(0)
+                                .cp(1)
+                                .level(1)
+                                .locationDescription("unkn Lake Cunningham Inner Lake Path (East San Jose, San Jose)")
+                                .build()
                 }
         };
     }

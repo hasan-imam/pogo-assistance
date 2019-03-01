@@ -21,6 +21,7 @@ public class DiscordEntityConstants {
 
     public static final String M8M_BOT_TOKEN = "";
     public static final String OWNING_USER_TOKEN = "";
+    public static final String CORRUPTED_USER_TOKEN = "";
 
     // Users/bots
 
@@ -30,6 +31,8 @@ public class DiscordEntityConstants {
 
     public static final String NAME_PDEX100_SUPER_BOT_P = "superbot-p";
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
+
+    public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
 
     // IDs for discord servers/channels
 

@@ -1,8 +1,12 @@
 package pogo.assistance.data.extraction.source.discord.pogosj1;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -47,12 +51,16 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
     @MethodSource("pogosj100ivMessages")
     void process_MessageFromIv100Channel_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
-        final PokemonSpawn pokemonSpawn = PROCESSOR.process(message)
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
-        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
-        assertTrue(pokemonSpawn.getLevel().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getCp().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getLocationDescription().isPresent(), failureMsgWithJumpUrl);
+        assertAll(failureMsgWithJumpUrl,
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
+                () -> assertThat(pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0)),
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent()),
+                () -> assertTrue(pokemonSpawn.getLocationDescription().isPresent())
+        );
     }
 
     @Disabled
@@ -60,23 +68,27 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
     @MethodSource("pogosjMax100Messages")
     void process_MessageFromMax100Channel_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
-        final PokemonSpawn pokemonSpawn = PROCESSOR.process(message)
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
-        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
-        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getLevel().orElse(-1), greaterThanOrEqualTo(30));
-        assertTrue(pokemonSpawn.getCp().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getLocationDescription().isPresent(), failureMsgWithJumpUrl);
+        assertAll(failureMsgWithJumpUrl,
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
+                () -> assertThat(pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0)),
+                () -> assertThat(pokemonSpawn.getLevel().orElse(-1), greaterThanOrEqualTo(30)),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent()),
+                () -> assertTrue(pokemonSpawn.getLocationDescription().isPresent())
+        );
     }
 
     private static Stream<Message> pogosj100ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POGOSJ1_100IV))
                 .filter(PROCESSOR::canProcess)
-                .limit(1000);
+                .limit(20000);
     }
 
     private static Stream<Message> pogosjMax100Messages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POGOSJ1_100IVMAX))
                 .filter(PROCESSOR::canProcess)
-                .limit(8200);
+                .limit(8200); // messages earlier than this limit have less description lines and fails parsing
     }
 }

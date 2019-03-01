@@ -41,6 +41,10 @@ public class PokemonSpawnExchange implements Closeable {
      * Map that holds references to offered {@link PokemonSpawn}s. This mapping helps de-dupe same spawn being offered
      * from different sources. The map value is used to evict expired spawn objects from the map, so we don't keep the
      * map growing forever.
+     *
+     * Notable that this de-duping is dependent on duplicate {@link PokemonSpawn}s being exactly the same. If at some
+     * point they start containing fields ignorable for this purpose (e.g. some metadata, source info etc.) we'll need
+     * to come up with a custom composite key.
      */
     private final Map<PokemonSpawn, Instant> spawnToExpiration;
 
@@ -69,6 +73,9 @@ public class PokemonSpawnExchange implements Closeable {
     }
 
     public synchronized void offer(final PokemonSpawn pokemonSpawn) {
+        if (spawnToExpiration.containsKey(pokemonSpawn)) {
+            log.debug("Ignoring duplicate spawn: {}", pokemonSpawn);
+        }
         spawnToExpiration.computeIfAbsent(pokemonSpawn, __ -> {
             // Add to notification queue
             spawnQueue.add(pokemonSpawn);
