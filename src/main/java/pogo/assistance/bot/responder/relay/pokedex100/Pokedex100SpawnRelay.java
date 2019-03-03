@@ -6,7 +6,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -43,17 +42,31 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     @Override
     public void observe(final PokemonSpawn pokemonSpawn) {
-        if (pokemonSpawn.getIv().orElse(-1.0) == 100) {
-            send100ivNotification(VerifierBotUtils.toVerifierBotCommand(pokemonSpawn));
+        final String command;
+        if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
+            command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn);
+            log.info("Sending 100 IV command: {}", command);
+        } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
+            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+            log.info("Sending 90+ IV command: {}", command);
+        } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry())) {
+            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+            log.info("Sending candy command: {}", command);
+        } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
+            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+            log.info("Sending high CP command: {}", command);
         } else {
             log.debug("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
+            return;
         }
+
+        sendCommandToSuperBotP(command);
     }
 
-    private void send100ivNotification(final String command) {
+    private void sendCommandToSuperBotP(final String command) {
         getSuperBotP().openPrivateChannel()
                 .complete()
-                .sendMessage(new MessageBuilder(command + " ").append(getH13m()).build())
+                .sendMessage(new MessageBuilder(command).build())
                 .queue();
     }
 }
