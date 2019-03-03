@@ -47,7 +47,24 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
     @Disabled
     @ParameterizedTest
     @MethodSource(value = {"flpmAlertBot7Dms"})
-    void process_MessageFromIv0Channel_ReturnsExpected(final Message message) {
+    void process_FlpmPrivateChannel_ReturnsExpected(final Message message) {
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+                .orElse(null);
+        assumeTrue(pokemonSpawn != null);
+        assertAll(failureMsgWithJumpUrl,
+                () -> assertTrue(pokemonSpawn.getIv().isPresent()),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent()),
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
+                () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.NONE),
+                () -> assertTrue(pokemonSpawn.getPokedexEntry().getId() > 0),
+                () -> assertFalse(pokemonSpawn.getPokedexEntry().getName().isEmpty()));
+    }
+
+    @Disabled
+    @ParameterizedTest
+    @MethodSource(value = {"apAlertBot7Dms"})
+    void process_ApPrivateChannel_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElse(null);
@@ -67,5 +84,11 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
         return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT_7).openPrivateChannel().complete())
                 .filter(PROCESSOR::canProcess)
                 .limit(20000);
+    }
+
+    private static Stream<Message> apAlertBot7Dms() {
+        return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_AP_ALERT_BOT).openPrivateChannel().complete())
+                .filter(PROCESSOR::canProcess)
+                .limit(15000);
     }
 }

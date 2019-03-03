@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,11 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     private final Provider<JDA> relayingUserJda;
 
-    @Getter(lazy = true)
+    @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final User superBotP = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_PDEX100_SUPER_BOT_P);
-    @Getter(lazy = true)
+    @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final User h13m = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_H13M);
-    @Getter(lazy = true)
+    @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final User qn234 = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_QN234);
 
     /**
@@ -52,7 +53,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     private void send100ivNotification(final String command) {
         getSuperBotP().openPrivateChannel()
                 .complete()
-                .sendMessage(new MessageBuilder(command + " ").append(h13m).build())
+                .sendMessage(new MessageBuilder(command + " ").append(getH13m()).build())
                 .queue();
     }
 }
