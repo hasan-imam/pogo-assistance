@@ -5,13 +5,15 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.AccountType;
 import picocli.CommandLine;
+import pogo.assistance.bot.collector.DaggerSpawnDataCollectorBotComponent;
+import pogo.assistance.bot.collector.SpawnDataCollectorBot;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.bot.responder.DaggerResponderBotComponent;
-import pogo.assistance.bot.responder.ListenerId;
-import pogo.assistance.bot.responder.ResponderBot;
 import pogo.assistance.bot.job.DaggerJobExecutionBotComponent;
 import pogo.assistance.bot.job.JobExecutionBot;
 import pogo.assistance.bot.job.WorkflowId;
+import pogo.assistance.bot.responder.DaggerResponderBotComponent;
+import pogo.assistance.bot.responder.ListenerId;
+import pogo.assistance.bot.responder.ResponderBot;
 
 @Slf4j
 public class BotStarter {
@@ -30,12 +32,21 @@ public class BotStarter {
         } else if (input.isInteractiveQuestPublish()) {
             log.info("Handling interactive commands...");
         } else if (input.isFeed()) {
-            log.info("Starting off the feed bot...");
+            runPokemonSpawnExchange();
         } else if (input.isResponder()) {
             startResponder(input.getListenerIds());
         }
 
         log.info("Done setting up bot!");
+    }
+
+    private static void runPokemonSpawnExchange() {
+        final SpawnDataCollectorBot bot = DaggerSpawnDataCollectorBotComponent.builder()
+                .collectingUserToken(DiscordEntityConstants.CORRUPTED_USER_TOKEN)
+                .relayingUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .build()
+                .getSpawnDataCollectorBot();
+        bot.run(); // run on this thread
     }
 
     private static void startResponder(final Set<ListenerId> inputListenerIds) {

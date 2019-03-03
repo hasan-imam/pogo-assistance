@@ -11,22 +11,10 @@ import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessage
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
+// TODO: remove
 @Module
 public class PokemonSpawnExchangeModule {
 
-    @Provides
-    public static DiscordPokemonSpawnListener provideDiscordPokemonSpawnListener(
-            final Set<MessageProcessor<PokemonSpawn>> messageProcessors,
-            final PokemonSpawnExchange pokemonSpawnExchange) {
-        return new DiscordPokemonSpawnListener(messageProcessors, pokemonSpawnExchange);
-    }
 
-    @Provides
-    public static Set<MessageProcessor<PokemonSpawn>> provideMessageProcessors() {
-        return ImmutableSet.of(
-                new NycPokeMapSpawnMessageProcessor(),
-                new PoGoSJSpawnMessageProcessor(),
-                new VAScansSpawnMessageProcessor());
-    }
 
 }

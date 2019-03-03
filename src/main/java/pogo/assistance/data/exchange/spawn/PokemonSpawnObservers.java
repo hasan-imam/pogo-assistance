@@ -30,6 +30,7 @@ class PokemonSpawnObservers implements Runnable {
     @Override
     public void run() {
         Verify.verify(!stopRunning.get());
+        log.info("Observing pokemon spawn queue...");
         while (!stopRunning.get()) {
             try {
                 final PokemonSpawn pokemonSpawn = spawnQueue.take();

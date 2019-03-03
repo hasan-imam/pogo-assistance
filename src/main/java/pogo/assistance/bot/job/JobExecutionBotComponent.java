@@ -20,7 +20,7 @@ public interface JobExecutionBotComponent {
          * {@link net.dv8tion.jda.core.JDA} will use this token to login.
          */
         @BindsInstance
-        JobExecutionBotComponent.Builder userToken(@Named(DiscordEntityConstants.NAME_OWNING_USER_TOKEN) final String userName);
+        JobExecutionBotComponent.Builder userToken(@Named(DiscordEntityConstants.NAME_USER_TOKEN_OWNER) final String userName);
 
         @BindsInstance
         JobExecutionBotComponent.Builder accountType(final AccountType accountType);

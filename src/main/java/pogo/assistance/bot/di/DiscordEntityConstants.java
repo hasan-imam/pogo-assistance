@@ -7,13 +7,18 @@ public class DiscordEntityConstants {
 
     // Name for common named attributes. Used as args to @Named annotation.
 
-    public static final String NAME_OWNING_USER_TOKEN = "owning_user_token";
+    public static final String NAME_USER_TOKEN_OWNER = "owning_user_token";
+    public static final String NAME_USER_TOKEN_M8M = "m8m_bot_token";
+    public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
 
-    public static final String NAME_JDA_BUILDER_BOT_USER = "bot_user_jda_builder";
-    public static final String NAME_JDA_BOT_USER = "bot_user_jda";
+    public static final String NAME_JDA_BUILDER_M8M_BOT = "bot_user_jda_builder";
+    public static final String NAME_JDA_M8M_BOT = "bot_user_jda";
+
+    public static final String NAME_JDA_BUILDER_CORRUPTED_USER = "corrupted_user_jda_builder";
+    public static final String NAME_JDA_CORRUPTED_USER = "corrupted_user_jda";
 
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
@@ -29,10 +34,10 @@ public class DiscordEntityConstants {
     public static final long USER_ID_QN234 = 520113608978333706L;
     public static final long USER_ID_JOSH = 289560054708043777L;
 
-    public static final String NAME_PDEX100_SUPER_BOT_P = "superbot-p";
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
-
     public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
+    public static final long USER_ID_AP_ALERT_BOT = 419631321577553921L;
+    public static final long USER_ID_SS_NOVA_BOT = 409780035470360576L;
 
     // IDs for discord servers/channels
 

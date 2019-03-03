@@ -25,7 +25,7 @@ public class DiscordEntityModule {
     @Provides
     @Named(DiscordEntityConstants.NAME_JDA_BUILDER_OWNING_USER)
     public static JDABuilder provideUserJdaBuilder(
-            @Named(DiscordEntityConstants.NAME_OWNING_USER_TOKEN) final String id,
+            @Named(DiscordEntityConstants.NAME_USER_TOKEN_OWNER) final String id,
             final AccountType accountType) {
         final JDABuilder jdaBuilder = new JDABuilder(accountType);
         jdaBuilder.setToken(id);

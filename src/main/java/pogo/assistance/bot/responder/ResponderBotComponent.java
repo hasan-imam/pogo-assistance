@@ -23,7 +23,7 @@ public interface ResponderBotComponent {
          * component will use the same token.
          */
         @BindsInstance
-        Builder userToken(@Named(DiscordEntityConstants.NAME_OWNING_USER_TOKEN) final String owningUserToken);
+        Builder userToken(@Named(DiscordEntityConstants.NAME_USER_TOKEN_OWNER) final String owningUserToken);
 
         @BindsInstance
         Builder accountType(final AccountType accountType);
