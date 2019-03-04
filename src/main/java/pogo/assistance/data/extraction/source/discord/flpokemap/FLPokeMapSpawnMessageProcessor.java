@@ -1,6 +1,7 @@
 package pogo.assistance.data.extraction.source.discord.flpokemap;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.*;
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_AP_ALERT_BOT;
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT_7;
 
 import com.google.common.base.Verify;
 import java.util.Optional;
@@ -8,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
@@ -48,7 +49,23 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
                 final long authorId = message.getAuthor().getIdLong();
                 return authorId == USER_ID_FLPM_ALERT_BOT_7 || authorId == USER_ID_AP_ALERT_BOT;
             case TEXT:
+                // Check if it's one of the many spawn posting channels under the AlphaPokes server
+
+                // Target some specific channels
+                final long channelId = message.getChannel().getIdLong();
+                if (channelId == DiscordEntityConstants.CHANNEL_ID_ALPHAPOKES_ULTRARARE_TEST) {
+                    return true;
+                }
+
+                // Broader set of channels for which we don't want to manage channel IDs by hand, but instead match
+                // based on channel name and category it's under.
                 final String channelName = message.getChannel().getName();
+                final String categoryId = Optional.ofNullable(message.getCategory())
+                        .map(Category::getId)
+                        .orElse(null);
+                if (categoryId == null) { // Some channels do not fall under a category (ungrouped)
+                    return false;
+                }
                 switch (message.getCategory().getId()) {
                     case "367523728491544577":
                         // ALPHARETTA category: target channels end with "spawns"
@@ -70,7 +87,7 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
                                 && !channelName.contains("custom_filters")
                                 && !channelName.contains("raid");
 //                    case "382579319119020042":
-//                        // NEW ORLEANS: looks dead - commeting out
+//                        // NEW ORLEANS: looks dead - commenting out
 //                        return false;
 
                     default:
@@ -89,7 +106,8 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
             // Some message contains a single description line with just the despawn time, but nothing else
             // These messages contain 1 line in FLPM alerts and 4 lines in AP alerts
             // We ignore those for now
-            log.debug("Ignoring message with missing spawn description: {}", message.getJumpUrl());
+            log.trace("Ignoring message from '{}' with missing spawn description: {}",
+                    message.getChannel().getName(), message.getJumpUrl());
             return Optional.empty();
         }
         Verify.verify(descriptionLines.length == 7,

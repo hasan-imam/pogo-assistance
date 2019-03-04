@@ -6,13 +6,17 @@ import dagger.Provides;
 import java.util.Collections;
 import javax.inject.Named;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import pogo.assistance.bot.responder.relay.pokedex100.Pokedex100SpawnRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.nycpokemap.NycPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
 
 @Module
 class SpawnDataExchangeModule {
@@ -30,7 +34,7 @@ class SpawnDataExchangeModule {
         final FLPokeMapSpawnMessageProcessor flpmSpawnMessageProcessor = new FLPokeMapSpawnMessageProcessor();
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(flpmSpawnMessageProcessor),
-                ImmutableSet.of(flpmSpawnMessageProcessor),
+                ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
                 spawnExchange);
     }
 
@@ -39,6 +43,8 @@ class SpawnDataExchangeModule {
      *  - POGO SJ
      *  - NYC PokeMap
      *  - VAScans
+     *  - We Catch
+     *  - Poke Fairy
      */
     @Named(CollectorJDAModule.NAME_OWNING_USER_SPAWN_LISTENER)
     @Provides
@@ -48,11 +54,14 @@ class SpawnDataExchangeModule {
                 ImmutableSet.of(
                         new NycPokeMapSpawnMessageProcessor(),
                         new PoGoSJSpawnMessageProcessor(),
-                        new VAScansSpawnMessageProcessor()),
+                        new VAScansSpawnMessageProcessor(),
+                        new WeCatchSpawnMessageProcessor(),
+                        new PokeFairySpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange);
     }
 
+    @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(
             final Provider<Pokedex100SpawnRelay> pokedex100SpawnRelayProvider) {

@@ -33,7 +33,7 @@ public class SpawnDataCollectorBot implements Runnable {
                     "Data collecting user's JDA is expected to have registered listener(s)");
             log.info("{}'s JDA status: {}, ping: {}, response count: {}",
                     collectingUserJda.getSelfUser().getName(), collectingUserJda.getStatus(), collectingUserJda.getPing(), collectingUserJda.getResponseTotal());
-            log.info("{}s' JDA status: {}, ping: {}, response count: {}",
+            log.info("{}'s JDA status: {}, ping: {}, response count: {}",
                     relayingUserJda.getSelfUser().getName(), relayingUserJda.getStatus(), relayingUserJda.getPing(), relayingUserJda.getResponseTotal());
             try {
                 TimeUnit.MINUTES.sleep(5);

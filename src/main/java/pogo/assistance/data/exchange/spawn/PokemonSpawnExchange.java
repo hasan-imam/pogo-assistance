@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +57,6 @@ public class PokemonSpawnExchange implements Closeable {
     private final PokemonSpawnObservers pokemonSpawnObservers;
     private final Thread observerThread;
 
-    @Inject
     public PokemonSpawnExchange(final Set<PokemonSpawnObserver> observers) {
         spawnToExpiration = new HashMap<>();
         spawnQueue = new LinkedBlockingQueue<>();
@@ -74,7 +72,7 @@ public class PokemonSpawnExchange implements Closeable {
 
     public synchronized void offer(final PokemonSpawn pokemonSpawn) {
         if (spawnToExpiration.containsKey(pokemonSpawn)) {
-            log.debug("Ignoring duplicate spawn: {}", pokemonSpawn);
+            log.trace("Ignoring duplicate spawn: {}", pokemonSpawn);
         }
         spawnToExpiration.computeIfAbsent(pokemonSpawn, __ -> {
             // Add to notification queue

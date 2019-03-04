@@ -31,6 +31,7 @@ class CollectorJDAModule {
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
         jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        // TODO: add logging of what's being registered
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -45,6 +46,7 @@ class CollectorJDAModule {
     public static JDA provideUserJda(
             @Named(NAME_USER_TOKEN_OWNER) final String token,
             @Named(NAME_OWNING_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
+
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
         jdaBuilder.addEventListener(discordPokemonSpawnListener);

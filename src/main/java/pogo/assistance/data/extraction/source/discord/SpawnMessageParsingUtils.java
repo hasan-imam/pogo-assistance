@@ -25,6 +25,7 @@ public class SpawnMessageParsingUtils {
      * Example thumbnail URLs:
      *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/401.png
      *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/88-73.png?5
+     *  - https://image.cdstud.io/o/351-29.png (we catch channel - castform)
      */
     private static final Pattern EMBED_THUMBNAIL_URL_PATTERN = Pattern.compile("(.+)/(?<id>\\d+)(.*)(\\.png)");
 
@@ -36,7 +37,7 @@ public class SpawnMessageParsingUtils {
 
     public static Gender parseGenderFromSign(@Nullable final String sign) {
         if (sign == null || sign.isEmpty()) {
-            return Gender.NONE;
+            return Gender.UNKNOWN;
         }
 
         switch (sign) {

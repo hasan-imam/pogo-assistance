@@ -37,7 +37,7 @@ public class DiscordEntityConstants {
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
     public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
     public static final long USER_ID_AP_ALERT_BOT = 419631321577553921L;
-    public static final long USER_ID_SS_NOVA_BOT = 409780035470360576L;
+    public static final long USER_ID_SS_NOVA_BOT = 409786475564105728L;
 
     // IDs for discord servers/channels
 
@@ -58,6 +58,9 @@ public class DiscordEntityConstants {
     public static final long CHANNEL_ID_NYCPOKEMAP_CP2500 = 324096818918981632L;
     public static final long CHANNEL_ID_NYCPOKEMAP_CP3000 = 416797863427833859L;
     public static final long CHANNEL_ID_NYCPOKEMAP_LEVEL35 = 416797870986100738L;
+
+    public static final long SERVER_ID_ALPHAPOKES = 273572648519204866L;
+    public static final long CHANNEL_ID_ALPHAPOKES_ULTRARARE_TEST = 504760808358674452L;
 
     public static final long SERVER_ID_VASCANS = 528443479077158915L;
     public static final long CHANNEL_ID_VASCANS_HUNDOS = 538849532901851137L;
