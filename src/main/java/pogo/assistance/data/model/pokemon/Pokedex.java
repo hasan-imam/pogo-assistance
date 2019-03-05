@@ -15,6 +15,11 @@ import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.serde.FileIOUtils;
 import pogo.assistance.data.serde.SerDeModule;
 
+/**
+ * TODO: implement a ditto disguise possibility lookup
+ * TODO: need more flexible 'form' qualifier
+ * TODO: implement a non-nesting pokemon lookup (need to be kept up to date with game changes)
+ */
 @UtilityClass
 public class Pokedex {
 
