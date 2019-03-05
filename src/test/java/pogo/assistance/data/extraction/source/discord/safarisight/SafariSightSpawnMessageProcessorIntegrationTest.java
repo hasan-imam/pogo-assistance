@@ -62,6 +62,7 @@ class SafariSightSpawnMessageProcessorIntegrationTest {
     }
 
     private static Stream<Message> safariSightNovaBotDMs() {
+        // TODO: add dedicated tests for each bot
         return DiscordEntityConstants.USER_ID_SS_NOVA_BOTS.stream()
                 .map(botId -> jda.getUserById(botId).openPrivateChannel().complete())
                 .flatMap(MessageStream::lookbackMessageStream)
