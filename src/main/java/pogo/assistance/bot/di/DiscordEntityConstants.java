@@ -45,6 +45,7 @@ public class DiscordEntityConstants {
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;
 
     public static final long SERVER_ID_POGOSJ1 = 346733317699141632L;
+    public static final long CHANNEL_ID_POGOSJ1_TWEETS = 346733581814726657L;
     public static final long CHANNEL_ID_POGOSJ1_100IV = 348769770671308800L;
     public static final long CHANNEL_ID_POGOSJ1_100IVMAX = 371106133382922250L;
 

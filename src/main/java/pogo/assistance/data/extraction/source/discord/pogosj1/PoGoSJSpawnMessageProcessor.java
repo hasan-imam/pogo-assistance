@@ -10,12 +10,17 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
+import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
+/**
+ * @implSpec
+ *      WARNING: Doesn't detect Dittos
+ */
+@Deprecated
 public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     /*
@@ -50,11 +55,10 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
         final String embedTitleWithoutGenderSigns = messageEmbed.getTitle().replaceAll("[♀♂⚲]", "").trim();
         final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(embedTitleWithoutGenderSigns);
         Verify.verify(titleMatcher.find());
-        final PokedexEntry pokedexEntry = ImmutablePokedexEntry.builder()
-                .id(SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl()))
-                .name(titleMatcher.group("pokemon").trim())
-                .gender(parseGenderFromEmbedTitle(messageEmbed.getTitle()))
-                .build();
+        final int id = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
+        final Gender gender = parseGenderFromEmbedTitle(messageEmbed.getTitle());
+        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(id, gender)
+                .orElseThrow(() -> new UnsupportedOperationException("Unable to lookup dex entry with ID: " + id));
 
         // Some extra verification on the description so we detect (i.e. throw error) if message format changes
         final String[] descriptionLines = messageEmbed.getDescription().split("\n");

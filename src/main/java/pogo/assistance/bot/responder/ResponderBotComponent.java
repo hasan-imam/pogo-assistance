@@ -8,10 +8,9 @@ import javax.inject.Singleton;
 import net.dv8tion.jda.core.AccountType;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.bot.di.DiscordEntityModule;
-import pogo.assistance.data.exchange.spawn.PokemonSpawnExchangeModule;
 
 @Singleton
-@Component(modules = { DiscordEntityModule.class, ResponderBotModule.class, PokemonSpawnExchangeModule.class})
+@Component(modules = { DiscordEntityModule.class, ResponderBotModule.class })
 public interface ResponderBotComponent {
 
     ResponderBot getResponderBot();

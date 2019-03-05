@@ -31,7 +31,7 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
 
     private static JDA jda;
 
-    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new PoGoSJSpawnMessageProcessor();
+    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new PoGoSJSpawnMessageProcessorV2();
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
@@ -54,6 +54,7 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertAll(failureMsgWithJumpUrl,
+                () -> assertThat(pokemonSpawn, equalTo(new PoGoSJSpawnMessageProcessor().process(message).get())),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
                 () -> assertThat(pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0)),
@@ -71,6 +72,7 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertAll(failureMsgWithJumpUrl,
+                () -> assertThat(pokemonSpawn, equalTo(new PoGoSJSpawnMessageProcessor().process(message).get())),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
                 () -> assertThat(pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0)),
@@ -80,9 +82,28 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         );
     }
 
+    @Disabled
+    @ParameterizedTest
+    @MethodSource("pogosjTweetMessages")
+    void process_MessageFromTweetsChannel_ReturnsExpected(final Message message) {
+        final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
+        final PokemonSpawn pokemonSpawn = new PoGoSJSpawnMessageProcessorV2().processWithoutThrowing(message)
+                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
+        assertAll(failureMsgWithJumpUrl,
+                // Many will fail the cp/iv/level checks because they are candies
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
+                () -> assertTrue(pokemonSpawn.getIv().isPresent()),
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent()),
+                () -> assertTrue(pokemonSpawn.getLocationDescription().isPresent())
+        );
+    }
+
     private static Stream<Message> pogosj100ivMessages() {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POGOSJ1_100IV))
                 .filter(PROCESSOR::canProcess)
+                .filter(message -> message.getIdLong() == 417840014093713409L)
                 .limit(20000);
     }
 
@@ -90,5 +111,11 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POGOSJ1_100IVMAX))
                 .filter(PROCESSOR::canProcess)
                 .limit(8200); // messages earlier than this limit have less description lines and fails parsing
+    }
+
+    private static Stream<Message> pogosjTweetMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POGOSJ1_TWEETS))
+                .filter(new PoGoSJSpawnMessageProcessorV2()::canProcess)
+                .limit(20000);
     }
 }
