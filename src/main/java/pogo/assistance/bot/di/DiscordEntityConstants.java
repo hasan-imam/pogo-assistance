@@ -1,5 +1,7 @@
 package pogo.assistance.bot.di;
 
+import com.google.common.collect.ImmutableSet;
+import java.util.Set;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -37,7 +39,10 @@ public class DiscordEntityConstants {
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
     public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
     public static final long USER_ID_AP_ALERT_BOT = 419631321577553921L;
-    public static final long USER_ID_SS_NOVA_BOT = 409919681106018315L;
+    public static final Set<Long> USER_ID_SS_NOVA_BOTS = ImmutableSet.of(
+            409919681106018315L,
+            409786475564105728L,
+            409780035470360576L);
 
     // IDs for discord servers/channels
 

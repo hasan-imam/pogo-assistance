@@ -1,6 +1,6 @@
 package pogo.assistance.data.extraction.source.discord.safarisight;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_SS_NOVA_BOT;
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_SS_NOVA_BOTS;
 
 import com.google.common.base.Verify;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class SafariSightSpawnMessageProcessor implements MessageProcessor<Pokemo
     @Override
     public boolean canProcess(@Nonnull final Message message) {
         return message.getChannel().getType() == ChannelType.PRIVATE
-                && message.getAuthor().getIdLong() == USER_ID_SS_NOVA_BOT;
+                && USER_ID_SS_NOVA_BOTS.contains(message.getAuthor().getIdLong());
     }
 
     @Override
