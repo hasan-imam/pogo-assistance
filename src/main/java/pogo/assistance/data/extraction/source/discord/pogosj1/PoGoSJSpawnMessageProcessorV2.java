@@ -23,6 +23,11 @@ import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
+/**
+ * This parses both tweet messages and other iv/level specific channels. But usually tweets includes what's posted in
+ * those other channels too, so there's a chance of duplication. Duplication is prevented at the
+ * {@link pogo.assistance.data.exchange.spawn.PokemonSpawnExchange exchange} level.
+ */
 @Slf4j
 public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSpawn> {
 

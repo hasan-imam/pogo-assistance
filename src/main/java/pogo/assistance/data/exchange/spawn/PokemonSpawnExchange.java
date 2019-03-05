@@ -83,11 +83,13 @@ public class PokemonSpawnExchange implements Closeable {
         });
 
         // To prevent the map from growing endlessly, do some clean up
-        if (spawnToExpiration.size() > EVICTION_SIZE_THRESHOLD) {
+        final int spawnMapSize = spawnToExpiration.size();
+        if (spawnMapSize > EVICTION_SIZE_THRESHOLD) {
             if (stopwatch.elapsed().compareTo(EVICTION_TIME_THRESHOLD) > 0) {
                 stopwatch.reset().start();
                 final Instant now = Instant.now();
                 spawnToExpiration.entrySet().removeIf(entry -> entry.getValue().compareTo(now) < 0);
+                log.debug("Cleared spawn de-duping map. Size went from {} to {}.", spawnMapSize, spawnToExpiration.size());
             }
         }
 
