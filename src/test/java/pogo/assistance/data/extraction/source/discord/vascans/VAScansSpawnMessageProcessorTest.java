@@ -59,7 +59,7 @@ class VAScansSpawnMessageProcessorTest {
                                 "https://raw.githubusercontent.com/seehuge/prdmicons/master/pokemon_icon_137_00.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.5032968319611, -77.4763366993049))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Porygon").id(137).gender(Gender.NONE).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Porygon").id(137).gender(Gender.UNKNOWN).build())
                                 .iv(100)
                                 .cp(1376)
                                 .level(28)
@@ -77,7 +77,7 @@ class VAScansSpawnMessageProcessorTest {
                                 "http://www.pokestadium.com/sprites/xy/snubbull.gif"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.5590068664644, -77.4713175517577))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Snubbull").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Snubbull").id(-1).gender(Gender.UNKNOWN).build())
                                 .iv(100)
                                 .cp(316)
                                 .level(9)
@@ -94,7 +94,7 @@ class VAScansSpawnMessageProcessorTest {
                                 "http://www.pokestadium.com/sprites/xy/ponyta.gif"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.532389113078, -77.422010687266))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Ponyta").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Ponyta").id(-1).gender(Gender.UNKNOWN).build())
                                 .iv(100)
                                 .cp(331)
                                 .level(7)

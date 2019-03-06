@@ -50,6 +50,7 @@ class CollectorJDAModule {
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
         jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListener(new KillSwitch());
 
         try {
             return jdaBuilder.build().awaitReady();
