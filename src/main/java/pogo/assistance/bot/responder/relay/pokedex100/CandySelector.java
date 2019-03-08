@@ -16,7 +16,7 @@ public class CandySelector {
 
             // non nesting
             .add("lapras")
-            .add("hitmonlee").add("hitmonchan")
+//            .add("hitmonlee").add("hitmonchan")
             .add("lickitung")
             .add("chansey").add("blissey")
             .add("snorlax")
@@ -27,7 +27,7 @@ public class CandySelector {
             .add("larvitar").add("pupitar").add("tyranitar")
             .add("ralts").add("kirlia").add("gardevoir").add("gallade")
             .add("slakoth").add("vigoroth").add("slaking")
-            .add("hariyama")
+//            .add("hariyama")
             .add("trapinch")
             .add("lunatone").add("solrock")
             .add("feebas")
