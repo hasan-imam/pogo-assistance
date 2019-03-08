@@ -8,13 +8,14 @@ import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 
 @UtilityClass
-class CandySelector {
+public class CandySelector {
 
     private static final Set<String> CANDY_POKEMON_NAMES = ImmutableSet.<String>builder()
             // max evolved
             .add("Charizard").add("Venusaur").add("Blastoise").add("Meganium").add("Typhlosion").add("Feraligatr")
 
             // non nesting
+            .add("lapras")
             .add("hitmonlee").add("hitmonchan")
             .add("lickitung")
             .add("chansey").add("blissey")

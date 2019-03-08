@@ -34,7 +34,12 @@ public class DiscordEntityConstants {
 
     public static final long USER_ID_H13M = 471666614857629696L;
     public static final long USER_ID_QN234 = 520113608978333706L;
+
+    public static final long USER_ID_KYRION = 209827394721284097L;
     public static final long USER_ID_JOSH = 289560054708043777L;
+    public static final long USER_ID_WOPZ = 237557740342476801L;
+    public static final long USER_ID_GHOST = 331557091884138496L;
+    public static final long USER_ID_HERO = 367080731350138880L;
 
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
     public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
