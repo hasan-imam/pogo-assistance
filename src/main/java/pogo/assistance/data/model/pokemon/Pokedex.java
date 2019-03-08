@@ -25,7 +25,6 @@ public class Pokedex {
 
     private static Map<Integer, PokedexFileEntry> ID_TO_ENTRY;
     private static Map<String, PokedexFileEntry> ENGLISH_NAME_TO_ENTRY;
-    private static Map<String, PokedexFileEntry> CHINESE_NAME_TO_ENTRY;
 
     static {
         loadEntriesToIndex();
@@ -38,30 +37,41 @@ public class Pokedex {
 
     public static Optional<PokedexEntry> getPokedexEntryFor(final String pokemonName, @Nullable final Gender gender) {
         final String lowerCaseName = pokemonName.toLowerCase();
-        return Optional.ofNullable(Optional.ofNullable(ENGLISH_NAME_TO_ENTRY.get(lowerCaseName))
-                .orElseGet(() -> CHINESE_NAME_TO_ENTRY.get(lowerCaseName)))
+        final Optional<PokedexEntry> lookedUp = Optional.ofNullable(ENGLISH_NAME_TO_ENTRY.get(lowerCaseName))
                 .map(entry -> getPokedexEntryFromFileEntry(entry, gender));
+        if (!lookedUp.isPresent()) {
+            // Look-up isn't straightforward for some. Put some effort into matching those.
+            if (lowerCaseName.contains("nidoran")) {
+                if (gender != null && gender != Gender.UNKNOWN && gender != Gender.NONE) {
+                    return getPokedexEntryFor(gender == Gender.FEMALE ? 29 : 32, gender);
+                } else {
+                    return Optional.empty();
+                }
+            }
+            if (lowerCaseName.contains("unown")) {
+                // TODO: implement some basic inference to figure out the 'unown' letter
+                return getPokedexEntryFor(201, Gender.NONE);
+            }
+        }
+        return lookedUp;
     }
 
     private static void loadEntriesToIndex() {
-        if (ID_TO_ENTRY != null && ENGLISH_NAME_TO_ENTRY != null && CHINESE_NAME_TO_ENTRY != null) {
+        if (ID_TO_ENTRY != null && ENGLISH_NAME_TO_ENTRY != null) {
             return;
         }
 
         final Map<Integer, PokedexFileEntry> idToEntry = new ConcurrentHashMap<>();
         final Map<String, PokedexFileEntry> englishNameToEntry = new ConcurrentHashMap<>();
-        final Map<String, PokedexFileEntry> chineseNameToEntry = new ConcurrentHashMap<>();
 
         final List<PokedexFileEntry> entries = readEntriesFromFile();
         entries.forEach(pokedexFileEntry -> {
             idToEntry.put(pokedexFileEntry.getId(), pokedexFileEntry);
             englishNameToEntry.put(pokedexFileEntry.getName().get("english").toLowerCase(), pokedexFileEntry);
-            chineseNameToEntry.put(pokedexFileEntry.getName().get("chinese"), pokedexFileEntry);
         });
 
         ID_TO_ENTRY = Collections.unmodifiableMap(idToEntry);
         ENGLISH_NAME_TO_ENTRY = Collections.unmodifiableMap(englishNameToEntry);
-        CHINESE_NAME_TO_ENTRY = Collections.unmodifiableMap(chineseNameToEntry);
     }
 
     private static List<PokedexFileEntry> readEntriesFromFile() {

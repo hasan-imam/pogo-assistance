@@ -7,17 +7,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
+import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
+@Slf4j
 public class NycPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     /*
@@ -75,12 +77,9 @@ public class NycPokeMapSpawnMessageProcessor implements MessageProcessor<Pokemon
         final Gender gender = Optional.ofNullable(titleMatcher.group("gender"))
                 .map(genderString -> genderString.equalsIgnoreCase("Male") ? Gender.MALE
                         : (genderString.equalsIgnoreCase("Female") ? Gender.FEMALE : null))
-                .orElse(Gender.NONE);
-        final PokedexEntry pokedexEntry = ImmutablePokedexEntry.builder()
-                .id(-1) // TODO: implement a name to id lookup
-                .name(pokemonName)
-                .gender(gender)
-                .build();
+                .orElse(Gender.UNKNOWN);
+        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(pokemonName, gender)
+                .orElseThrow(() -> new UnsupportedOperationException("Unable to lookup dex entry with name: " + pokemonName));
 
         final Optional<Double> iv = Optional.ofNullable(titleMatcher.group("iv"))
                 .map(ivString -> ivString.replaceAll("[\\D]*", ""))

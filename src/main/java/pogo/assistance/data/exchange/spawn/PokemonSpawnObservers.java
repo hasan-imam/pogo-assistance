@@ -34,6 +34,8 @@ class PokemonSpawnObservers implements Runnable {
         while (!stopRunning.get()) {
             try {
                 final PokemonSpawn pokemonSpawn = spawnQueue.take();
+                // TODO: If things break inside this observer calls, no error is logged, unless the observer
+                // itself bothers to do it. This needs to be done better with guava service or something.
                 observers.forEach(observer -> executorService.submit(() -> observer.observe(pokemonSpawn)));
             } catch (final InterruptedException e) {
                 log.warn("Pokemon spawn observers stopping on interruption.", e);

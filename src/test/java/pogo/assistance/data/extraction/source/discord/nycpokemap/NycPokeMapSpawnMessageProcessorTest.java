@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
+import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -41,7 +41,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Map: https://maps.google.com/maps?q=40.66286302,-73.91315637"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.66286302, -73.91315637))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Unown K").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Unown", Gender.NONE).get())
                                 .iv(97)
                                 .cp(436)
                                 .level(15)
@@ -62,7 +62,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Map: https://maps.google.com/maps?q=40.63222953,-74.15542049"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.63222953, -74.15542049))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Abra").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Abra", Gender.UNKNOWN).get())
                                 .iv(97)
                                 .cp(488)
                                 .level(15)
@@ -83,7 +83,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Maps: https://maps.google.com/maps?q=40.88774859,-73.87769538"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.88774859, -73.87769538))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Yanma").id(-1).gender(Gender.FEMALE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Yanma", Gender.FEMALE).get())
                                 .iv(100)
                                 .cp(420)
                                 .level(10)
@@ -103,7 +103,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Maps: https://maps.google.com/maps?q=40.75605381,-73.9818551"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.75605381, -73.9818551))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Nidoran♂").id(-1).gender(Gender.MALE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Nidoran♂", Gender.MALE).get())
                                 .iv(73)
                                 .cp(739)
                                 .level(35)
@@ -124,7 +124,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Maps: https://maps.google.com/maps?q=40.76193535,-73.91958643"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.76193535, -73.91958643))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Beldum").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Beldum", Gender.UNKNOWN).get())
                                 .iv(77)
                                 .cp(558)
                                 .level(21)
@@ -145,7 +145,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 "Google Map: https://maps.google.com/maps?q=40.63872944,-73.70995033"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(40.63872944, -73.70995033))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Wigglytuff").id(-1).gender(Gender.NONE).build())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor("Wigglytuff", Gender.UNKNOWN).get())
                                 .iv(0)
                                 .cp(853)
                                 .build()
