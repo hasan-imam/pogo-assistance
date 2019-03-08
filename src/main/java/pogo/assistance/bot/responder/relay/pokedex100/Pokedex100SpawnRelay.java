@@ -1,5 +1,6 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
+import com.google.common.util.concurrent.RateLimiter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -30,6 +31,8 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final User qn234 = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_QN234);
 
+    private final RateLimiter rateLimiter = RateLimiter.create(5);
+
     /**
      * @param relayingUserJda
      *      JDA with user {@link JDA#getSelfUser() user} who will relay the spawn info. User needs to have necessary
@@ -42,25 +45,29 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     @Override
     public void observe(final PokemonSpawn pokemonSpawn) {
-        final String command;
-        if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
-            command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn);
-            log.info("Sending 100 IV command: {}", command);
-        } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
-            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
-            log.info("Sending 90+ IV command: {}", command);
-        } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry())) {
-            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
-            log.info("Sending candy command: {}", command);
-        } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
-            command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
-            log.info("Sending high CP command: {}", command);
-        } else {
-            log.debug("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
-            return;
+        rateLimiter.acquire();
+        try {
+            final String command;
+            if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
+                command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn);
+                log.info("Sending 100 IV command: {}", command);
+            } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+                log.info("Sending 90+ IV command: {}", command);
+            } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry())) {
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+                log.info("Sending candy command: {}", command);
+            } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
+                log.info("Sending high CP command: {}", command);
+            } else {
+                log.trace("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
+                return;
+            }
+            sendCommandToSuperBotP(command);
+        } catch (final RuntimeException e) {
+            log.error("Error observing spawn: " + pokemonSpawn, e);
         }
-
-        sendCommandToSuperBotP(command);
     }
 
     private void sendCommandToSuperBotP(final String command) {
