@@ -45,7 +45,6 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     @Override
     public void observe(final PokemonSpawn pokemonSpawn) {
-        rateLimiter.acquire();
         try {
             final String command;
             if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
@@ -64,6 +63,8 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
                 log.trace("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
                 return;
             }
+
+            rateLimiter.acquire();
             sendCommandToSuperBotP(command);
         } catch (final RuntimeException e) {
             log.error("Error observing spawn: " + pokemonSpawn, e);
