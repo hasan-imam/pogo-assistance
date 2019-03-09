@@ -25,7 +25,7 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
     // Following counts are exclusive, e.g. if something is counted towards 90+ iv, it's not included in 80+ iv count
     private long countWithIv100 = 0, countWithIv90 = 0, countWithIv80 = 0, countWithIv50 = 0, countWithIv0 = 0;
     private long countWithCp3000 = 0, countWithCp2000 = 0;
-    private long countWithLevel30 = 0;
+    private long countWithLevel35 = 0, countWithLevel30 = 0;
     private long countTotalCandies = 0, countCandiesHasIv = 0;
 
     @Override
@@ -35,7 +35,9 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
         countTotal++;
         pokemonSpawn.getLevel().ifPresent(level -> {
             countHasLevel++;
-            if (level >= 30) {
+            if (level == 35) {
+                countWithLevel35++;
+            } else if (level >= 30) {
                 countWithLevel30++;
             }
         });
@@ -83,8 +85,8 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
                 .append(String.format("\t%d had CP -> %d 3000+, %d 2000+",
                         countHasCp, countWithCp3000, countWithCp2000));
         message.append(System.lineSeparator())
-                .append(String.format("\t%d had level -> %d 30+",
-                        countHasLevel, countWithLevel30));
+                .append(String.format("\t%d had level -> %d @ 35, %d 30+",
+                        countHasLevel, countWithLevel35, countWithLevel30));
         message.append(System.lineSeparator())
                 .append(String.format("\t%d candies, %d of them have iv",
                 countTotalCandies, countCandiesHasIv));
