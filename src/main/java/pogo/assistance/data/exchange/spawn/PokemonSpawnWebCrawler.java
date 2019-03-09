@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
+import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
 import pogo.assistance.data.extraction.source.web.pokemap.spawn.PokemonSpawnFetcher;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -31,6 +32,17 @@ public class PokemonSpawnWebCrawler extends AbstractScheduledService {
     }
 
     @Override
+    protected void startUp() throws Exception {
+        // Skip initial burst of spawns by querying the map and hydrating the duplicate detector
+        final SpawnSummaryStatistics spawnSummaryStatistics = new SpawnSummaryStatistics();
+        spawnFetchers.parallelStream()
+                .map(PokemonSpawnWebCrawler::executeFetch)
+                .flatMap(List::stream)
+                .forEach(spawnSummaryStatistics);
+        log.info("Discarding the spawns from initial fetch. Stats: \n{}", spawnSummaryStatistics.toString());
+    }
+
+    @Override
     protected void runOneIteration() throws Exception {
         final AtomicInteger fetchedCount = new AtomicInteger(0);
         final AtomicInteger offeredCount = new AtomicInteger(0);
@@ -47,7 +59,7 @@ public class PokemonSpawnWebCrawler extends AbstractScheduledService {
 
     @Override
     protected Scheduler scheduler() {
-        return Scheduler.newFixedRateSchedule(0, 1, TimeUnit.MINUTES);
+        return Scheduler.newFixedRateSchedule(30, 30, TimeUnit.SECONDS);
     }
 
     @Override

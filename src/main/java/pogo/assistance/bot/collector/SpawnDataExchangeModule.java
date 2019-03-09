@@ -11,7 +11,6 @@ import pogo.assistance.bot.responder.relay.pokedex100.Pokedex100SpawnRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
-import pogo.assistance.data.extraction.source.discord.nycpokemap.NycPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessorV2;
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
@@ -52,7 +51,8 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
-                        new NycPokeMapSpawnMessageProcessor(),
+//                        // Disabling in favor of the web crawler
+//                        new NycPokeMapSpawnMessageProcessor(),
                         new PoGoSJSpawnMessageProcessorV2(),
                         new VAScansSpawnMessageProcessor(),
                         new WeCatchSpawnMessageProcessor(),

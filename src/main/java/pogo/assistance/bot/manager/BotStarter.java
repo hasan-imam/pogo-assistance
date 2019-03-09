@@ -2,8 +2,11 @@ package pogo.assistance.bot.manager;
 
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.AccountType;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import picocli.CommandLine;
 import pogo.assistance.bot.collector.DaggerSpawnDataCollectorBotComponent;
 import pogo.assistance.bot.collector.SpawnDataCollectorBot;
@@ -22,6 +25,8 @@ public class BotStarter {
     private final static String USER_TOKEN = DiscordEntityConstants.OWNING_USER_TOKEN;
 
     public static void main(final String[] args) {
+        setupJULToSlf4jBridge();
+
         final BotStarterInput input = new BotStarterInput();
         final CommandLine commandLine = new CommandLine(input);
         commandLine.parse(args);
@@ -46,7 +51,7 @@ public class BotStarter {
                 .relayingUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();
-        bot.run(); // run on this thread
+        bot.startAsync().awaitRunning();
     }
 
     private static void startResponder(final Set<ListenerId> inputListenerIds) {
@@ -85,6 +90,16 @@ public class BotStarter {
                 .build()
                 .getJobExecutionBot();
         jobExecutionBot.run();
+    }
+
+    // For reference: https://stackoverflow.com/questions/9117030/jul-to-slf4j-bridge
+    private static void setupJULToSlf4jBridge() {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+        Logger.getGlobal().setLevel(Level.ALL);
+
+        // Unless JUL is configured to log CONFIG level messages, this line won't print
+        Logger.getLogger(BotStarter.class.getName()).log(Level.CONFIG, "JUL-to-SLF4J bridge working");
     }
 
 }

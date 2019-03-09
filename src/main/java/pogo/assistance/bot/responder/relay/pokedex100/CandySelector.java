@@ -14,6 +14,9 @@ public class CandySelector {
             // max evolved
             .add("Charizard").add("Venusaur").add("Blastoise").add("Meganium").add("Typhlosion").add("Feraligatr")
 
+            // rare regional
+            .add("Pachirisu")
+
             // non nesting
             .add("lapras")
 //            .add("hitmonlee").add("hitmonchan")

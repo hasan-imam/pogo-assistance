@@ -47,6 +47,10 @@ dependencies {
     compile 'com.google.dagger:dagger:2.19'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.19'
 
+    /////////////////////////////// CONNECTIVITY //////////////////////////////
+
+    compile 'org.apache.httpcomponents.client5:httpclient5:5.0-beta3'
+
     //////////////////////////////// UTILITIES ////////////////////////////////
 
     // Guava: https://github.com/google/guava#adding-guava-to-your-build
@@ -70,6 +74,11 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.11.2'
     compile 'org.apache.logging.log4j:log4j-core:2.11.2'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.2'
+    /*
+     * JUL bridge to SLF4J: https://www.slf4j.org/legacy.html#jul-to-slf4j
+     * Needs some programmatic setup as well: https://stackoverflow.com/questions/9117030/jul-to-slf4j-bridge
+     */
+    compile 'org.slf4j:jul-to-slf4j:1.7.5'
 
     ///////////////////////////////// TESTING /////////////////////////////////
 
