@@ -1,4 +1,4 @@
-package pogo.assistance.data.extraction.source.web.pokemap.spawn;
+package pogo.assistance.data.extraction.source.web;
 
 import java.io.Closeable;
 import java.util.List;

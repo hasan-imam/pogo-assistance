@@ -45,6 +45,8 @@ public class DiscordEntityConstants {
     public static final long USER_ID_FLPM_ALERT_BOT_7 = 347260485210603531L;
     public static final long USER_ID_AP_ALERT_BOT = 419631321577553921L;
     public static final Set<Long> USER_ID_SS_NOVA_BOTS = ImmutableSet.of(
+            400906588581265410L,
+            409803661502447626L,
             409919681106018315L,
             409786475564105728L,
             409780035470360576L);

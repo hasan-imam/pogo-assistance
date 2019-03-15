@@ -1,20 +1,10 @@
-package pogo.assistance.data.extraction.source.web.pokemap.spawn;
+package pogo.assistance.data.extraction.source.web.pokemap;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,25 +12,23 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.hc.client5.http.classic.methods.RequestBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import com.google.common.base.Preconditions;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
+import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
 import pogo.assistance.data.model.Region;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 @Slf4j
 public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
-
-    private static final Map<Region, URI> BASE_URLS_OF_SOURCES = ImmutableMap.of(
-            Region.NYC, URI.create("https://nycpokemap.com"),
-            Region.SG, URI.create("https://sgpokemap.com"));
 
     private static final String QUERIED_POKEMON_ID_LIST = IntStream.rangeClosed(1, 493)
             .mapToObj(String::valueOf)
@@ -57,7 +45,7 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
             final Gson gson,
             final CloseableHttpClient closeableHttpClient,
             final Region region) {
-        Preconditions.checkArgument(BASE_URLS_OF_SOURCES.containsKey(region));
+        Preconditions.checkArgument(PokeMapUtils.BASE_URLS_OF_SOURCES.containsKey(region));
         this.gson = gson;
         this.closeableHttpClient = closeableHttpClient;
         this.region = region;
@@ -93,31 +81,10 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
     }
 
     private Optional<JsonObject> executeQuery(final ClassicHttpRequest httpGetRequest) {
-        try {
-            final CloseableHttpResponse response = closeableHttpClient.execute(httpGetRequest);
-            if (response.getCode() == HttpStatus.SC_SUCCESS) {
-                final Optional<JsonObject> fetched = Optional.ofNullable(EntityUtils.toString(response.getEntity(), UTF_8))
-                        .filter(s -> !s.isEmpty())
-                        .map(s -> gson.fromJson(s, JsonObject.class));
-                if (fetched.isPresent()) {
-                    updateLastQueryTime(fetched.get());
-                } else {
-                    log.error("Received empty/null response from executing request: {}", httpGetRequest);
-                }
-                return fetched;
-            } else {
-                log.error("Query unsuccessful...{}Request URI: {}{}Response: {}",
-                        System.lineSeparator(), httpGetRequest.getUri(), System.lineSeparator(), response);
-            }
-        } catch (final IOException e) {
-            log.error(String.format("Failed to execute HTTP request: %s", httpGetRequest), e);
-        } catch (final ParseException e) {
-            log.error("Failed to parse response", e);
-        } catch (final URISyntaxException e) {
-            log.error("Failed to get URI from request: {}", httpGetRequest);
-        }
-
-        return Optional.empty();
+        final Optional<JsonObject> fetched = PokeMapUtils.executeQuery(closeableHttpClient, httpGetRequest)
+                .map(s -> gson.fromJson(s, JsonObject.class));
+        fetched.ifPresent(this::updateLastQueryTime);
+        return fetched;
     }
 
     private void updateLastQueryTime(final JsonObject fullPayload) {
@@ -132,7 +99,7 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
     }
 
     private ClassicHttpRequest prepareRequest() {
-        final String baseUrl = BASE_URLS_OF_SOURCES.get(region).toString();
+        final String baseUrl = PokeMapUtils.BASE_URLS_OF_SOURCES.get(region).toString();
         final String uri = baseUrl + "/query2.php?" +
                 "since=" + lastQueryTime.get().toEpochMilli()/1000 + // server expects seconds, not milliseconds
                 "&mons=" + QUERIED_POKEMON_ID_LIST +

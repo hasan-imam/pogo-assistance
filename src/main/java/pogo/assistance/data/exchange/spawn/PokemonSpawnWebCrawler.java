@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
-import pogo.assistance.data.extraction.source.web.pokemap.spawn.PokemonSpawnFetcher;
+import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**

@@ -1,4 +1,4 @@
-package pogo.assistance.data.extraction.source.web.pokemap.spawn;
+package pogo.assistance.data.extraction.source.web.pokemap;
 
 import com.google.gson.annotations.SerializedName;
 import io.jenetics.jpx.WayPoint;

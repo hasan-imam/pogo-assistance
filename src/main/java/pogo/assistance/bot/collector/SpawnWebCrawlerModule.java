@@ -10,8 +10,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
-import pogo.assistance.data.extraction.source.web.pokemap.spawn.PokeMapSpawnDataExtractor;
-import pogo.assistance.data.extraction.source.web.pokemap.spawn.PokemonSpawnFetcher;
+import pogo.assistance.data.extraction.source.web.pokemap.PokeMapSpawnDataExtractor;
+import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
 import pogo.assistance.data.model.Region;
 
 @Module
