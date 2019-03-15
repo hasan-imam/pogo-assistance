@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public enum  Region {
+    CL(":flag_cl:"),
     FR(":flag_fr:"),
     JP(":flag_jp:"),
     NYC(":flag_us:"),
+    PN(":flag_us:"),
     SG(":flag_sg:");
 
     @Getter
