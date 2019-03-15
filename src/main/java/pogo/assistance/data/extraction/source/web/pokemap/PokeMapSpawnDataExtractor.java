@@ -54,12 +54,13 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
     @Override
     public synchronized List<PokemonSpawn> fetch() {
         final ClassicHttpRequest httpGetRequest = prepareRequest();
-        final AtomicInteger fetchedCount = new AtomicInteger(0);
-        final AtomicInteger uniqueCount = new AtomicInteger(0);
         final Instant prevQueryTime = lastQueryTime.get();
         final JsonArray spawnEntries = executeQuery(httpGetRequest)
                 .map(jsonObject -> jsonObject.getAsJsonArray("pokemons"))
                 .orElseGet(JsonArray::new);
+
+        final AtomicInteger fetchedCount = new AtomicInteger(0);
+        final AtomicInteger uniqueCount = new AtomicInteger(0);
         final SpawnSummaryStatistics statistics = new SpawnSummaryStatistics();
         final List<PokemonSpawn> pokemonSpawns = StreamSupport.stream(spawnEntries.spliterator(), false)
                 .peek(__ -> fetchedCount.incrementAndGet())

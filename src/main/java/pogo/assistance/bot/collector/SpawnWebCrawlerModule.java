@@ -12,6 +12,7 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
 import pogo.assistance.data.extraction.source.web.pokemap.PokeMapSpawnDataExtractor;
 import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
+import pogo.assistance.data.extraction.source.web.radar.RadarSpawnDataExtractor;
 import pogo.assistance.data.model.Region;
 
 @Module
@@ -31,7 +32,8 @@ public class SpawnWebCrawlerModule {
             final CloseableHttpClient closeableHttpClient) {
         return ImmutableSet.of(
                 new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.NYC),
-                new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.SG)
+                new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.SG),
+                new RadarSpawnDataExtractor(gson, closeableHttpClient, Region.CL)
         );
     }
 
