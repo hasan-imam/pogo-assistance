@@ -59,7 +59,7 @@ class RadarUtils {
             Region.PN, URI.create("http://extonpokemap.com")); // TODO fix PN
 
     private static final Set<String> NECESSARY_COOKIES = ImmutableSet.of("SESSION-TOKEN", "CSRF-TOKEN");
-q
+
     public static Optional<String> executeQuery(
             final Region region,
             final CookieStore cookieStore,
