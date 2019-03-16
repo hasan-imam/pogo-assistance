@@ -30,6 +30,8 @@ import pogo.assistance.bot.responder.relay.pokedex100.CandySelector;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
 import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
 import pogo.assistance.data.model.Region;
+import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 @Slf4j
@@ -68,12 +70,15 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
         final SpawnSummaryStatistics statistics = new SpawnSummaryStatistics();
         final List<PokemonSpawn> pokemonSpawns = StreamSupport.stream(spawnEntries.spliterator(), false)
                 .peek(__ -> fetchedCount.incrementAndGet())
-                .distinct()
-                .peek(__ -> uniqueCount.incrementAndGet())
                 .map(jsonElement -> gson.fromJson(jsonElement, PokemonSpawnEntry.class))
                 .map(PokemonSpawnEntry::asPokemonSpawn)
+                .distinct()
+                .peek(__ -> uniqueCount.incrementAndGet())
                 .filter(pokemonSpawn -> !pokemonSpawn.getDespawnTime().isPresent()
                         || !pokemonSpawn.getDespawnTime().get().isBefore(Instant.now()))
+                // Exclude dsp time since it might be introducing a lot of duplicates
+                // TODO: investigate and re-enable
+                .map(pokemonSpawn -> ImmutablePokemonSpawn.builder().from(pokemonSpawn).despawnTime(Optional.empty()).build())
                 .peek(statistics)
                 .collect(Collectors.toList());
 
