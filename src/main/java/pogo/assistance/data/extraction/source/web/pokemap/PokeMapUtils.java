@@ -4,19 +4,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.hc.client5.http.HttpResponseException;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -53,19 +52,13 @@ class PokeMapUtils {
             Region.NYC, URI.create("https://nycpokemap.com"),
             Region.SG, URI.create("https://sgpokemap.com"));
 
-    public static Optional<String> executeQuery(final CloseableHttpClient closeableHttpClient, final ClassicHttpRequest httpGetRequest) {
-        final URI requestUri;
-        try {
-            requestUri = httpGetRequest.getUri();
-        } catch (final URISyntaxException e) {
-            log.error("Failed to get URI from request: {}", httpGetRequest);
-            return Optional.empty();
-        }
+    public static Optional<String> executeQuery(final CloseableHttpClient closeableHttpClient, final HttpUriRequest httpGetRequest) {
+        final URI requestUri = httpGetRequest.getURI();
 
         // Print request URI, instead of the request itself, for all error logs. Printing request leaves out the base URL.
         try {
             final CloseableHttpResponse response = closeableHttpClient.execute(httpGetRequest);
-            if (response.getCode() == HttpStatus.SC_SUCCESS) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return Optional.ofNullable(EntityUtils.toString(response.getEntity(), UTF_8))
                         .filter(s -> !s.isEmpty());
             } else {

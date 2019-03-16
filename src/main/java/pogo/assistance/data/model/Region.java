@@ -12,7 +12,7 @@ public enum  Region {
     FR(":flag_fr:"),
     JP(":flag_jp:"),
     NYC(":flag_us:"),
-    PN(":flag_us:"),
+    EXTON(":flag_us:"),
     SG(":flag_sg:");
 
     @Getter

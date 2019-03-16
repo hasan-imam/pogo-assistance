@@ -13,10 +13,10 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 import javax.inject.Inject;
 
-import org.apache.hc.client5.http.classic.methods.RequestBuilder;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -53,7 +53,7 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
 
     @Override
     public synchronized List<PokemonSpawn> fetch() {
-        final ClassicHttpRequest httpGetRequest = prepareRequest();
+        final HttpUriRequest httpGetRequest = prepareRequest();
         final Instant prevQueryTime = lastQueryTime.get();
         final JsonArray spawnEntries = executeQuery(httpGetRequest)
                 .map(jsonObject -> jsonObject.getAsJsonArray("pokemons"))
@@ -81,7 +81,7 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
         return pokemonSpawns;
     }
 
-    private Optional<JsonObject> executeQuery(final ClassicHttpRequest httpGetRequest) {
+    private Optional<JsonObject> executeQuery(final HttpUriRequest httpGetRequest) {
         final Optional<JsonObject> fetched = PokeMapUtils.executeQuery(closeableHttpClient, httpGetRequest)
                 .map(s -> gson.fromJson(s, JsonObject.class));
         fetched.ifPresent(this::updateLastQueryTime);
@@ -99,7 +99,7 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
         log.trace("Updated last fetch time for {} from {} to {}", region, lastQueryTime.getAndSet(inserted), inserted);
     }
 
-    private ClassicHttpRequest prepareRequest() {
+    private HttpUriRequest prepareRequest() {
         final String baseUrl = PokeMapUtils.BASE_URLS_OF_SOURCES.get(region).toString();
         final String uri = baseUrl + "/query2.php?" +
                 "since=" + lastQueryTime.get().toEpochMilli()/1000 + // server expects seconds, not milliseconds

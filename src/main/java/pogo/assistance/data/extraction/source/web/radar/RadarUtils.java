@@ -4,7 +4,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,26 +15,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.hc.client5.http.HttpResponseException;
-import org.apache.hc.client5.http.classic.methods.RequestBuilder;
-import org.apache.hc.client5.http.cookie.Cookie;
-import org.apache.hc.client5.http.cookie.CookieOrigin;
-import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.cookie.MalformedCookieException;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.cookie.BasicPathHandler;
-import org.apache.hc.client5.http.impl.cookie.BasicSecureHandler;
-import org.apache.hc.client5.http.impl.cookie.LaxExpiresHandler;
-import org.apache.hc.client5.http.impl.cookie.LaxMaxAgeHandler;
-import org.apache.hc.client5.http.impl.cookie.RFC6265CookieSpec;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.CookieOrigin;
+import org.apache.http.cookie.MalformedCookieException;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.cookie.BasicPathHandler;
+import org.apache.http.impl.cookie.BasicSecureHandler;
+import org.apache.http.impl.cookie.LaxExpiresHandler;
+import org.apache.http.impl.cookie.LaxMaxAgeHandler;
+import org.apache.http.impl.cookie.RFC6265CookieSpec;
+import org.apache.http.util.EntityUtils;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -51,37 +52,33 @@ class RadarUtils {
     public static final Map<Integer, Weather> WEATHER_ID_MAPPING = ImmutableMap.<Integer, Weather>builder()
             // TODO: verify all weather types
             // TODO: setup some automatic test to catch issues with this mapping changing
+            .put(0, Weather.CLOUDY) // TODO verify this again
             .put(1, Weather.SUNNY) // or clear - checked
+            .put(2, Weather.RAIN)
+            .put(4, Weather.CLOUDY)
             .build();
 
     public static final Map<Region, URI> BASE_URLS_OF_SOURCES = ImmutableMap.of(
             Region.CL, URI.create("http://radarpokemon.cl"),
-            Region.PN, URI.create("http://extonpokemap.com")); // TODO fix PN
+            Region.EXTON, URI.create("https://www.extonpokemap.com")); // TODO fix EXTON
 
     private static final Set<String> NECESSARY_COOKIES = ImmutableSet.of("SESSION-TOKEN", "CSRF-TOKEN");
 
     public static Optional<String> executeQuery(
             final Region region,
             final CookieStore cookieStore,
-            final ClassicHttpRequest httpGetRequest,
+            final HttpUriRequest httpGetRequest,
             final CloseableHttpClient closeableHttpClient) {
-        final URI requestUri;
-        try {
-            requestUri = httpGetRequest.getUri();
-        } catch (final URISyntaxException e) {
-            log.error("Failed to get URI from request: {}", httpGetRequest);
-            return Optional.empty();
-        }
 
         // Set cookies, update if necessary
         final HttpClientContext localContext = HttpClientContext.create();
         refreshCookies(cookieStore, closeableHttpClient, region);
         localContext.setCookieStore(cookieStore);
 
-        // Print request URI, instead of the request itself, for all error logs. Printing request leaves out the base URL.
+        final URI requestUri = httpGetRequest.getURI();
         try {
             final CloseableHttpResponse response = closeableHttpClient.execute(httpGetRequest, localContext);
-            if (response.getCode() == HttpStatus.SC_SUCCESS) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 // Update cookies from response - most likely unnecessary
                 parseCookiesFromSetCookieHeaders(BASE_URLS_OF_SOURCES.get(region), response.getHeaders("Set-Cookie"))
                         .forEach(cookieStore::addCookie);
@@ -109,7 +106,7 @@ class RadarUtils {
         cookieStore.clearExpired(Date.from(Instant.now()));
         if (!hasNecessaryCookies(cookieStore)) {
             final List<Cookie> fetchedCookies = getRequiredCookies(closeableHttpClient, region);
-            Verify.verify(hasNecessaryCookies(fetchedCookies));
+            Verify.verify(hasNecessaryCookies(fetchedCookies), "Failed to get required cookies from server");
             fetchedCookies.forEach(cookieStore::addCookie);
         }
     }
@@ -130,23 +127,17 @@ class RadarUtils {
      */
     private static List<Cookie> getRequiredCookies(final CloseableHttpClient closeableHttpClient, final Region region) {
         final String baseUrl = RadarUtils.BASE_URLS_OF_SOURCES.get(region).toString();
-        final ClassicHttpRequest httpGetRequest = RequestBuilder.get(baseUrl)
+        final HttpUriRequest httpGetRequest = RequestBuilder.get(baseUrl)
+                .setConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
+                        .build())
                 .setHeader(HttpHeaders.CONNECTION, "keep-alive")
                 .setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.9")
                 .build();
         try {
             final CloseableHttpResponse response = closeableHttpClient.execute(httpGetRequest);
-            if (response.getCode() == HttpStatus.SC_SUCCESS) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return parseCookiesFromSetCookieHeaders(BASE_URLS_OF_SOURCES.get(region), response.getHeaders("Set-Cookie"));
-                //                return Stream.of(response.getHeaders("Set-Cookie"))
-                //                        .map(NameValuePair::getValue)
-                //                        .map(headerValue -> headerValue.split(";")[0].split("="))
-                //                        .map(pair -> {
-                //                            final BasicClientCookie cookie = new BasicClientCookie(pair[0], pair[1]);
-                //                            cookie.setDomain(BASE_URLS_OF_SOURCES.get(region).getHost());
-                //                            cookie.setPath("/");
-                //                            return cookie;
-                //                        }).collect(Collectors.toList());
             } else {
                 log.error("Failed to do initial get request to the server: {}. Error response: {}", baseUrl, response);
             }
@@ -166,8 +157,6 @@ class RadarUtils {
 
     /**
      * Exists to parse this server's cookies in more lenient way, specifically the 'domain' attribute, which is always empty.
-     * Looks like this beta version of Apache HTTP client v5 doesn't allow lenient parsing out of box. We can replace this if we figure out a better
-     * alternative.
      */
     private static class LaxCookieSpec extends RFC6265CookieSpec {
         private static LaxCookieSpec INSTANCE = new LaxCookieSpec();

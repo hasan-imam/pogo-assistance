@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
@@ -32,8 +33,9 @@ interface PokemonSpawnEntry {
     @SerializedName("lon")
     double longitude();
 
-    @SerializedName("expire_timestamp_true")
-    boolean despawnTimeAccurate(); // TODO wtf is this
+    // Exton map uses the value, CL map uses the alternate
+    @SerializedName(value = "expire_timestamp_verified", alternate = "expire_timestamp_true")
+    boolean despawnTimeVerified();
 
     @SerializedName("expire_timestamp")
     long despawnTimeEpochMilli();
@@ -114,16 +116,34 @@ interface PokemonSpawnEntry {
 
     @Value.Derived
     default Set<PokedexEntry.Form> forms() {
+        // TODO: process this: https://www.extonpokemap.com/static/data/en.json?_=1551496519
         switch (pokemonId()) {
             case 351: // castform
                 final Weather weather = weather().map(RadarUtils.WEATHER_ID_MAPPING::get).orElse(Weather.CLEAR);
                 switch (form()) {
-                    case 30: // normal
-                        Verify.verify(weather == Weather.SUNNY || weather == Weather.CLEAR);
+                    case 29: // normal
+                        Verify.verify(weather == Weather.CLOUDY);
                         return Collections.singleton(PokedexEntry.Form.CASTFORM_NORMAL);
+                    case 30: // sunny
+                        Verify.verify(weather == Weather.SUNNY || weather == Weather.CLEAR);
+                        return Collections.singleton(PokedexEntry.Form.CASTFORM_SUNNY);
+                    case 31:
+                        Verify.verify(weather == Weather.RAIN);
+                        return Collections.singleton(PokedexEntry.Form.CASTFORM_RAINY);
                     default:
                         LoggerFactory.getLogger(PokemonSpawnEntry.class).error("Unhandled castform form: {} with weather: {}", form(), weather());
                         return Collections.emptySet();
+                }
+                // TODO verify
+                // 52 -> meowth, form 63 -> non alolan
+                // 37 -> 55 non alolan vulpix
+                // 50 -> 60 diglett what form??
+                // TODO: does same form number for different pokemon mean differnt thing?
+            case 19: // rattata
+                if (form() == 46) {
+                    return Collections.singleton(PokedexEntry.Form.ALOLAN);
+                } else {
+                    return Collections.emptySet();
                 }
             // TODO: implement handling
         }
@@ -141,7 +161,9 @@ interface PokemonSpawnEntry {
         level().ifPresent(builder::level);
         cp().ifPresent(builder::cp);
         iv().ifPresent(builder::iv);
-        builder.despawnTime(Instant.ofEpochMilli(despawnTimeEpochMilli() * 1000));
+        if (despawnTimeVerified()) {
+            builder.despawnTime(Instant.ofEpochMilli(despawnTimeEpochMilli() * 1000));
+        }
         return builder.build();
     }
 

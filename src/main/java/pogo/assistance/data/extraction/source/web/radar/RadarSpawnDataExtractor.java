@@ -13,16 +13,15 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.inject.Inject;
 
-import org.apache.hc.client5.http.classic.methods.RequestBuilder;
-import org.apache.hc.client5.http.cookie.BasicCookieStore;
-import org.apache.hc.client5.http.cookie.Cookie;
-import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.NameValuePair;
-import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.http.HttpHeaders;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -50,10 +49,10 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
         this.region = region;
         this.cookieStore = new BasicCookieStore();
 
+        // Calling this populates the cookie store with the csrf token which is needed for the fetch
         RadarUtils.refreshCookies(this.cookieStore, closeableHttpClient, region);
         // TODO: check what happens are cookie expiration
         // TODO: add handling for expiration
-        // TODO: should this be outside of the constructor?
     }
 
     @Override
@@ -105,10 +104,20 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
         log.trace("Updated last fetch time for {} from {} to {}", region, lastQueryTime.getAndSet(lastUpdateTime), lastUpdateTime);
     }
 
-    private ClassicHttpRequest prepareRequest() {
+    private HttpUriRequest prepareRequest() {
         final String baseUrl = RadarUtils.BASE_URLS_OF_SOURCES.get(region).toString();
         final String uri = baseUrl + "/api/get_data";
-        List<NameValuePair> params = new ArrayList<>();
+        return RequestBuilder.post(uri)
+                .setEntity(new UrlEncodedFormEntity((Iterable<? extends NameValuePair>) prepareFormParameters()))
+                .setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=UTF-8")
+                .setHeader(HttpHeaders.HOST, RadarUtils.BASE_URLS_OF_SOURCES.get(region).getHost()) // TODO check what this outputs
+                .setHeader(HttpHeaders.REFERER, baseUrl)
+                .setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.9")
+                .build();
+    }
+
+    private List<NameValuePair> prepareFormParameters() {
+        final List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("_", Long.toString(Instant.now().toEpochMilli()/1000)));
 
@@ -120,7 +129,7 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
                 params.add(new BasicNameValuePair("min_lon", "-90.66072463989259"));
                 params.add(new BasicNameValuePair("max_lon", "-62.887287139892585"));
                 break;
-            case PN:
+            case EXTON:
                 params.add(new BasicNameValuePair("min_lat", "38.90684728656818"));
                 params.add(new BasicNameValuePair("max_lat", "41.46619022337922"));
                 params.add(new BasicNameValuePair("min_lon", "-76.9719958305359"));
@@ -147,12 +156,8 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
 
         params.add(new BasicNameValuePair("last_update", Long.toString(lastQueryTime.get().toEpochMilli()/1000)));
         params.add(new BasicNameValuePair("_csrf", getCsrfToken()));
-        return RequestBuilder.post(uri)
-                .setEntity(new UrlEncodedFormEntity(params))
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded; charset=UTF-8")
-                .setHeader(HttpHeaders.REFERER, baseUrl)
-                .setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.9")
-                .build();
+
+        return params;
     }
 
     @Override
