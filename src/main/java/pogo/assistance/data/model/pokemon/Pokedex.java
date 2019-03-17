@@ -7,9 +7,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+
 import lombok.experimental.UtilityClass;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.serde.FileIOUtils;
@@ -19,15 +23,21 @@ import pogo.assistance.data.serde.SerDeModule;
  * TODO: implement a ditto disguise possibility lookup
  * TODO: need more flexible 'form' qualifier
  * TODO: implement a non-nesting pokemon lookup (need to be kept up to date with game changes)
+ * TODO: use genderless index in lookup methods
  */
 @UtilityClass
 public class Pokedex {
 
     private static Map<Integer, PokedexFileEntry> ID_TO_ENTRY;
+    /**
+     * Entries keyed by lower case pokemon name.
+     */
     private static Map<String, PokedexFileEntry> ENGLISH_NAME_TO_ENTRY;
+    private static Set<Integer> GENDERLESS_POKEMON_IDS;
 
     static {
         loadEntriesToIndex();
+        loadGenderlessPokemonIndex();
     }
 
     public static Optional<PokedexEntry> getPokedexEntryFor(final int pokemonId, @Nullable final Gender gender) {
@@ -56,6 +66,10 @@ public class Pokedex {
         return lookedUp;
     }
 
+    public boolean isGenderLess(final int pokemonId) {
+        return GENDERLESS_POKEMON_IDS.contains(pokemonId);
+    }
+
     private static void loadEntriesToIndex() {
         if (ID_TO_ENTRY != null && ENGLISH_NAME_TO_ENTRY != null) {
             return;
@@ -72,6 +86,14 @@ public class Pokedex {
 
         ID_TO_ENTRY = Collections.unmodifiableMap(idToEntry);
         ENGLISH_NAME_TO_ENTRY = Collections.unmodifiableMap(englishNameToEntry);
+    }
+
+    private static void loadGenderlessPokemonIndex() {
+        GENDERLESS_POKEMON_IDS = PokedexConstants.GENDERLESS_POKEMON_NAMES.stream()
+                .map(String::toLowerCase)
+                .map(lowerCaseName -> Objects.requireNonNull(ENGLISH_NAME_TO_ENTRY.get(lowerCaseName)))
+                .map(PokedexFileEntry::getId)
+                .collect(Collectors.toSet());
     }
 
     private static List<PokedexFileEntry> readEntriesFromFile() {
@@ -92,7 +114,8 @@ public class Pokedex {
         return ImmutablePokedexEntry.builder()
                 .id(pokedexFileEntry.getId())
                 .name(pokedexFileEntry.getName().get("english"))
-                .gender(gender == null ? Gender.UNKNOWN : gender)
+                .gender(isGenderLess(pokedexFileEntry.getId()) ? Gender.NONE
+                        : (gender == null ? Gender.UNKNOWN : gender))
                 .build();
     }
 
