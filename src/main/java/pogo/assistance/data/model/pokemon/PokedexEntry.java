@@ -45,6 +45,7 @@ public interface PokedexEntry {
 
     /**
      * Qualifier, when present on an entry, can alter various attributes (e.g. move set, type, stats) of the pokemon.
+     * TODO: this needs a serious refactor - plain enums are not sufficient or easy to use
      */
     enum Form {
         // General forms
@@ -52,7 +53,12 @@ public interface PokedexEntry {
         SHINY,
 
         // Pokemon specific forms
-        CASTFORM_SUNNY, CASTFORM_RAINY, CASTFORM_SHOWY, CASTFORM_NORMAL
+        CASTFORM_SUNNY, CASTFORM_RAINY, CASTFORM_SNOWY, CASTFORM_NORMAL,
+
+        // Unown forms - there are logic that heavily depends on these names and them being declared in specific order!
+        UNOWN_A, UNOWN_B, UNOWN_C, UNOWN_D, UNOWN_E, UNOWN_F, UNOWN_G, UNOWN_H, UNOWN_I, UNOWN_J, UNOWN_K, UNOWN_L, UNOWN_M,
+        UNOWN_N, UNOWN_O, UNOWN_P, UNOWN_Q, UNOWN_R, UNOWN_S, UNOWN_T, UNOWN_U, UNOWN_V, UNOWN_W, UNOWN_X, UNOWN_Y, UNOWN_Z,
+        UNOWN_EXCLAMATION, UNOWN_QUESTION
     }
 
 }

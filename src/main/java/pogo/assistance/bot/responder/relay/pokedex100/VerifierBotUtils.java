@@ -5,6 +5,7 @@ import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.FEMALE;
 import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.MALE;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import lombok.experimental.UtilityClass;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Form;
@@ -85,7 +86,7 @@ public class VerifierBotUtils {
                 return name + "sunny";
             } else if (pokedexEntry.getForms().contains(Form.CASTFORM_RAINY)) {
                 return name + "raniy";
-            } else if (pokedexEntry.getForms().contains(Form.CASTFORM_SHOWY)) {
+            } else if (pokedexEntry.getForms().contains(Form.CASTFORM_SNOWY)) {
                 return name + "snowy";
             } else if (pokedexEntry.getForms().contains(Form.CASTFORM_NORMAL)) {
                 return name + "normal";
@@ -95,13 +96,29 @@ public class VerifierBotUtils {
         }
 
         if (name.toLowerCase().contains("unown")) {
-            /*
-             * Expected conversions:
-             *   - "unown" -> "unown"
-             *   - "Unown A" -> "UnownA"
-             *   - "Unown - B" -> "UnownB"
-             */
-            return name.replaceAll("[\\s\\-]", "");
+            if (!pokedexEntry.getForms().isEmpty()) {
+                // Form present - prepare name using that
+                Verify.verify(pokedexEntry.getForms().size() == 1);
+                final Form form = pokedexEntry.getForms().iterator().next();
+                Verify.verify(form.name().contains("UNOWN"));
+                final String character = form.name().replaceFirst("UNOWN_", "");
+                if (character.length() == 1) {
+                    return "Unown" + character;
+                } else if (character.contains("EXCLAMATION")) {
+                    return "Unown!";
+                } else {
+                    return "Unown?";
+                }
+            } else {
+                /*
+                 * Sometimes the form isn't present and the name is not exactly just "Unown" but with some characters added
+                 * Expected conversions:
+                 *   - "unown" -> "unown"
+                 *   - "Unown A" -> "UnownA"
+                 *   - "Unown - B" -> "UnownB"
+                 */
+                return name.replaceAll("[\\s\\-]", "");
+            }
         }
 
         if (pokedexEntry.getForms().contains(ALOLAN)) {
