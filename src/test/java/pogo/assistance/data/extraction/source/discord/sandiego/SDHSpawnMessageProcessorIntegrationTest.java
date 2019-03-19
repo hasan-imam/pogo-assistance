@@ -42,7 +42,6 @@ class SDHSpawnMessageProcessorIntegrationTest {
         Optional.ofNullable(jda).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"SDHVIPBotDirectMessages"})
     void process_MessageFromSDVVIPBot_ReturnsExpected(final Message message) {

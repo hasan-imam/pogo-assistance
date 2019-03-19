@@ -2,23 +2,22 @@ package pogo.assistance.data.extraction.source.discord.wecatch;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_WECATCH_IV90UP;
 
-import com.google.common.base.Verify;
-import io.jenetics.jpx.Point;
-import io.jenetics.jpx.WayPoint;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Verify;
+import io.jenetics.jpx.Point;
+import io.jenetics.jpx.WayPoint;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
-import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
@@ -83,12 +82,11 @@ public class WeCatchSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
         final Matcher physiologyDataLineMatcher = DESCRIPTION_LINE_PHYSIOLOGY_PATTERN.matcher(descriptionLines[5]);
         Verify.verify(physiologyDataLineMatcher.find());
-        final Gender gender = SpawnMessageParsingUtils.parseGenderFromSign(physiologyDataLineMatcher.group("gender"));
         // TODO: parse height, weight
 
-        final int pokemonId = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
-        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(pokemonId, gender)
-                .orElseThrow(() -> new IllegalArgumentException("Failed to lookup dex entry from id: " + pokemonId));
+        final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
+                messageEmbed.getThumbnail().getUrl(),
+                SpawnMessageParsingUtils.parseGenderFromSign(physiologyDataLineMatcher.group("gender")));
         final PokemonSpawn pokemonSpawn = ImmutablePokemonSpawn.builder()
                 .from(parseWeCatchLocationLink(messageEmbed.getUrl()))
                 .pokedexEntry(pokedexEntry)

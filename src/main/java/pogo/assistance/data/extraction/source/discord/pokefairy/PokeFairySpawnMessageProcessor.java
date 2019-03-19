@@ -2,19 +2,19 @@ package pogo.assistance.data.extraction.source.discord.pokefairy;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_POKEFAIRY_NEOSF90IV;
 
-import com.google.common.base.Verify;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Verify;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
@@ -48,7 +48,6 @@ public class PokeFairySpawnMessageProcessor implements MessageProcessor<PokemonS
 
         final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(messageEmbed.getTitle());
         Verify.verify(titleMatcher.find());
-        final String pokemonName = titleMatcher.group("pokemon");
         final double iv = Double.parseDouble(titleMatcher.group("iv"));
         final int level = Integer.parseInt(titleMatcher.group("level"));
         final String locationDescription = descriptionLines[6];
@@ -59,16 +58,10 @@ public class PokeFairySpawnMessageProcessor implements MessageProcessor<PokemonS
         final Gender gender = SpawnMessageParsingUtils.parseGenderFromSign(cpAndGenderLineMatcher.group("gender"));
 
         /*
-         * We parse the pokemon name but actually use the ID to look it up in dex, things like male Nidoran gets posted
+         * We don't parse pokemon name, and instead use the ID to look it up in dex, because things like male Nidoran gets posted
          * as 'Nidoranm' and messes up simple string match based look up.
          */
-        final int pokemonId = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
-        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(pokemonId, gender)
-                .map(basePokedexEntry -> ImmutablePokedexEntry.builder().from(basePokedexEntry))
-                .orElseThrow(() -> new IllegalArgumentException("Failed to lookup dex entry from id: " + pokemonId))
-                .id(pokemonId)
-                .gender(gender)
-                .build();
+        final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(messageEmbed.getThumbnail().getUrl(), gender);
         final PokemonSpawn pokemonSpawn = ImmutablePokemonSpawn.builder()
                 .from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()))
                 .pokedexEntry(pokedexEntry)

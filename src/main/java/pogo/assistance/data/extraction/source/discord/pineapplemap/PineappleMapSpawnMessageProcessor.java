@@ -17,9 +17,8 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
-import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
+import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
@@ -72,10 +71,9 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
         final String compiledText = messageEmbed.toJSONObject().toString();
 
-        final int id = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
-        final Gender gender = extractGender(compiledText);
-        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(id, gender)
-                .orElseThrow(() -> new UnsupportedOperationException("Unable to lookup dex entry with ID: " + id));
+        final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
+                messageEmbed.getThumbnail().getUrl(),
+                extractGender(compiledText));
 
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(extractLocation(compiledText)

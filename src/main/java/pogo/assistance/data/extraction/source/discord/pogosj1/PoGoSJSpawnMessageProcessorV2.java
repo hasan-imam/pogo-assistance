@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
+import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn.Builder;
 import pogo.assistance.data.model.pokemon.Pokedex;
@@ -27,6 +28,9 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  * This parses both tweet messages and other iv/level specific channels. But usually tweets includes what's posted in
  * those other channels too, so there's a chance of duplication. Duplication is prevented at the
  * {@link pogo.assistance.data.exchange.spawn.PokemonSpawnExchange exchange} level.
+ *
+ * Note: messages do not have the right cast form image, but one can infer the form by looking at the boost/weather
+ * info in the message.
  */
 @Slf4j
 public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSpawn> {
@@ -71,8 +75,11 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
         final String compiledText = message.getAuthor().getName() + " " +
                 messageEmbed.getTitle() + " " + messageEmbed.getDescription();
 
-        final int id = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
+        final String novaBotThumbnailUrl = messageEmbed.getThumbnail().getUrl();
+        final int id = NovaBotProcessingUtils.parsePokemonIdFromNovaBotAssetUrl(novaBotThumbnailUrl);
         final Gender gender = extractGender(messageEmbed.getTitle());
+        final Set<PokedexEntry.Form> forms = NovaBotProcessingUtils.parseFormsFromNovaBotAssetUrl(novaBotThumbnailUrl);
+
         final PokedexEntry pokedexEntry;
         // Special handling for Ditto: Since the thumbnail shows the disguised pokemon, parsing ID from the thumbnail
         // url essentailly gives us the wrong pokemon.
@@ -83,10 +90,10 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
             final PokedexEntry disguisePokedexEntry = Pokedex.getPokedexEntryFor(disguisePokemonName, gender).orElseThrow(() ->
                     new UnsupportedOperationException("Failed to lookup Ditto's disguise pokemon: " + disguisePokemonName));
             Verify.verify(disguisePokedexEntry.getId() == id);
-            pokedexEntry = Pokedex.getPokedexEntryFor("ditto", gender)
+            pokedexEntry = Pokedex.getPokedexEntryFor(132, gender, forms)
                     .orElseThrow(() -> new IllegalStateException("Failed to look up Ditto entry by name"));
         } else {
-            pokedexEntry = Pokedex.getPokedexEntryFor(id, gender)
+            pokedexEntry = Pokedex.getPokedexEntryFor(id, gender, forms)
                     .orElseThrow(() -> new UnsupportedOperationException("Unable to lookup dex entry with ID: " + id));
         }
 
@@ -122,7 +129,6 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
             return Optional.ofNullable(matcher.group("cp"))
                     .map(String::trim)
                     .filter(s -> !s.contains("?"))
-//                    .filter(s -> s.matches("\\d+"))
                     .map(Integer::parseInt);
         }
         return Optional.empty();
@@ -134,7 +140,6 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
             return Optional.ofNullable(matcher.group("iv"))
                     .map(String::trim)
                     .filter(s -> !s.contains("?"))
-//                    .filter(s -> s.matches("[\\d\\.]+"))
                     .map(Double::parseDouble);
         }
         return Optional.empty();
@@ -158,29 +163,4 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
         }
         return Gender.UNKNOWN;
     }
-
-//    private void verifyConsistencyWithAuthoName(final Message message, final PokemonSpawn pokemonSpawn) {
-//        // Parse fields from summary
-//        final String summaryWithoutGenderSigns = message.getAuthor().getName().replaceAll("[♀♂⚲]", "").trim();
-//        final Matcher summaryMatcher = MESSAGE_TITLE_PATTERN.matcher(summaryWithoutGenderSigns);
-//        Verify.verify(summaryMatcher.matches());
-//        final String pokemonName = summaryMatcher.group("pokemon").trim().toLowerCase();
-//        final Gender gender = extractGender(message.getAuthor().getName());
-//        final int cp = Integer.parseInt(summaryMatcher.group("cp"));
-//        final double iv = Double.parseDouble(summaryMatcher.group("iv"));
-//        final int level = Integer.parseInt(summaryMatcher.group("level"));
-//
-//        // Match data from summary with the data parsed from embed
-//        final PokedexEntry pokedexEntry = pokemonSpawn.getPokedexEntry();
-//        if (!pokedexEntry.getName().toLowerCase().contains(pokemonName)) {
-//            // Names can mismatch in some benign cases such as Unowns. So just logging a mismatch as warning.
-//            log.warn("Pokemon name mismatched between dex entry ({}) and parsed name ({})",
-//                    pokedexEntry.getName(), pokemonName);
-//        }
-//        Verify.verify(pokedexEntry.getGender().equals(gender));
-//        Verify.verify(pokemonSpawn.getIv().isPresent() && pokemonSpawn.getIv().get().compareTo(iv) == 0);
-//        Verify.verify(pokemonSpawn.getCp().isPresent() && pokemonSpawn.getCp().get().compareTo(cp) == 0);
-//        Verify.verify(pokemonSpawn.getLevel().isPresent() && pokemonSpawn.getLevel().get().compareTo(level) == 0);
-//    }
-
 }

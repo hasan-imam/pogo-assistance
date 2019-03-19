@@ -2,21 +2,21 @@ package pogo.assistance.data.extraction.source.discord.safarisight;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_SS_NOVA_BOTS;
 
-import com.google.common.base.Verify;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Verify;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
-import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
@@ -55,8 +55,6 @@ public class SafariSightSpawnMessageProcessor implements MessageProcessor<Pokemo
 
         final Matcher nameGenderLevelMatcher = DESCRIPTION_LINE_NAME_GENDER_LVL_PATTERN.matcher(descriptionLines[0]);
         Verify.verify(nameGenderLevelMatcher.find());
-        final String pokemonName = nameGenderLevelMatcher.group("pokemon").trim();
-        final Gender gender = SpawnMessageParsingUtils.parseGenderFromSign(nameGenderLevelMatcher.group("gender"));
         final int level = Integer.parseInt(nameGenderLevelMatcher.group("level"));
 
         final Matcher ivCpLineMatcher = DESCRIPTION_LINE_IV_CP_PATTERN.matcher(descriptionLines[1]);
@@ -64,11 +62,9 @@ public class SafariSightSpawnMessageProcessor implements MessageProcessor<Pokemo
         final double iv = Double.parseDouble(ivCpLineMatcher.group("iv"));
         final int cp = Integer.parseInt(ivCpLineMatcher.group("cp"));
 
-        final PokedexEntry pokedexEntry = ImmutablePokedexEntry.builder()
-                .name(pokemonName)
-                .id(SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl()))
-                .gender(gender)
-                .build();
+        final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
+                messageEmbed.getThumbnail().getUrl(),
+                SpawnMessageParsingUtils.parseGenderFromSign(nameGenderLevelMatcher.group("gender")));
         final PokemonSpawn pokemonSpawn = ImmutablePokemonSpawn.builder()
                 .from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()))
                 .pokedexEntry(pokedexEntry)

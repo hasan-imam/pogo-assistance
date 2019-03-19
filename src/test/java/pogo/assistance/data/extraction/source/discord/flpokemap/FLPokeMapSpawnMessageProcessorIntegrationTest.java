@@ -9,15 +9,16 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.security.auth.login.LoginException;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Message;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
@@ -44,7 +45,6 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
         Optional.ofNullable(jda).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"flpmAlertBot7Dms"})
     void process_FlpmPrivateChannel_ReturnsExpected(final Message message) {
@@ -56,12 +56,11 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
                 () -> assertTrue(pokemonSpawn.getIv().isPresent()),
                 () -> assertTrue(pokemonSpawn.getCp().isPresent()),
                 () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
-                () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.NONE),
+                () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.UNKNOWN, "unknown gender"),
                 () -> assertTrue(pokemonSpawn.getPokedexEntry().getId() > 0),
                 () -> assertFalse(pokemonSpawn.getPokedexEntry().getName().isEmpty()));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"apAlertBot7Dms"})
     void process_ApPrivateChannel_ReturnsExpected(final Message message) {
@@ -73,7 +72,7 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
                 () -> assertTrue(pokemonSpawn.getIv().isPresent()),
                 () -> assertTrue(pokemonSpawn.getCp().isPresent()),
                 () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
-                () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.NONE),
+                () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.UNKNOWN, "unknown gender"),
                 () -> assertTrue(pokemonSpawn.getPokedexEntry().getId() > 0),
                 () -> assertFalse(pokemonSpawn.getPokedexEntry().getName().isEmpty()));
     }
