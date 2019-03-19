@@ -116,4 +116,25 @@ class PokedexConstants {
             .add("Zygarde")
             .build();
 
+    public static final Set<String> ALOLAN_POSSIBLE_POKEMON_NAMES = ImmutableSet.<String>builder()
+        .add("Exeggutor")
+        .add("Grimer")
+        .add("Muk")
+        .add("Meowth")
+        .add("Persian")
+        .add("Vulpix")
+        .add("Ninetales")
+        .add("Sandshrew")
+        .add("Sandslash")
+        .add("Rattata")
+        .add("Raticate")
+        .add("Diglett")
+        .add("Dugtrio")
+        .add("Geodude")
+        .add("Graveler")
+        .add("Golem")
+        .add("Raichu")
+        .add("Marowak")
+        .build();
+    
 }

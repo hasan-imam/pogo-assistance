@@ -34,21 +34,28 @@ public class Pokedex {
      */
     private static Map<String, PokedexFileEntry> ENGLISH_NAME_TO_ENTRY;
     private static Set<Integer> GENDERLESS_POKEMON_IDS;
+    private static Set<Integer> ALOLAN_POSSIBLE_POKEMON_IDS;
 
     static {
         loadEntriesToIndex();
         loadGenderlessPokemonIndex();
+        loadAlolanPossiblePokemonIndex();
+    }
+
+    public static Optional<PokedexEntry> getPokedexEntryFor(final int pokemonId, @Nullable final Gender gender, final Set<PokedexEntry.Form> forms) {
+        return Optional.ofNullable(ID_TO_ENTRY.get(pokemonId))
+                .map(pokedexFileEntry -> getPokedexEntryFromFileEntry(pokedexFileEntry, gender, forms));
     }
 
     public static Optional<PokedexEntry> getPokedexEntryFor(final int pokemonId, @Nullable final Gender gender) {
         return Optional.ofNullable(ID_TO_ENTRY.get(pokemonId))
-                .map(pokedexFileEntry -> getPokedexEntryFromFileEntry(pokedexFileEntry, gender));
+                .map(pokedexFileEntry -> getPokedexEntryFromFileEntry(pokedexFileEntry, gender, Collections.emptySet()));
     }
 
     public static Optional<PokedexEntry> getPokedexEntryFor(final String pokemonName, @Nullable final Gender gender) {
         final String lowerCaseName = pokemonName.toLowerCase();
         final Optional<PokedexEntry> lookedUp = Optional.ofNullable(ENGLISH_NAME_TO_ENTRY.get(lowerCaseName))
-                .map(entry -> getPokedexEntryFromFileEntry(entry, gender));
+                .map(entry -> getPokedexEntryFromFileEntry(entry, gender, Collections.emptySet()));
         if (!lookedUp.isPresent()) {
             // Look-up isn't straightforward for some. Put some effort into matching those.
             if (lowerCaseName.contains("nidoran")) {
@@ -68,6 +75,10 @@ public class Pokedex {
 
     public boolean isGenderLess(final int pokemonId) {
         return GENDERLESS_POKEMON_IDS.contains(pokemonId);
+    }
+
+    public boolean canHaveAlolanForm(final int pokemonId) {
+        return ALOLAN_POSSIBLE_POKEMON_IDS.contains(pokemonId);
     }
 
     private static void loadEntriesToIndex() {
@@ -96,6 +107,14 @@ public class Pokedex {
                 .collect(Collectors.toSet());
     }
 
+    private static void loadAlolanPossiblePokemonIndex() {
+        ALOLAN_POSSIBLE_POKEMON_IDS = PokedexConstants.ALOLAN_POSSIBLE_POKEMON_NAMES.stream()
+                .map(String::toLowerCase)
+                .map(lowerCaseName -> Objects.requireNonNull(ENGLISH_NAME_TO_ENTRY.get(lowerCaseName)))
+                .map(PokedexFileEntry::getId)
+                .collect(Collectors.toSet());
+    }
+
     private static List<PokedexFileEntry> readEntriesFromFile() {
         try {
             return Arrays.asList(SerDeModule.providesGson(Collections.emptyMap(), Collections.emptySet()).fromJson(
@@ -110,12 +129,14 @@ public class Pokedex {
 
     private static PokedexEntry getPokedexEntryFromFileEntry(
             final PokedexFileEntry pokedexFileEntry,
-            @Nullable final Gender gender) {
+            @Nullable final Gender gender,
+            final Set<PokedexEntry.Form> forms) {
         return ImmutablePokedexEntry.builder()
                 .id(pokedexFileEntry.getId())
                 .name(pokedexFileEntry.getName().get("english"))
                 .gender(isGenderLess(pokedexFileEntry.getId()) ? Gender.NONE
                         : (gender == null ? Gender.UNKNOWN : gender))
+                .forms(forms)
                 .build();
     }
 
