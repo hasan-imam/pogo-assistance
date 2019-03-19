@@ -57,4 +57,15 @@ public class SpawnMessageParsingUtils {
         Verify.verify(thumbnailUrlMatcher.find());
         return Integer.parseInt(thumbnailUrlMatcher.group("id"));
     }
+
+    public static Gender parseGenderFromEmbedTitle(final String title) {
+        if (title.contains("♂")) {
+            return Gender.MALE;
+        } else if (title.contains("♀")) {
+            return Gender.FEMALE;
+        } else if (title.contains("⚲")) {
+            return Gender.NONE;
+        }
+        return Gender.NONE;
+    }
 }

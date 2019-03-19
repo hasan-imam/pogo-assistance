@@ -56,7 +56,7 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
         final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(embedTitleWithoutGenderSigns);
         Verify.verify(titleMatcher.find());
         final int id = SpawnMessageParsingUtils.parsePokemonIdFromNovaBotSprite(messageEmbed.getThumbnail().getUrl());
-        final Gender gender = parseGenderFromEmbedTitle(messageEmbed.getTitle());
+        final Gender gender = SpawnMessageParsingUtils.parseGenderFromEmbedTitle(messageEmbed.getTitle());
         final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(id, gender)
                 .orElseThrow(() -> new UnsupportedOperationException("Unable to lookup dex entry with ID: " + id));
 
@@ -74,17 +74,6 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
                 .iv(Double.parseDouble(titleMatcher.group("iv")))
                 .locationDescription(descriptionLines[2].replaceFirst("Location:", "").trim())
                 .build());
-    }
-
-    private static Gender parseGenderFromEmbedTitle(final String title) {
-        if (title.contains("♂")) {
-            return Gender.MALE;
-        } else if (title.contains("♀")) {
-            return Gender.FEMALE;
-        } else if (title.contains("⚲")) {
-            return Gender.NONE;
-        }
-        return Gender.NONE;
     }
 
 }
