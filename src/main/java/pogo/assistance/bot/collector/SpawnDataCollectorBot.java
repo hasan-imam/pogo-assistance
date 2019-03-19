@@ -1,10 +1,13 @@
 package pogo.assistance.bot.collector;
 
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_OWNING_USER;
 
 import com.google.common.base.Verify;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
@@ -18,22 +21,30 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
 public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
     private final JDA relayingUserJda;
-    private final JDA collectingUserJda;
+    private final JDA corruptedUserJda;
+    private final JDA beninUserJda;
     private final PokemonSpawnWebCrawler pokemonSpawnWebCrawler;
 
     private final AtomicBoolean shutdownTriggered = new AtomicBoolean(false);
 
     /**
-     * @param relayingUserJda
+     * @param owningUserJda
      *      JDA with the relaying user. At this point, the relaying user's JDA is also used for data collection.
      */
     @Inject
     public SpawnDataCollectorBot(
-            @Named(NAME_JDA_OWNING_USER) final JDA relayingUserJda,
-            @Named(NAME_JDA_CORRUPTED_USER) final JDA collectingUserJda,
+            @Named(NAME_JDA_OWNING_USER) final JDA owningUserJda,
+            @Named(NAME_JDA_CORRUPTED_USER) final JDA corruptedUserJda,
+            @Named(NAME_JDA_BENIN_USER) final JDA beninUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler) {
-        this.relayingUserJda = relayingUserJda;
-        this.collectingUserJda = collectingUserJda;
+
+        Verify.verify(hasRegisteredListener(corruptedUserJda), "Corrupted user JDA is expected to have registered listener(s)");
+        Verify.verify(hasRegisteredListener(beninUserJda), "Benin user JDA is expected to have registered listener(s)");
+        Verify.verify(hasRegisteredListener(owningUserJda), "Owning user JDA is expected to have registered listener(s)");
+
+        this.relayingUserJda = owningUserJda;
+        this.corruptedUserJda = corruptedUserJda;
+        this.beninUserJda = beninUserJda;
         this.pokemonSpawnWebCrawler = pokemonSpawnWebCrawler;
     }
 
@@ -46,18 +57,14 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     @Override
     public void run() {
         while (!shutdownTriggered.get() && relayingUserJda.getStatus() != Status.SHUTDOWN) {
-            // This verification throwing just puts the bot in a half dead state
-            // TODO: do something better - important verification failure should kill the bot
-            Verify.verify(!collectingUserJda.getRegisteredListeners().isEmpty(),
-                    "Data collecting user's JDA is expected to have registered listener(s)");
             log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                    collectingUserJda.getSelfUser().getName(), collectingUserJda.getStatus(), collectingUserJda.getPing(), collectingUserJda.getResponseTotal());
+                    corruptedUserJda.getSelfUser().getName(), corruptedUserJda.getStatus(), corruptedUserJda.getPing(), corruptedUserJda.getResponseTotal());
             log.info("{}'s JDA status: {}, ping: {}, response count: {}",
                     relayingUserJda.getSelfUser().getName(), relayingUserJda.getStatus(), relayingUserJda.getPing(), relayingUserJda.getResponseTotal());
             try {
+                // TODO verify that this shutdown works as expected
                 synchronized (shutdownTriggered) {
                     TimeUnit.MINUTES.timedWait(shutdownTriggered, 5);
-//                    TimeUnit.MINUTES.sleep(5);
                 }
             } catch (final InterruptedException e) {
                 log.error("Spawn data collector/relay interrupted. Attempting to close underlying services.", e);
@@ -70,7 +77,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     @Override
     protected void shutDown() {
         pokemonSpawnWebCrawler.stopAsync();
-        collectingUserJda.shutdown();
+        corruptedUserJda.shutdown();
         relayingUserJda.shutdown();
         pokemonSpawnWebCrawler.awaitTerminated();
     }
@@ -81,5 +88,9 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         synchronized (shutdownTriggered) {
             shutdownTriggered.notifyAll();
         }
+    }
+
+    private static boolean hasRegisteredListener(final JDA jda) {
+        return !jda.getRegisteredListeners().isEmpty();
     }
 }

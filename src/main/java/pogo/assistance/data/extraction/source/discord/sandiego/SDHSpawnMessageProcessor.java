@@ -3,6 +3,7 @@ package pogo.assistance.data.extraction.source.discord.sandiego;
 import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -62,7 +63,12 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
         extractCp(compiledText).ifPresent(builder::cp);
         extractIv(compiledText).ifPresent(builder::iv);
 
-        return Optional.of(builder.build());
+        final PokemonSpawn pokemonSpawn = builder.build();
+        if (fudgeFactorCheck()) {
+            log.debug("RNG test passed! Reporting spawn from SDH: {}", pokemonSpawn);
+            return Optional.of(pokemonSpawn);
+        }
+        return Optional.empty();
     }
 
     private static Optional<Double> extractIv(final String fullMessageText) {
@@ -93,5 +99,13 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
                     .map(Integer::parseInt);
         }
         return Optional.empty();
+    }
+
+    /**
+     * @return
+     *      Return true once every 20 calls since we don't want to fully launch this parser just yet.
+     */
+    private static boolean fudgeFactorCheck() {
+        return ThreadLocalRandom.current().nextInt(1, 20) == 10;
     }
 }

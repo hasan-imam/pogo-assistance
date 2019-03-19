@@ -12,7 +12,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_OWNER = "owning_user_token";
     public static final String NAME_USER_TOKEN_M8M = "m8m_bot_token";
     public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
-    public static final String NAME_USER_TOKEN_BENIN = "corrupted_user_token";
+    public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";

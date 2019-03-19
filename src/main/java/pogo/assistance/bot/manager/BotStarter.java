@@ -47,8 +47,9 @@ public class BotStarter {
 
     private static void runPokemonSpawnExchange() {
         final SpawnDataCollectorBot bot = DaggerSpawnDataCollectorBotComponent.builder()
-                .collectingUserToken(DiscordEntityConstants.CORRUPTED_USER_TOKEN)
-                .relayingUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .corruptedUserToken(DiscordEntityConstants.CORRUPTED_USER_TOKEN)
+                .beninUserToken(DiscordEntityConstants.BENIN_USER_TOKEN)
+                .owningUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();
         bot.startAsync().awaitRunning();

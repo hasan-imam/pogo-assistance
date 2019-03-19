@@ -17,11 +17,15 @@ public interface SpawnDataCollectorBotComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        SpawnDataCollectorBotComponent.Builder collectingUserToken(
+        SpawnDataCollectorBotComponent.Builder corruptedUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_CORRUPTED) final String corruptedUserToken);
 
         @BindsInstance
-        SpawnDataCollectorBotComponent.Builder relayingUserToken(
+        SpawnDataCollectorBotComponent.Builder beninUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_BENIN) final String corruptedUserToken);
+
+        @BindsInstance
+        SpawnDataCollectorBotComponent.Builder owningUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_OWNER) final String corruptedUserToken);
 
         SpawnDataCollectorBotComponent build();

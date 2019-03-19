@@ -16,6 +16,7 @@ import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapS
 import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessorV2;
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
 
@@ -36,6 +37,20 @@ class SpawnDataExchangeModule {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(flpmSpawnMessageProcessor),
                 ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
+                spawnExchange);
+    }
+
+    /**
+     * 'Corrupted' user has access to:
+     *  - San Diego Hills
+     */
+    @Named(CollectorJDAModule.NAME_BENIN_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForBeninUserJDA(
+            final PokemonSpawnExchange spawnExchange) {
+        return new DiscordPokemonSpawnListener(
+                Collections.emptySet(),
+                ImmutableSet.of(new SDHSpawnMessageProcessor()),
                 spawnExchange);
     }
 
