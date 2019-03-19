@@ -46,7 +46,6 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         Optional.ofNullable(jda).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("pogosj100ivMessages")
     void process_MessageFromIv100Channel_ReturnsExpected(final Message message) {
@@ -64,7 +63,6 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         );
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("pogosjMax100Messages")
     void process_MessageFromMax100Channel_ReturnsExpected(final Message message) {
@@ -82,7 +80,6 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
         );
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("pogosjTweetMessages")
     void process_MessageFromTweetsChannel_ReturnsExpected(final Message message) {
@@ -93,10 +90,10 @@ class PoGoSJSpawnMessageProcessorIntegrationTest {
                 // Many will fail the cp/iv/level checks because they are candies
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getId(), greaterThan(0)),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getName(), not(emptyOrNullString())),
-                () -> assertTrue(pokemonSpawn.getIv().isPresent()),
-                () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
-                () -> assertTrue(pokemonSpawn.getCp().isPresent()),
-                () -> assertTrue(pokemonSpawn.getLocationDescription().isPresent())
+                () -> assertTrue(pokemonSpawn.getIv().isPresent(), "missing iv"),
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent(), "missing level"),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent(), "missing cp"),
+                () -> assertTrue(pokemonSpawn.getLocationDescription().isPresent(), "missing location")
         );
     }
 

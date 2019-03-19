@@ -44,7 +44,6 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         Optional.ofNullable(jda).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"chicagoland100ivMessages"})
     void process_MessageFromChicagoland100IvChannel_ReturnsExpected(final Message message) {
@@ -54,7 +53,6 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"pineappleNewark100ivMessages"})
     void process_MessageFromPineapple100IvChannel_ReturnsExpected(final Message message) {
@@ -64,7 +62,6 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"pineappleFremontLevel35Messages"})
     void process_MessageFromPineappleLevel35Channel_ReturnsExpected(final Message message) {
@@ -74,7 +71,6 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getLevel().orElse(-1), equalTo(35));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"pineappleHaywardRareMessages"})
     void process_MessageFromPineappleRareChannel_ReturnsExpected(final Message message) {

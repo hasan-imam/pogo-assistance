@@ -9,15 +9,16 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.security.auth.login.LoginException;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Message;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
@@ -44,10 +45,9 @@ class PokeFairySpawnMessageProcessorIntegrationTest {
         Optional.ofNullable(jda).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource(value = {"neoSf90ivPosts"})
-    void process_ApPrivateChannel_ReturnsExpected(final Message message) {
+    void process_NeoSf90IVChannelMessages_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElse(null);
@@ -58,7 +58,8 @@ class PokeFairySpawnMessageProcessorIntegrationTest {
                 () -> assertTrue(pokemonSpawn.getLevel().isPresent()),
                 () -> assertNotSame(pokemonSpawn.getPokedexEntry().getGender(), Gender.UNKNOWN),
                 () -> assertTrue(pokemonSpawn.getPokedexEntry().getId() > 0),
-                () -> assertFalse(pokemonSpawn.getPokedexEntry().getName().isEmpty()));
+                () -> assertFalse(pokemonSpawn.getPokedexEntry().getName().isEmpty()),
+                () -> assertTrue(!pokemonSpawn.getPokedexEntry().getName().equals("Unown") || !pokemonSpawn.getPokedexEntry().getForms().isEmpty()));
     }
 
     private static Stream<Message> neoSf90ivPosts() {
