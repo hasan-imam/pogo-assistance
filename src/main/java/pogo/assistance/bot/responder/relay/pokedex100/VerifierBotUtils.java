@@ -23,18 +23,19 @@ public class VerifierBotUtils {
      * @return
      *      100iv post command for SuperBotP. Example command: "geodude cp445 m 44.5555,55.4444"
      */
-    public static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn) {
+    static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster) {
         Preconditions.checkArgument(pokemonSpawn.getIv().isPresent() && pokemonSpawn.getIv().get() == 100.0);
         Preconditions.checkArgument(pokemonSpawn.getCp().isPresent());
-        return String.format("%s cp%d %s %f,%f n",
+        return String.format("%s cp%d %s %f,%f%s",
                 getNameSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getCp().get(),
                 getGenderSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getLatitude().toDegrees(),
-                pokemonSpawn.getLongitude().toDegrees());
+                pokemonSpawn.getLongitude().toDegrees(),
+                mentionPoster ? " n" : "");
     }
 
-    public static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn) {
+    static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster) {
         Preconditions.checkArgument(!pokemonSpawn.getIv().isPresent() || pokemonSpawn.getIv().get() != 100.0);
         final StringBuilder stringBuilder = new StringBuilder("?df");
 
@@ -59,8 +60,14 @@ public class VerifierBotUtils {
         stringBuilder.append(" ").append(pokemonSpawn.getLatitude().toDegrees()).append(",")
                 .append(pokemonSpawn.getLongitude().toDegrees());
 
-        if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
-            stringBuilder.append(" n"); // needed to mention verifier name for 90+ iv posts
+        if (mentionPoster) {
+            if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
+                stringBuilder.append(" n"); // needed to mention verifier name for 90+ iv posts
+            }
+        } else {
+            if (pokemonSpawn.getIv().orElse(-1.0) < 90.0) {
+                stringBuilder.append(" n"); // needed to NOT mention verifier name for non 90+ iv posts
+            }
         }
 
         return stringBuilder.toString();
