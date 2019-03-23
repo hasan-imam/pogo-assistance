@@ -10,12 +10,17 @@ public class DiscordEntityConstants {
     // Name for common named attributes. Used as args to @Named annotation.
 
     public static final String NAME_USER_TOKEN_OWNER = "owning_user_token";
+    public static final String NAME_USER_TOKEN_M15MV1 = "m15mv1_user_token";
     public static final String NAME_USER_TOKEN_M8M = "m8m_bot_token";
     public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
     public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
+    public static final String NAME_USER_TOKEN_NINERS = "niners_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
+
+    public static final String NAME_JDA_BUILDER_M15MV1_USER = "m15mv1_user_jda_builder";
+    public static final String NAME_JDA_M15MV1_USER = "m15mv1_user_jda";
 
     public static final String NAME_JDA_BUILDER_M8M_BOT = "bot_user_jda_builder";
     public static final String NAME_JDA_M8M_BOT = "bot_user_jda";
@@ -25,19 +30,23 @@ public class DiscordEntityConstants {
 
     public static final String NAME_JDA_BENIN_USER = "benin_user_jda";
 
+    public static final String NAME_JDA_NINERS_USER = "niners_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
 
     public static final String M8M_BOT_TOKEN = "";
     public static final String OWNING_USER_TOKEN = "";
+    public static final String M15MV1_USER_TOKEN = "";
     public static final String CORRUPTED_USER_TOKEN = "";
     public static final String BENIN_USER_TOKEN = "";
+    public static final String NINERS_USER_TOKEN = "";
 
     // Users/bots
 
     public static final long USER_ID_H13M = 471666614857629696L;
-    public static final long USER_ID_QN234 = 520113608978333706L;
+    public static final long USER_ID_M15MV1 = 520113608978333706L;
 
     public static final long USER_ID_KYRION = 209827394721284097L;
     public static final long USER_ID_JOSH = 289560054708043777L;

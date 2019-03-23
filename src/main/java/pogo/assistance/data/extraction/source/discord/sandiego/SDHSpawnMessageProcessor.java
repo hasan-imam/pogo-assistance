@@ -60,12 +60,7 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
         extractCp(compiledText).ifPresent(builder::cp);
         extractIv(compiledText).ifPresent(builder::iv);
 
-        final PokemonSpawn pokemonSpawn = builder.build();
-        if (fudgeFactorCheck()) {
-            log.debug("RNG test passed! Reporting spawn from SDH: {}", pokemonSpawn);
-            return Optional.of(pokemonSpawn);
-        }
-        return Optional.empty();
+        return Optional.of(builder.build());
     }
 
     private static Optional<Double> extractIv(final String fullMessageText) {

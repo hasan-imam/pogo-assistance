@@ -1,12 +1,13 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import com.google.common.util.concurrent.RateLimiter;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import com.google.common.util.concurrent.RateLimiter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final User h13m = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_H13M);
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
-    private final User qn234 = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_QN234);
+    private final User m15mv1 = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_M15MV1);
 
     private final RateLimiter rateLimiter = RateLimiter.create(1);
 
@@ -41,7 +42,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
      *      permissions, e.g. having a 'verified', 'candy tracker' etc. roles when relaying to Pokedex100.
      */
     @Inject
-    public Pokedex100SpawnRelay(@Named(DiscordEntityConstants.NAME_JDA_OWNING_USER) final Provider<JDA> relayingUserJda) {
+    public Pokedex100SpawnRelay(@Named(DiscordEntityConstants.NAME_JDA_M15MV1_USER) final Provider<JDA> relayingUserJda) {
         this.relayingUserJda = relayingUserJda;
     }
 
@@ -55,13 +56,13 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
                 log.info("Sending 90+ IV command: {}", command);
-            } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry()) && pokemonSpawn.getIv().isPresent()) {
+            } /*else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry()) && pokemonSpawn.getIv().isPresent()) {
                 // Check presence of IV on the candies. This is to limit the number of posts since most of the spawns
                 // don't have IV info on them (especially the spawns coming from pokemaps).
                 // TODO: Can we do this in a better way?
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
                 log.info("Sending candy command: {}", command);
-            } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
+            }*/ else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn);
                 log.info("Sending high CP command: {}", command);
             } else {

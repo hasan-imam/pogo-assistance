@@ -19,6 +19,7 @@ public class CandySelector {
             .build();
 
     private static final Set<String> NON_NESTING = ImmutableSet.<String>builder()
+            .add("Aerodactyl")
             .add("Shieldon").add("Bastiodon")
             .add("lapras")
             .add("hitmonlee").add("hitmonchan")

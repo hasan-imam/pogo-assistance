@@ -18,7 +18,7 @@ class KillSwitch extends ListenerAdapter {
     private static final Set<Long> ADMIN_USER_IDS = ImmutableSet.of(
             // Owning user
             DiscordEntityConstants.USER_ID_H13M,
-            DiscordEntityConstants.USER_ID_QN234,
+            DiscordEntityConstants.USER_ID_M15MV1,
             // Pokedex100 mods
             DiscordEntityConstants.USER_ID_KYRION,
             DiscordEntityConstants.USER_ID_JOSH,

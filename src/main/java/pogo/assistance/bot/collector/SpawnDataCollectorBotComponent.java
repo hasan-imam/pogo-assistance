@@ -1,9 +1,10 @@
 package pogo.assistance.bot.collector;
 
-import dagger.BindsInstance;
-import dagger.Component;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import dagger.BindsInstance;
+import dagger.Component;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.serde.SerDeModule;
 
@@ -22,11 +23,15 @@ public interface SpawnDataCollectorBotComponent {
 
         @BindsInstance
         SpawnDataCollectorBotComponent.Builder beninUserToken(
-                @Named(DiscordEntityConstants.NAME_USER_TOKEN_BENIN) final String corruptedUserToken);
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_BENIN) final String beninUserToken);
 
         @BindsInstance
-        SpawnDataCollectorBotComponent.Builder owningUserToken(
-                @Named(DiscordEntityConstants.NAME_USER_TOKEN_OWNER) final String corruptedUserToken);
+        SpawnDataCollectorBotComponent.Builder ninersUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_NINERS) final String ninersUserToken);
+
+        @BindsInstance
+        SpawnDataCollectorBotComponent.Builder controlUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15MV1) final String controlUserToken);
 
         SpawnDataCollectorBotComponent build();
     }

@@ -20,6 +20,9 @@ import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessagePr
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
 
+/**
+ * This module registers the listeners we need to put on the data collecting user JDAs.
+ */
 @Module
 class SpawnDataExchangeModule {
 
@@ -41,7 +44,7 @@ class SpawnDataExchangeModule {
     }
 
     /**
-     * 'Corrupted' user has access to:
+     * 'Benin' user has access to:
      *  - San Diego Hills
      */
     @Named(CollectorJDAModule.NAME_BENIN_USER_SPAWN_LISTENER)
@@ -57,20 +60,17 @@ class SpawnDataExchangeModule {
     /**
      * Owning user has access to:
      *  - POGO SJ
-     *  - NYC PokeMap
+     *  - NYC PokeMap (unused here since we have crawler for it)
      *  - VAScans
      *  - We Catch
      *  - Poke Fairy
      */
-    @Named(CollectorJDAModule.NAME_OWNING_USER_SPAWN_LISTENER)
+    @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides
-    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForOwningUserJDA(
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForNinersUserJDA(
             final PokemonSpawnExchange spawnExchange) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
-//                        // Disabling in favor of the web crawler
-//                        new NycPokeMapSpawnMessageProcessor(),
-
                         new PoGoSJSpawnMessageProcessorV2(),
                         new VAScansSpawnMessageProcessor(),
                         new WeCatchSpawnMessageProcessor(),

@@ -4,9 +4,10 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.AccountType;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import picocli.CommandLine;
 import pogo.assistance.bot.collector.DaggerSpawnDataCollectorBotComponent;
 import pogo.assistance.bot.collector.SpawnDataCollectorBot;
@@ -49,7 +50,8 @@ public class BotStarter {
         final SpawnDataCollectorBot bot = DaggerSpawnDataCollectorBotComponent.builder()
                 .corruptedUserToken(DiscordEntityConstants.CORRUPTED_USER_TOKEN)
                 .beninUserToken(DiscordEntityConstants.BENIN_USER_TOKEN)
-                .owningUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .ninersUserToken(DiscordEntityConstants.NINERS_USER_TOKEN)
+                .controlUserToken(DiscordEntityConstants.M15MV1_USER_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();
         bot.startAsync().awaitRunning();
