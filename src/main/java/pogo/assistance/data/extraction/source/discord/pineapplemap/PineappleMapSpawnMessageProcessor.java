@@ -1,8 +1,8 @@
 package pogo.assistance.data.extraction.source.discord.pineapplemap;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_CHICAGOLAND_POGO_100IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CHICAGOLAND_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_PINEAPPLE;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_CHICAGOLAND_POGO;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -150,7 +150,7 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
 
     private static boolean isFromChicagolandTargetChannel(final Message message) {
         return Optional.ofNullable(message.getGuild()).map(Guild::getIdLong).filter(id -> id == SERVER_ID_CHICAGOLAND_POGO).isPresent()
-                && message.getChannel().getIdLong() == CHANNEL_ID_CHICAGOLAND_POGO_100IV;
+                && SPAWN_CHANNEL_IDS_CHICAGOLAND_POGO.contains(message.getChannel().getIdLong());
     }
 
     /**

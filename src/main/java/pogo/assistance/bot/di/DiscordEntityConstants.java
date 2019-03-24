@@ -15,6 +15,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
     public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
     public static final String NAME_USER_TOKEN_NINERS = "niners_user_token";
+    public static final String NAME_USER_TOKEN_JOHNNY = "johnny_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -32,6 +33,8 @@ public class DiscordEntityConstants {
 
     public static final String NAME_JDA_NINERS_USER = "niners_user_jda";
 
+    public static final String NAME_JDA_JOHNNY_USER = "johnny_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
@@ -42,6 +45,7 @@ public class DiscordEntityConstants {
     public static final String CORRUPTED_USER_TOKEN = "";
     public static final String BENIN_USER_TOKEN = "";
     public static final String NINERS_USER_TOKEN = "";
+    public static final String JOHNNY_USER_TOKEN = "";
 
     // Users/bots
 
@@ -105,6 +109,12 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_CHICAGOLAND_POGO = 261908001332527115L;
     public static final long CHANNEL_ID_CHICAGOLAND_POGO_100IV = 283667771114520577L;
+    public static final long CHANNEL_ID_CHICAGOLAND_POGO_RARESPAWNS = 510802889313353738L;
+    public static final long CHANNEL_ID_CHICAGOLAND_POGO_90PLUS = 532807041375272993L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_CHICAGOLAND_POGO = ImmutableSet.of(
+            CHANNEL_ID_CHICAGOLAND_POGO_100IV,
+            CHANNEL_ID_CHICAGOLAND_POGO_RARESPAWNS,
+            CHANNEL_ID_CHICAGOLAND_POGO_90PLUS);
 
     public static final long SERVER_ID_SANDIEGOHILLS = 520776622887141388L;
 }
