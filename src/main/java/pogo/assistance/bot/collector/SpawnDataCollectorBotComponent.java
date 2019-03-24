@@ -30,6 +30,10 @@ public interface SpawnDataCollectorBotComponent {
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_NINERS) final String ninersUserToken);
 
         @BindsInstance
+        SpawnDataCollectorBotComponent.Builder johnnyUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_JOHNNY) final String johnnyUserToken);
+
+        @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15MV1) final String controlUserToken);
 

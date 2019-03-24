@@ -2,6 +2,7 @@ package pogo.assistance.bot.collector;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15MV1_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 
@@ -24,6 +25,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     private final JDA corruptedUserJda;
     private final JDA beninUserJda;
     private final JDA ninersUserJda;
+    private final JDA johnnyUserJda;
     private final PokemonSpawnWebCrawler pokemonSpawnWebCrawler;
 
     private final AtomicBoolean shutdownTriggered = new AtomicBoolean(false);
@@ -38,17 +40,20 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_CORRUPTED_USER) final JDA corruptedUserJda,
             @Named(NAME_JDA_BENIN_USER) final JDA beninUserJda,
             @Named(NAME_JDA_NINERS_USER) final JDA ninersUserJda,
+            @Named(NAME_JDA_JOHNNY_USER) final JDA johnnyUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler) {
 
         Verify.verify(hasRegisteredListener(m15mv1UserJda), "Control user JDA is expected to have at least one listener (kill switch)");
         Verify.verify(hasRegisteredListener(corruptedUserJda), "Corrupted user JDA is expected to have registered listener(s)");
         Verify.verify(hasRegisteredListener(beninUserJda), "Benin user JDA is expected to have registered listener(s)");
         Verify.verify(hasRegisteredListener(ninersUserJda), "Niners user JDA is expected to have registered listener(s)");
+        Verify.verify(hasRegisteredListener(ninersUserJda), "Johnny user JDA is expected to have registered listener(s)");
 
         this.controlUserJda = m15mv1UserJda;
         this.corruptedUserJda = corruptedUserJda;
         this.beninUserJda = beninUserJda;
         this.ninersUserJda = ninersUserJda;
+        this.johnnyUserJda = johnnyUserJda;
         this.pokemonSpawnWebCrawler = pokemonSpawnWebCrawler;
     }
 
@@ -61,14 +66,12 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     @Override
     public void run() {
         while (!shutdownTriggered.get() && controlUserJda.getStatus() != Status.SHUTDOWN) {
-            log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                    corruptedUserJda.getSelfUser().getName(), corruptedUserJda.getStatus(), corruptedUserJda.getPing(), corruptedUserJda.getResponseTotal());
-            log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                    beninUserJda.getSelfUser().getName(), beninUserJda.getStatus(), beninUserJda.getPing(), beninUserJda.getResponseTotal());
-            log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                    ninersUserJda.getSelfUser().getName(), ninersUserJda.getStatus(), ninersUserJda.getPing(), ninersUserJda.getResponseTotal());
-            log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                    controlUserJda.getSelfUser().getName(), controlUserJda.getStatus(), controlUserJda.getPing(), controlUserJda.getResponseTotal());
+            logJdaState(corruptedUserJda);
+            logJdaState(beninUserJda);
+            logJdaState(ninersUserJda);
+            logJdaState(johnnyUserJda);
+            logJdaState(controlUserJda);
+
             try {
                 // TODO verify that this shutdown works as expected
                 synchronized (shutdownTriggered) {
@@ -101,6 +104,11 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         synchronized (shutdownTriggered) {
             shutdownTriggered.notifyAll();
         }
+    }
+
+    private static void logJdaState(final JDA jda) {
+        log.info("{}'s JDA status: {}, ping: {}, response count: {}",
+                jda.getSelfUser().getName(), jda.getStatus(), jda.getPing(), jda.getResponseTotal());
     }
 
     private static boolean hasRegisteredListener(final JDA jda) {

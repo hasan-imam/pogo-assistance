@@ -58,12 +58,13 @@ class SpawnDataExchangeModule {
     }
 
     /**
-     * Owning user has access to:
+     * 'Niners' user has access to:
      *  - POGO SJ
      *  - NYC PokeMap (unused here since we have crawler for it)
      *  - VAScans
      *  - We Catch
      *  - Poke Fairy
+     *  - Pineapple
      */
     @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides
@@ -76,6 +77,20 @@ class SpawnDataExchangeModule {
                         new WeCatchSpawnMessageProcessor(),
                         new PokeFairySpawnMessageProcessor(),
                         new PineappleMapSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange);
+    }
+
+    /**
+     * 'Johnny' user has access to:
+     *  - Chicagoland
+     */
+    @Named(CollectorJDAModule.NAME_JOHNNY_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForJohnnyUserJDA(
+            final PokemonSpawnExchange spawnExchange) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new PineappleMapSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange);
     }
