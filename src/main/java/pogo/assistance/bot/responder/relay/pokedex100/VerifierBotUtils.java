@@ -13,7 +13,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
  * Example commands:
- *  - "?df weedle 44.5555,55.4444" -> candy
+ *  - "?df alolan geodude iv50 44.5555,55.4444" -> candy
  *  - "?df [id] 44.5555,55.4444" -> candy
  */
 @UtilityClass
@@ -36,7 +36,7 @@ public class VerifierBotUtils {
     }
 
     static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster) {
-        Preconditions.checkArgument(!pokemonSpawn.getIv().isPresent() || pokemonSpawn.getIv().get() != 100.0);
+        Preconditions.checkArgument(!pokemonSpawn.getIv().isPresent() || pokemonSpawn.getIv().get() < 100.0);
         final StringBuilder stringBuilder = new StringBuilder("?df");
 
         /*
