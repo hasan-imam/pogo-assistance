@@ -16,6 +16,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
     public static final String NAME_USER_TOKEN_NINERS = "niners_user_token";
     public static final String NAME_USER_TOKEN_JOHNNY = "johnny_user_token";
+    public static final String NAME_USER_TOKEN_TIMBURTY = "timburty_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -35,6 +36,8 @@ public class DiscordEntityConstants {
 
     public static final String NAME_JDA_JOHNNY_USER = "johnny_user_jda";
 
+    public static final String NAME_JDA_TIMBURTY_USER = "timburty_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
@@ -42,10 +45,12 @@ public class DiscordEntityConstants {
     public static final String M8M_BOT_TOKEN = "";
     public static final String OWNING_USER_TOKEN = "";
     public static final String M15MV1_USER_TOKEN = "";
+
     public static final String CORRUPTED_USER_TOKEN = "";
     public static final String BENIN_USER_TOKEN = "";
     public static final String NINERS_USER_TOKEN = "";
     public static final String JOHNNY_USER_TOKEN = "";
+    public static final String TIMBURTY_USER_TOKEN = "";
 
     // Users/bots
 
@@ -117,4 +122,7 @@ public class DiscordEntityConstants {
             CHANNEL_ID_CHICAGOLAND_POGO_90PLUS);
 
     public static final long SERVER_ID_SANDIEGOHILLS = 520776622887141388L;
+
+    public static final long SERVER_ID_SOUTHWEST_POKEMON = 489168292301373452L;
+
 }
