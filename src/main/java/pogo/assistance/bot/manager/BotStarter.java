@@ -52,6 +52,7 @@ public class BotStarter {
                 .beninUserToken(DiscordEntityConstants.BENIN_USER_TOKEN)
                 .ninersUserToken(DiscordEntityConstants.NINERS_USER_TOKEN)
                 .johnnyUserToken(DiscordEntityConstants.JOHNNY_USER_TOKEN)
+                .timburtyUserToken(DiscordEntityConstants.TIMBURTY_USER_TOKEN)
                 .controlUserToken(DiscordEntityConstants.M15MV1_USER_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();

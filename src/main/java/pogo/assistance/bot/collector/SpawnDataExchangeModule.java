@@ -17,6 +17,7 @@ import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessage
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.southwest.SouthwestPokemonSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
 
@@ -91,6 +92,20 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new PineappleMapSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange);
+    }
+
+    /**
+     * 'Timburty' user has access to:
+     *  - Chicagoland
+     */
+    @Named(CollectorJDAModule.NAME_TIMBURTY_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForTimburtyUserJDA(
+            final PokemonSpawnExchange spawnExchange) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new SouthwestPokemonSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange);
     }
