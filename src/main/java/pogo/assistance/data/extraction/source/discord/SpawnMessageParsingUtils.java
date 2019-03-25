@@ -18,7 +18,7 @@ import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 @UtilityClass
 public class SpawnMessageParsingUtils {
 
-    /*
+    /**
      * Example map URLs:
      *  - http://maps.google.com/maps?q=37.4332914692569,-122.115651980398
      *  - https://www.google.com/maps/search/?api=1&query=37.5542702090763,-77.4791150614027
@@ -26,7 +26,7 @@ public class SpawnMessageParsingUtils {
     private static final Pattern GOOGLE_MAP_QUERY_URL =
             Pattern.compile("(.+(q=|query=))(?<latitude>[-\\d\\.]+),(?<longitude>[-\\d\\.]+)(.*)");
 
-    /*
+    /**
      * Example matched strings:
      *  - 100.00%
      *  - 1.1%
@@ -35,7 +35,7 @@ public class SpawnMessageParsingUtils {
      */
     private static final Pattern IV_PATTERN = Pattern.compile("\\(?" + "(?<iv>[\\d\\.]{1,6}|\\?)%" + "\\)?");
 
-    /*
+    /**
      * Example matched strings:
      *  - (15/15/15)
      *  - (15|15|15)
@@ -53,6 +53,37 @@ public class SpawnMessageParsingUtils {
                     "\\s*[/\\|]\\s*" +
                     "(Sta:)?\\s?" + "(?<stamina>[\\d?]+)" + "S?" +
                     "\\)?");
+
+    /**
+     * Example matched strings:
+     *  - CP 123
+     *  - CP:123
+     *  - CP: 123
+     *  - (CP: 123)
+     *  - CP123
+     *
+     * Verify online: https://regex101.com/r/bHvnAf/7
+     */
+    private static final Pattern CP_PATTERN = Pattern.compile(
+            "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
+                    "(CP)[:\\s]*" +
+                    "(?<cp>[\\d\\?]{1,4})" +
+                    "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
+
+    /**
+     * Example matched strings:
+     *  - Level 13
+     *  - (L13)
+     *  - L13
+     *  - lvl 13
+     *
+     * Verify online: https://regex101.com/r/lxvJaS/1
+     */
+    private static final Pattern LEVEL_PATTERN = Pattern.compile(
+            "(^|\\(|\\|/|\\s+)" + // expects beginning of line, white space, '(', '/', '|' etc. separators at the beginning
+                    "(Level[\\s]+|L|lvl[\\s]+)" +
+                    "(?<level>[\\d\\?]{1,2})" +
+                    "($|\\)|\\|/|\\s+)");
 
     public static Point parseGoogleMapQueryLink(final String url) {
         final Matcher mapUrlMatcher = GOOGLE_MAP_QUERY_URL.matcher(url);
@@ -103,6 +134,24 @@ public class SpawnMessageParsingUtils {
         return Optional.empty();
     }
 
+    public static Optional<Integer> extractCp(final String text) {
+        final Matcher cpMatcher = CP_PATTERN.matcher(text);
+        Verify.verify(cpMatcher.find());
+        if (!cpMatcher.group("cp").equals("?")) {
+            return Optional.ofNullable(Ints.tryParse(cpMatcher.group("cp")));
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Integer> extractLevel(final String text) {
+        final Matcher levelMatcher = LEVEL_PATTERN.matcher(text);
+        Verify.verify(levelMatcher.find());
+        if (!levelMatcher.group("level").equals("?")) {
+            return Optional.ofNullable(Ints.tryParse(levelMatcher.group("level")));
+        }
+        return Optional.empty();
+    }
+
     public static Optional<CombatStats> extractCombatStats(final String textContainingAds, final String textContainingIv) {
         final Optional<Double> extractedIv = extractIv(textContainingIv);
         final Optional<CombatStats> combatStats = extractCombatStats(textContainingAds);
@@ -119,7 +168,7 @@ public class SpawnMessageParsingUtils {
         return combatStats;
     }
 
-    public static Optional<CombatStats> extractCombatStats(final String textContainingAds) {
+    private static Optional<CombatStats> extractCombatStats(final String textContainingAds) {
         final Matcher adsMatcher = ADS_STAT_PATTERN.matcher(textContainingAds);
         if (!adsMatcher.find()) {
             return Optional.empty();
@@ -131,7 +180,7 @@ public class SpawnMessageParsingUtils {
                 .build());
     }
 
-    public static Optional<Double> extractIv(final String text) {
+    private static Optional<Double> extractIv(final String text) {
         final Matcher ivMatcher = IV_PATTERN.matcher(text);
         if (ivMatcher.find()) {
             return Optional.ofNullable(Doubles.tryParse(ivMatcher.group("iv")));

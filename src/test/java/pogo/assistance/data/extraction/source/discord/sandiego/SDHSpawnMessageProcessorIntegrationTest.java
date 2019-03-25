@@ -59,6 +59,6 @@ class SDHSpawnMessageProcessorIntegrationTest {
     private static Stream<Message> SDHVIPBotDirectMessages() {
         return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_SDHVIP_BOT).openPrivateChannel().complete())
                 .filter(PROCESSOR::canProcess)
-                .limit(3000);
+                .limit(4000);
     }
 }
