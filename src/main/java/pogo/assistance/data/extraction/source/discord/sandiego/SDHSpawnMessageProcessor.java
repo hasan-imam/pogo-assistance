@@ -50,7 +50,7 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
 
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
                 messageEmbed.getThumbnail().getUrl(),
-                SpawnMessageParsingUtils.parseGenderFromEmbedTitle(messageEmbed.getTitle()));
+                SpawnMessageParsingUtils.extractGender(messageEmbed.getTitle()).orElse(null));
 
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()));

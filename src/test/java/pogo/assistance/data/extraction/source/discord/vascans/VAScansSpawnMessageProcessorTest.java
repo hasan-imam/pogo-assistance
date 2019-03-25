@@ -31,7 +31,7 @@ class VAScansSpawnMessageProcessorTest {
         return new Object[][] {
                 new Object[] {
                         mockMessageWithContent(
-                                "Squirtle (15/15/15) L31 CP:824 ♂",
+                                "Chikorita (15/15/15) L31 CP:824 ♂",
                                 "IV:100.00% Boost: none\n" +
                                         "Despawn: 2:11:14 PM\n" +
                                         "Remaining: 25m 5s \n" +
@@ -41,7 +41,7 @@ class VAScansSpawnMessageProcessorTest {
                                 "https://raw.githubusercontent.com/seehuge/prdmicons/master/pokemon_icon_152_00.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.5349949208584, -77.4599340276508))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Squirtle").id(152).gender(Gender.MALE).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Chikorita").id(152).gender(Gender.MALE).build())
                                 .iv(100)
                                 .cp(824)
                                 .level(31)
@@ -59,7 +59,7 @@ class VAScansSpawnMessageProcessorTest {
                                 "https://raw.githubusercontent.com/seehuge/prdmicons/master/pokemon_icon_137_00.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.5032968319611, -77.4763366993049))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Porygon").id(137).gender(Gender.UNKNOWN).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Porygon").id(137).gender(Gender.NONE).build())
                                 .iv(100)
                                 .cp(1376)
                                 .level(28)
@@ -74,10 +74,10 @@ class VAScansSpawnMessageProcessorTest {
                                         "This timer is a guesstimate!\n" +
                                         "37.55900, -77.4713 Park Avenue 2753 \n" +
                                         "  [Google Maps](https://www.google.com/maps/search/?api=1&query=37.5590068664644,-77.4713175517577)",
-                                "http://www.pokestadium.com/sprites/xy/snubbull.gif"),
+                                "https://raw.githubusercontent.com/seehuge/prdmicons/master/pokemon_icon_209_00.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.5590068664644, -77.4713175517577))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Snubbull").id(-1).gender(Gender.UNKNOWN).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Snubbull").id(209).gender(Gender.UNKNOWN).build())
                                 .iv(100)
                                 .cp(316)
                                 .level(9)
@@ -91,10 +91,10 @@ class VAScansSpawnMessageProcessorTest {
                                         "Approx time left: 17m 58s \n" +
                                         "37.53238, -77.4220 East Grace Street  \n" +
                                         "  [Google Maps](https://www.google.com/maps/search/?api=1&query=37.532389113078,-77.422010687266)",
-                                "http://www.pokestadium.com/sprites/xy/ponyta.gif"),
+                                "https://raw.githubusercontent.com/seehuge/prdmicons/master/pokemon_icon_77_00.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.532389113078, -77.422010687266))
-                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Ponyta").id(-1).gender(Gender.UNKNOWN).build())
+                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Ponyta").id(77).gender(Gender.UNKNOWN).build())
                                 .iv(100)
                                 .cp(331)
                                 .level(7)

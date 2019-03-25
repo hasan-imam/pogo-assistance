@@ -17,10 +17,10 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
-import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
@@ -73,7 +73,9 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
 
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
                 messageEmbed.getThumbnail().getUrl(),
-                extractGender(compiledText));
+                // Genderless pokemons simply don't have any gender mentioned. Although that's indistinguishable from unknown gender, we will assume that all
+                // posts that intentionally skip gender only does when genderless. Fair assumption since all processed messages should have verified pokemons.
+                SpawnMessageParsingUtils.extractGender(compiledText).orElse(null));
 
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(extractLocation(compiledText)
@@ -134,18 +136,6 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
                     .map(Double::parseDouble);
         }
         return Optional.empty();
-    }
-
-    private static Gender extractGender(final String fullMessageText) {
-        // Gender appears as "♀Female" or "♂Male"
-        if (fullMessageText.contains("♂") || fullMessageText.contains("Male")) {
-            return Gender.MALE;
-        } else if (fullMessageText.contains("♀") || fullMessageText.contains("Female")) {
-            return Gender.FEMALE;
-        }
-        // Genderless pokemons simply don't have any gender mentioned. Although that's indistinguishable from unknown gender, we will assume that all posts
-        // that intentionally skip gender only does when genderless. Fair assumption since all processed messages should have verified pokemons.
-        return Gender.NONE;
     }
 
     private static boolean isFromChicagolandTargetChannel(final Message message) {

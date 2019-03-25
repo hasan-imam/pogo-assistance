@@ -34,7 +34,7 @@ public class CandySelector {
             .add("ralts").add("kirlia").add("gardevoir").add("gallade")
             .add("slakoth").add("vigoroth").add("slaking")
             .add("trapinch")
-            .add("lunatone").add("solrock")
+//            .add("lunatone").add("solrock")
             .add("feebas")
             .add("chimecho")
             .add("clamperl")

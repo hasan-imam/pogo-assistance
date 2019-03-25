@@ -31,6 +31,10 @@ public class NovaBotProcessingUtils {
      */
     private static final Pattern EMBED_THUMBNAIL_URL_PATTERN = Pattern.compile("(.+)/(?<id>\\d+)[\\-]?(?<id2>[\\w]+)?\\.png(.*)");
 
+    /**
+     * @param gender
+     *      Optional gender input if the gender is already known
+     */
     public static PokedexEntry inferPokedexEntryFromNovaBotAssetUrl(@NonNull final String url, @Nullable final PokedexEntry.Gender gender) {
         return Pokedex.getPokedexEntryFor(parsePokemonIdFromNovaBotAssetUrl(url), gender, parseFormsFromNovaBotAssetUrl(url))
                 .orElseThrow(() -> new IllegalArgumentException("Failed to infer pokedex entry from novabot URL: " + url));

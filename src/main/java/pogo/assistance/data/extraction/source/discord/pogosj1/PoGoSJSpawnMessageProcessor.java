@@ -13,9 +13,7 @@ import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
-import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
@@ -59,7 +57,7 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
         Verify.verify(titleMatcher.find());
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
                 messageEmbed.getThumbnail().getUrl(),
-                SpawnMessageParsingUtils.parseGenderFromEmbedTitle(messageEmbed.getTitle()));
+                SpawnMessageParsingUtils.extractGender(messageEmbed.getTitle()).orElse(null));
 
         // Some extra verification on the description so we detect (i.e. throw error) if message format changes
         final String[] descriptionLines = messageEmbed.getDescription().split("\n");

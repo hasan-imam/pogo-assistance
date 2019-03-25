@@ -17,6 +17,7 @@ import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
+import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
@@ -45,6 +46,9 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
+        if (!message.getAuthor().isBot()) {
+            return false;
+        }
         switch (message.getChannel().getType()) {
             case PRIVATE:
                 final long authorId = message.getAuthor().getIdLong();
@@ -119,10 +123,6 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
         final String pokemonName = titleMatcher.group("pokemon");
         final String locationDescription = titleMatcher.group("location");
 
-        final Matcher ivLineMatcher = DESCRIPTION_LINE_IV_PATTERN.matcher(descriptionLines[3]);
-        Verify.verify(ivLineMatcher.find());
-        final double iv = Double.parseDouble(ivLineMatcher.group("iv"));
-
         final Matcher cpAndLevelLineMatcher = DESCRIPTION_LINE_CP_LVL_PATTERN.matcher(descriptionLines[4]);
         Verify.verify(cpAndLevelLineMatcher.find());
         final int cp = Integer.parseInt(cpAndLevelLineMatcher.group("cp"));
@@ -130,7 +130,8 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
 
         final Matcher physiologyDataLineMatcher = DESCRIPTION_LINE_PHYSIOLOGY_PATTERN.matcher(descriptionLines[6]);
         Verify.verify(physiologyDataLineMatcher.find());
-        final Gender gender = SpawnMessageParsingUtils.parseGenderFromSign(physiologyDataLineMatcher.group("gender"));
+        final Gender gender = SpawnMessageParsingUtils.extractGender(physiologyDataLineMatcher.group("gender"))
+                .orElseThrow(() -> new IllegalArgumentException("Failed to parse gender from line: " + descriptionLines[6]));
         // TODO: parse height, weight
 
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(messageEmbed.getThumbnail().getUrl(), gender);
@@ -138,7 +139,9 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
                 .from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()))
                 .pokedexEntry(pokedexEntry)
                 .cp(cp)
-                .iv(iv)
+                .iv(SpawnMessageParsingUtils.extractCombatStats(descriptionLines[3], descriptionLines[3])
+                        .flatMap(CombatStats::combinedIv)
+                        .orElseThrow(() -> new IllegalArgumentException("Failed to extract IV from line: " + descriptionLines[3])))
                 .level(level)
                 .locationDescription(locationDescription)
                 .build();

@@ -22,7 +22,6 @@ import net.dv8tion.jda.core.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -59,6 +58,7 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN));
     }
 
     @ParameterizedTest
@@ -68,6 +68,7 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), greaterThanOrEqualTo(90.0));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN));
     }
 
     @ParameterizedTest
@@ -89,6 +90,7 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getIv().orElse(-1.0), equalTo(100.0));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN));
     }
 
     @ParameterizedTest
@@ -98,6 +100,7 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
         assertThat(failureMsgWithJumpUrl, pokemonSpawn.getLevel().orElse(-1), equalTo(35));
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN));
     }
 
     @ParameterizedTest
@@ -109,9 +112,7 @@ class PineappleMapSpawnMessageProcessorIntegrationTest {
         assertTrue(pokemonSpawn.getLevel().isPresent(), failureMsgWithJumpUrl);
         assertTrue(pokemonSpawn.getCp().isPresent(), failureMsgWithJumpUrl);
         assertTrue(pokemonSpawn.getIv().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(Pokedex.isGenderLess(pokemonSpawn.getPokedexEntry().getId())
-                || pokemonSpawn.getPokedexEntry().getGender() == PokedexEntry.Gender.MALE
-                || pokemonSpawn.getPokedexEntry().getGender() == PokedexEntry.Gender.FEMALE);
+        assertThat(failureMsgWithJumpUrl, pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN));
     }
 
     private static Stream<Message> chicagoland100ivMessages() {

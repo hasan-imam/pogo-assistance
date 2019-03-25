@@ -45,7 +45,9 @@ public interface PokedexEntry {
 
     /**
      * Qualifier, when present on an entry, can alter various attributes (e.g. move set, type, stats) of the pokemon.
-     * TODO: this needs a serious refactor - plain enums are not sufficient or easy to use
+     * TODO: this needs a serious refactor - plain enums are not sufficient or easy to use, such as:
+     *   - ditto disguises
+     *   - many unknown variations
      */
     enum Form {
         // General forms

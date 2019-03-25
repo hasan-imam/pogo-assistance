@@ -49,8 +49,10 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
     @MethodSource(value = {"flpmAlertBot7Dms"})
     void process_FlpmPrivateChannel_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
-        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+        final PokemonSpawn pokemonSpawn = PROCESSOR.process(message)
                 .orElse(null);
+        // Many DMs contain non-encountered pokemon which don't contain any cp/iv/level data
+        // This assumption check is to avoid those since processor returns empty for such messages
         assumeTrue(pokemonSpawn != null);
         assertAll(failureMsgWithJumpUrl,
                 () -> assertTrue(pokemonSpawn.getIv().isPresent()),
@@ -65,8 +67,10 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
     @MethodSource(value = {"apAlertBot7Dms"})
     void process_ApPrivateChannel_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
-        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
+        final PokemonSpawn pokemonSpawn = PROCESSOR.process(message)
                 .orElse(null);
+        // Many DMs contain non-encountered pokemon which don't contain any cp/iv/level data
+        // This assumption check is to avoid those since processor returns empty for such messages
         assumeTrue(pokemonSpawn != null);
         assertAll(failureMsgWithJumpUrl,
                 () -> assertTrue(pokemonSpawn.getIv().isPresent()),

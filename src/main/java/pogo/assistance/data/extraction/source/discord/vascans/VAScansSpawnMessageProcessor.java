@@ -1,30 +1,32 @@
 package pogo.assistance.data.extraction.source.discord.vascans;
 
-import com.google.common.base.Verify;
-import io.jenetics.jpx.Point;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Verify;
+import io.jenetics.jpx.Point;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
+import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
+import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 public class VAScansSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     /*
-     * Example title: "Scyther (15/15/15) L35 CP:2513 ♀"
+     * Example title: "Nidoran-f (15/15/15) L35 CP:2513 ♀"
      * Gender segment is missing some times. All other sections are present quite consistently.
      */
     private static final Pattern MESSAGE_TITLE_PATTERN = Pattern.compile(
-            "(?<pokemon>[\\w\\s]+)" +
+            "(?<pokemon>[\\w\\s\\-]+)" +
                     "(?<stats>\\(.+\\))?" + "(\\s*)" +
                     "(L(?<level>[\\d]+))?" + "(\\s*)" +
                     "(CP:(?<cp>[\\d]+))?" + "(\\s*)" +
@@ -58,11 +60,13 @@ public class VAScansSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final Matcher titleMatcher = MESSAGE_TITLE_PATTERN.matcher(messageEmbed.getTitle());
         Verify.verify(titleMatcher.find());
 
-        final PokedexEntry pokedexEntry = ImmutablePokedexEntry.builder()
-                .id(parsePokemonIdFromThumbnailUrl(messageEmbed.getThumbnail().getUrl()))
-                .name(titleMatcher.group("pokemon").trim())
-                .gender(SpawnMessageParsingUtils.parseGenderFromSign(titleMatcher.group("gender")))
-                .build();
+        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(
+                parsePokemonIdFromThumbnailUrl(messageEmbed.getThumbnail().getUrl()),
+                SpawnMessageParsingUtils.parseGenderFromSign(titleMatcher.group("gender")))
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        "Failed to infer pokedex entry from title: '%s' and thumbnail URL: '%s'",
+                        messageEmbed.getTitle(),
+                        messageEmbed.getThumbnail().getUrl())));
 
         // Some extra verification on the description so we detect (i.e. throw error) if message format changes
         final String[] descriptionLines = messageEmbed.getDescription().split("\n");
@@ -84,10 +88,8 @@ public class VAScansSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .map(Integer::parseInt)
                 .ifPresent(builder::cp);
 
-        final Matcher ivAndBoostDescriptionMatcher = IV_BOOST_DESCRIPTION_MATCHER.matcher(descriptionLines[0]);
-        Verify.verify(ivAndBoostDescriptionMatcher.find());
-        Optional.ofNullable(ivAndBoostDescriptionMatcher.group("iv"))
-                .map(Double::parseDouble)
+        SpawnMessageParsingUtils.extractCombatStats(messageEmbed.getTitle(), descriptionLines[0])
+                .flatMap(CombatStats::combinedIv)
                 .ifPresent(builder::iv);
 
         // TODO: parse location from 5th line
