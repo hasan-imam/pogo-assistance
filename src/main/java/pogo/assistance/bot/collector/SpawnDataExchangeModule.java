@@ -11,6 +11,7 @@ import dagger.Provides;
 import pogo.assistance.bot.responder.relay.pokedex100.Pokedex100SpawnRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
+import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessorV2;
@@ -106,6 +107,21 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new SouthwestPokemonSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange);
+    }
+
+    /**
+     * 'Irvin88' user has access to:
+     *  - VCPokeScan
+     *  - PoGoBadger's Den
+     */
+    @Named(CollectorJDAModule.NAME_IRVIN88_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForIrvin88UserJDA(
+            final PokemonSpawnExchange spawnExchange) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange);
     }

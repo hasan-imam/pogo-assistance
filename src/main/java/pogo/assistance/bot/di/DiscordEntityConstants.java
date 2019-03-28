@@ -17,6 +17,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_NINERS = "niners_user_token";
     public static final String NAME_USER_TOKEN_JOHNNY = "johnny_user_token";
     public static final String NAME_USER_TOKEN_TIMBURTY = "timburty_user_token";
+    public static final String NAME_USER_TOKEN_IRVIN88 = "irvin88_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -38,6 +39,8 @@ public class DiscordEntityConstants {
 
     public static final String NAME_JDA_TIMBURTY_USER = "timburty_user_jda";
 
+    public static final String NAME_JDA_IRVIN88_USER = "irvin88_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
@@ -51,6 +54,7 @@ public class DiscordEntityConstants {
     public static final String NINERS_USER_TOKEN = "";
     public static final String JOHNNY_USER_TOKEN = "";
     public static final String TIMBURTY_USER_TOKEN = "";
+    public static final String IRVIN88_USER_TOKEN = "";
 
     // Users/bots
 
@@ -73,6 +77,7 @@ public class DiscordEntityConstants {
             409786475564105728L,
             409780035470360576L);
     public static final long USER_ID_SDHVIP_BOT = 520776622887141388L;
+    public static final long USER_ID_POGO_BADGERS_BOT = 508688611898687498L;
 
     // IDs for discord servers/channels
 
@@ -124,5 +129,11 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_SANDIEGOHILLS = 520776622887141388L;
 
     public static final long SERVER_ID_SOUTHWEST_POKEMON = 489168292301373452L;
+
+    public static final long SERVER_ID_VCSCANS = 334404466948177922L;
+    public static final long CHANNEL_ID_VCSCANS_100IV = 516049924195090442L;
+    public static final long CHANNEL_ID_VCSCANS_0IV = 544756096837877784L;
+
+    public static final long SERVER_ID_POGO_BADGERS = 504336735199821824L;
 
 }

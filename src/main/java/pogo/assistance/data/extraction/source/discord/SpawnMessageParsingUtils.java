@@ -44,15 +44,18 @@ public class SpawnMessageParsingUtils {
      *  - Atk: 14 / Def: 6 / Sta: 13
      *  - (Atk: 14 / Def: 6 / Sta: 13)
      *  - (14A / 6D / 13S)
+     *  - A:15 D:15 S:15
+     *
+     * Verify online: https://regex101.com/r/vsxUsw/1
      */
-    private static final Pattern ADS_STAT_PATTERN =
-            Pattern.compile("\\(?" +
-                    "(Atk:)?\\s?" + "(?<attack>[\\d?]+)" + "A?" +
-                    "\\s*[/\\|]\\s*" +
-                    "(Def:)?\\s?" + "(?<defense>[\\d?]+)" + "D?" +
-                    "\\s*[/\\|]\\s*" +
-                    "(Sta:)?\\s?" + "(?<stamina>[\\d?]+)" + "S?" +
-                    "\\)?");
+    private static final Pattern ADS_STAT_PATTERN = Pattern.compile(
+            "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
+                    "(Atk:|A:)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
+                    "[/\\|\\s]+" +
+                    "(Def:|D:)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
+                    "[/\\|\\s]+" +
+                    "(Sta:|S:)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
+                    "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**
      * Example matched strings:
@@ -75,13 +78,14 @@ public class SpawnMessageParsingUtils {
      *  - Level 13
      *  - (L13)
      *  - L13
+     *  - L:13
      *  - lvl 13
      *
-     * Verify online: https://regex101.com/r/lxvJaS/1
+     * Verify online: https://regex101.com/r/lxvJaS/2
      */
     private static final Pattern LEVEL_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects beginning of line, white space, '(', '/', '|' etc. separators at the beginning
-                    "(Level[\\s]+|L|lvl[\\s]+)" +
+                    "(Level[\\s]+|L[:]?|lvl[\\s]+)" +
                     "(?<level>[\\d\\?]{1,2})" +
                     "($|\\)|\\|/|\\s+)");
 
