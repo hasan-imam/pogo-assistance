@@ -1,7 +1,8 @@
 package pogo.assistance.bot.di;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -11,7 +12,7 @@ public class DiscordEntityConstants {
 
     public static final String NAME_USER_TOKEN_OWNER = "owning_user_token";
     public static final String NAME_USER_TOKEN_M15MV1 = "m15mv1_user_token";
-    public static final String NAME_USER_TOKEN_M8M = "m8m_bot_token";
+    public static final String NAME_USER_TOKEN_M15M = "m15m_bot_token";
     public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
     public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
     public static final String NAME_USER_TOKEN_NINERS = "niners_user_token";
@@ -25,8 +26,8 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_BUILDER_M15MV1_USER = "m15mv1_user_jda_builder";
     public static final String NAME_JDA_M15MV1_USER = "m15mv1_user_jda";
 
-    public static final String NAME_JDA_BUILDER_M8M_BOT = "bot_user_jda_builder";
-    public static final String NAME_JDA_M8M_BOT = "bot_user_jda";
+    public static final String NAME_JDA_BUILDER_M15M_BOT = "m15m_bot_jda_builder";
+    public static final String NAME_JDA_M15M_BOT = "m15m_bot_jda";
 
     public static final String NAME_JDA_BUILDER_CORRUPTED_USER = "corrupted_user_jda_builder";
     public static final String NAME_JDA_CORRUPTED_USER = "corrupted_user_jda";
@@ -45,7 +46,7 @@ public class DiscordEntityConstants {
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
 
-    public static final String M8M_BOT_TOKEN = "";
+    public static final String M15M_BOT_TOKEN = "";
     public static final String OWNING_USER_TOKEN = "";
     public static final String M15MV1_USER_TOKEN = "";
 
@@ -83,6 +84,10 @@ public class DiscordEntityConstants {
 
     public static final long CHANNEL_ID_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;
+
+    public static final long CHANNEL_ID_DD_BOT_TESTING = 561529516124536833L;
+
+    public static final long CHANNEL_ID_PDEX100P_PLAYGROUND = 561519459374858245L;
 
     public static final long SERVER_ID_POGOSJ1 = 346733317699141632L;
     public static final long CHANNEL_ID_POGOSJ1_TWEETS = 346733581814726657L;

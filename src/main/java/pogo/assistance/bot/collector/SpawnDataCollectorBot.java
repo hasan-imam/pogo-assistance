@@ -4,7 +4,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15MV1_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 
@@ -35,12 +35,12 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     private final AtomicBoolean shutdownTriggered = new AtomicBoolean(false);
 
     /**
-     * @param m15mv1UserJda
+     * @param m15mBotJda
      *      Control user JDA - used for relaying and bot control. All other JDAs just collect data.
      */
     @Inject
     public SpawnDataCollectorBot(
-            @Named(NAME_JDA_M15MV1_USER) final JDA m15mv1UserJda,
+            @Named(NAME_JDA_M15M_BOT) final JDA m15mBotJda,
             @Named(NAME_JDA_CORRUPTED_USER) final JDA corruptedUserJda,
             @Named(NAME_JDA_BENIN_USER) final JDA beninUserJda,
             @Named(NAME_JDA_NINERS_USER) final JDA ninersUserJda,
@@ -49,7 +49,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_IRVIN88_USER) final JDA irvin88UserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler) {
 
-        Verify.verify(hasRegisteredListener(m15mv1UserJda), "Control user JDA is expected to have at least one listener (kill switch)");
+        Verify.verify(hasRegisteredListener(m15mBotJda), "Control user JDA is expected to have at least one listener (kill switch)");
         Verify.verify(hasRegisteredListener(corruptedUserJda), "Corrupted user JDA is expected to have registered listener(s)");
         Verify.verify(hasRegisteredListener(beninUserJda), "Benin user JDA is expected to have registered listener(s)");
         Verify.verify(hasRegisteredListener(ninersUserJda), "Niners user JDA is expected to have registered listener(s)");
@@ -57,7 +57,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         Verify.verify(hasRegisteredListener(timburtyUserJda), "Timburty user JDA is expected to have registered listener(s)");
         Verify.verify(hasRegisteredListener(irvin88UserJda), "Irvin88 user JDA is expected to have registered listener(s)");
 
-        this.controlUserJda = m15mv1UserJda;
+        this.controlUserJda = m15mBotJda;
         this.corruptedUserJda = corruptedUserJda;
         this.beninUserJda = beninUserJda;
         this.ninersUserJda = ninersUserJda;

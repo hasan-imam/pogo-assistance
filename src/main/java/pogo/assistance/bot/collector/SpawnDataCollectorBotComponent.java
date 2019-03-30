@@ -43,7 +43,7 @@ public interface SpawnDataCollectorBotComponent {
 
         @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
-                @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15MV1) final String controlUserToken);
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 
         SpawnDataCollectorBotComponent build();
     }

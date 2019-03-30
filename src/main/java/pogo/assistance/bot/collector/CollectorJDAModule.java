@@ -4,14 +4,14 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15MV1_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_BENIN;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_CORRUPTED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_IRVIN88;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_JOHNNY;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_M15MV1;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_M15M;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_NINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_TIMBURTY;
 
@@ -151,9 +151,9 @@ class CollectorJDAModule {
      */
     @Singleton
     @Provides
-    @Named(NAME_JDA_M15MV1_USER)
-    public static JDA provideControlUserJda(@Named(NAME_USER_TOKEN_M15MV1) final String token) {
-        final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
+    @Named(NAME_JDA_M15M_BOT)
+    public static JDA provideControlUserJda(@Named(NAME_USER_TOKEN_M15M) final String token) {
+        final JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT);
         jdaBuilder.setToken(token);
         jdaBuilder.addEventListener(new KillSwitch());
 

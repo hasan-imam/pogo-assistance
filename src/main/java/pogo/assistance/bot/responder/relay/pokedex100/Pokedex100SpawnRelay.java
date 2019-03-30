@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.TextChannel;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnObserver;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
@@ -28,21 +28,19 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     private final Provider<JDA> relayingUserJda;
 
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
-    private final User superBotP = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_PDEX100_SUPER_BOT_P);
+    private final TextChannel commandRelayChannel = relayingUserJda.get().getTextChannelById(DiscordEntityConstants.CHANNEL_ID_PDEX100P_PLAYGROUND);
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
-    private final User h13m = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_H13M);
-    @Getter(lazy = true, value = AccessLevel.PRIVATE)
-    private final User m15mv1 = relayingUserJda.get().getUserById(DiscordEntityConstants.USER_ID_M15MV1);
+    private final TextChannel serverLogChannel = relayingUserJda.get().getTextChannelById(DiscordEntityConstants.CHANNEL_ID_DD_BOT_TESTING);
 
     private final RateLimiter rateLimiter = RateLimiter.create(1);
 
     /**
      * @param relayingUserJda
      *      JDA with user {@link JDA#getSelfUser() user} who will relay the spawn info. User needs to have necessary
-     *      permissions, e.g. having a 'verified', 'candy tracker' etc. roles when relaying to Pokedex100.
+     *      permissions, for relaying to Pokedex100-Playground.
      */
     @Inject
-    public Pokedex100SpawnRelay(@Named(DiscordEntityConstants.NAME_JDA_M15MV1_USER) final Provider<JDA> relayingUserJda) {
+    public Pokedex100SpawnRelay(@Named(DiscordEntityConstants.NAME_JDA_M15M_BOT) final Provider<JDA> relayingUserJda) {
         this.relayingUserJda = relayingUserJda;
     }
 
@@ -62,9 +60,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
                 // TODO: Can we do this in a better way?
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
                 log.info("Sending candy command: {}", command);
-            } else if (pokemonSpawn.getCp().orElse(0) >= 2690) {
-                // TODO: have made the cp threshold here high for now since all high cp posts mentions poster
-                // should lower it back to 2k once that's fixed
+            } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
                 log.info("Sending high CP command: {}", command);
             } else {
@@ -75,13 +71,12 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             rateLimiter.acquire();
             sendCommandToSuperBotP(command);
         } catch (final RuntimeException e) {
-            log.error("Error observing spawn: " + pokemonSpawn, e);
+            log.error("Error relaying spawn: " + pokemonSpawn, e);
         }
     }
 
     private void sendCommandToSuperBotP(final String command) {
-        getSuperBotP().openPrivateChannel()
-                .complete()
+        getCommandRelayChannel()
                 .sendMessage(new MessageBuilder(command).build())
                 .queueAfter(ThreadLocalRandom.current().nextInt(30), TimeUnit.SECONDS);
     }

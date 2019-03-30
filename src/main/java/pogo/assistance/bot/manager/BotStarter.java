@@ -54,7 +54,7 @@ public class BotStarter {
                 .johnnyUserToken(DiscordEntityConstants.JOHNNY_USER_TOKEN)
                 .timburtyUserToken(DiscordEntityConstants.TIMBURTY_USER_TOKEN)
                 .irvin88UserToken(DiscordEntityConstants.IRVIN88_USER_TOKEN)
-                .controlUserToken(DiscordEntityConstants.M15MV1_USER_TOKEN)
+                .controlUserToken(DiscordEntityConstants.M15M_BOT_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();
         bot.startAsync().awaitRunning();

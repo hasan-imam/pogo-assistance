@@ -61,13 +61,7 @@ public class VerifierBotUtils {
                 .append(pokemonSpawn.getLongitude().toDegrees());
 
         if (mentionPoster) {
-            if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
-                stringBuilder.append(" n"); // needed to mention verifier name for 90+ iv posts
-            }
-        } else {
-            if (pokemonSpawn.getIv().orElse(-1.0) < 90.0) {
-                stringBuilder.append(" n"); // needed to NOT mention verifier name for non 90+ iv posts
-            }
+            stringBuilder.append(" n"); // needed to mention verifier name for 90+ iv posts
         }
 
         return stringBuilder.toString();
