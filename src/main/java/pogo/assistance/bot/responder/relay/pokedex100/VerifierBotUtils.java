@@ -60,8 +60,8 @@ public class VerifierBotUtils {
         stringBuilder.append(" ").append(pokemonSpawn.getLatitude().toDegrees()).append(",")
                 .append(pokemonSpawn.getLongitude().toDegrees());
 
-        if (mentionPoster) {
-            stringBuilder.append(" n"); // needed to mention verifier name for 90+ iv posts
+        if (!mentionPoster) {
+            stringBuilder.append(" n"); // needed to NOT mention verifier name for 90+ iv posts
         }
 
         return stringBuilder.toString();
