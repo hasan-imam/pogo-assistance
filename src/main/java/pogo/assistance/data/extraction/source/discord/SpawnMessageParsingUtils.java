@@ -84,11 +84,11 @@ public class SpawnMessageParsingUtils {
      *  - L:13
      *  - lvl 13
      *
-     * Verify online: https://regex101.com/r/lxvJaS/2
+     * Verify online: https://regex101.com/r/lxvJaS/3
      */
     private static final Pattern LEVEL_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects beginning of line, white space, '(', '/', '|' etc. separators at the beginning
-                    "(Level[\\s]+|L[:]?|lvl[\\s]+)" +
+                    "(Level[\\s]+|L[:]?|(Lvl|lvl)[\\s]+)" +
                     "(?<level>[\\d\\?]{1,2})" +
                     "($|\\)|\\|/|\\s+)");
 

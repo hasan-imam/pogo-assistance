@@ -1,7 +1,9 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
 
@@ -11,6 +13,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Verify;
 import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
@@ -23,12 +26,15 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  * @implNote
  *      Assumptions:
  *          - All message has one embed and the embed's thumbnail URL is a novabot asset URL
+ *            - This is not true for some of the older NHT messages
+ *              Sample asset URL: https://raw.githubusercontent.com/bmpgo/sprites/poracle/pokemon_icon_193_00.png
  */
 public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
         return isFromVcPokeScanTargetChannels(message)
+                || isFromNHTTargetChannels(message)
                 || isFromPoGoBadgersDmBot(message);
     }
 
@@ -104,6 +110,15 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     private static boolean isFromPoGoBadgersDmBot(final Message message) {
         return message.getChannelType() == ChannelType.PRIVATE
                 && message.getAuthor().getIdLong() == USER_ID_POGO_BADGERS_BOT;
+    }
+
+    private static boolean isFromNHTTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && Optional.ofNullable(message.getGuild()).map(Guild::getIdLong).filter(id -> id == SERVER_ID_NORTHHOUSTONTRAINERS).isPresent()
+                && Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .filter(id -> id == CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED)
+                .isPresent();
     }
 
 }

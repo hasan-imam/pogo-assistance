@@ -116,6 +116,7 @@ class SpawnDataExchangeModule {
      * 'Irvin88' user has access to:
      *  - VCPokeScan
      *  - PoGoBadger's Den
+     *  - North Houston Trainers
      */
     @Named(CollectorJDAModule.NAME_IRVIN88_USER_SPAWN_LISTENER)
     @Provides

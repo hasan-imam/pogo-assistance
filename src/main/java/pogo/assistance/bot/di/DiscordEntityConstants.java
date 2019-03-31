@@ -141,4 +141,8 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_POGO_BADGERS = 504336735199821824L;
 
+    public static final long SERVER_ID_NORTHHOUSTONTRAINERS = 480799758810742824L;
+    public static final long CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED = 510562954291314688L;
+    public static final long CHANNEL_ID_NORTHHOUSTONTRAINERS_GLOBAL100 = 532661073321525250L;
+
 }
