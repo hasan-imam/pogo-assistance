@@ -8,6 +8,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDA.Status;
+import pogo.assistance.bot.responder.relay.pokedex100.SpawnStatisticsRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
 
 @Slf4j
@@ -30,6 +32,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     private final JDA johnnyUserJda;
     private final JDA timburtyUserJda;
     private final JDA irvin88UserJda;
+    private final SpawnStatisticsRelay spawnStatisticsRelay;
     private final PokemonSpawnWebCrawler pokemonSpawnWebCrawler;
 
     private final AtomicBoolean shutdownTriggered = new AtomicBoolean(false);
@@ -47,7 +50,8 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_JOHNNY_USER) final JDA johnnyUserJda,
             @Named(NAME_JDA_TIMBURTY_USER) final JDA timburtyUserJda,
             @Named(NAME_JDA_IRVIN88_USER) final JDA irvin88UserJda,
-            final PokemonSpawnWebCrawler pokemonSpawnWebCrawler) {
+            final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
+            final SpawnStatisticsRelay spawnStatisticsRelay) {
 
         Verify.verify(hasRegisteredListener(m15mBotJda), "Control user JDA is expected to have at least one listener (kill switch)");
         Verify.verify(hasRegisteredListener(corruptedUserJda), "Corrupted user JDA is expected to have registered listener(s)");
@@ -64,6 +68,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         this.johnnyUserJda = johnnyUserJda;
         this.timburtyUserJda = timburtyUserJda;
         this.irvin88UserJda = irvin88UserJda;
+        this.spawnStatisticsRelay = spawnStatisticsRelay;
         this.pokemonSpawnWebCrawler = pokemonSpawnWebCrawler;
     }
 
@@ -76,23 +81,32 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     @Override
     public void run() {
         while (!shutdownTriggered.get() && controlUserJda.getStatus() != Status.SHUTDOWN) {
-            logJdaState(corruptedUserJda);
-            logJdaState(beninUserJda);
-            logJdaState(ninersUserJda);
-            logJdaState(johnnyUserJda);
-            logJdaState(timburtyUserJda);
-            logJdaState(irvin88UserJda);
-            logJdaState(controlUserJda);
-
             try {
-                // TODO verify that this shutdown works as expected
-                synchronized (shutdownTriggered) {
-                    TimeUnit.MINUTES.timedWait(shutdownTriggered, 5);
+                logJdaState(corruptedUserJda);
+                logJdaState(beninUserJda);
+                logJdaState(ninersUserJda);
+                logJdaState(johnnyUserJda);
+                logJdaState(timburtyUserJda);
+                logJdaState(irvin88UserJda);
+                logJdaState(controlUserJda);
+
+                if (spawnStatisticsRelay.getStopwatch().elapsed().compareTo(Duration.ofMinutes(60)) > 0) {
+                    // Relay spawn stats (roughly) at some intervals
+                    spawnStatisticsRelay.relayLatestStats();
                 }
-            } catch (final InterruptedException e) {
-                log.error("Spawn data collector/relay interrupted. Attempting to close underlying services.", e);
-                triggerShutdown();
-                Thread.currentThread().interrupt();
+
+                try {
+                    // TODO verify that this shutdown works as expected
+                    synchronized (shutdownTriggered) {
+                        TimeUnit.MINUTES.timedWait(shutdownTriggered, 1);
+                    }
+                } catch (final InterruptedException e) {
+                    log.error("Spawn data collector/relay interrupted. Attempting to close underlying services.", e);
+                    triggerShutdown();
+                    Thread.currentThread().interrupt();
+                }
+            } catch (final Exception e) {
+                log.error("Unexpected error in collector bot's status checking loop", e);
             }
         }
     }

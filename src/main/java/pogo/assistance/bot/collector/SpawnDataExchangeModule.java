@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
 import pogo.assistance.bot.responder.relay.pokedex100.Pokedex100SpawnRelay;
+import pogo.assistance.bot.responder.relay.pokedex100.SpawnStatisticsRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
@@ -129,8 +130,11 @@ class SpawnDataExchangeModule {
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(
-            final Provider<Pokedex100SpawnRelay> pokedex100SpawnRelayProvider) {
-        return new PokemonSpawnExchange(ImmutableSet.of(pokedex100SpawnRelayProvider.get()));
+            final Provider<Pokedex100SpawnRelay> pokedex100SpawnRelayProvider,
+            final Provider<SpawnStatisticsRelay> statisticsRelayProvider) {
+        return new PokemonSpawnExchange(ImmutableSet.of(
+                pokedex100SpawnRelayProvider.get(),
+                statisticsRelayProvider.get()));
     }
 
 }
