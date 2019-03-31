@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -79,16 +80,16 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
         final StringBuilder message = new StringBuilder("\t" + countTotal + " total spawns");
 
         message.append(System.lineSeparator())
-                .append(String.format("\t%d had IV -> %d @ 100, %d 90+, %d 80+, %d 50+, %d @ 0",
+                .append(String.format("\t%d had IV → %d @ 100%%, %d >= 90%%, %d >= 80%%, %d >= 50%%, %d @ 0%%",
                         countHasIv, countWithIv100, countWithIv90, countWithIv80, countWithIv50, countWithIv0));
         message.append(System.lineSeparator())
-                .append(String.format("\t%d had CP -> %d 3000+, %d 2000+",
+                .append(String.format("\t%d had CP → %d >= 3000, %d >= 2000",
                         countHasCp, countWithCp3000, countWithCp2000));
         message.append(System.lineSeparator())
-                .append(String.format("\t%d had level -> %d @ 35, %d 30+",
+                .append(String.format("\t%d had level → %d @ 35, %d >= 30",
                         countHasLevel, countWithLevel35, countWithLevel30));
         message.append(System.lineSeparator())
-                .append(String.format("\t%d candies, %d of them have iv",
+                .append(String.format("\t%d candies, %d of them had IV",
                 countTotalCandies, countCandiesHasIv));
 
         final Map<String, Long> candyCounts = spawns.stream()
@@ -96,7 +97,7 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
                 .filter(CandySelector::isCandy)
                 .map(PokedexEntry::getName)
                 .sorted()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+                .collect(Collectors.groupingBy(Function.identity(), TreeMap::new, Collectors.counting()));
         message.append(System.lineSeparator()).append(String.format("\tCandy count by pokemon: %s", candyCounts));
 
         return message.toString();

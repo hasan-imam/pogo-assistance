@@ -76,10 +76,10 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
         // Relay
         final Message messageToServerLog = getServerLogChannel().sendMessage(embedBuilder.build()).complete();
         final Message messageToH13M = getH13mDmChannel().sendMessage(embedBuilder.build()).complete();
-//        final Message messageToJosh = getJoshDmChannel().sendMessage(embedBuilder.build()).complete();
+        final Message messageToJosh = getJoshDmChannel().sendMessage(embedBuilder.build()).complete();
 
         // Clear out data
-        if (messageToServerLog != null && messageToH13M != null) {
+        if (messageToServerLog != null && messageToH13M != null && messageToJosh != null) {
             getStopwatch().reset().start();
             statisticsMap.clear();
         }

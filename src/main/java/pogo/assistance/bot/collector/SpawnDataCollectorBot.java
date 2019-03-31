@@ -98,7 +98,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
                 try {
                     // TODO verify that this shutdown works as expected
                     synchronized (shutdownTriggered) {
-                        TimeUnit.MINUTES.timedWait(shutdownTriggered, 1);
+                        TimeUnit.MINUTES.timedWait(shutdownTriggered, 5);
                     }
                 } catch (final InterruptedException e) {
                     log.error("Spawn data collector/relay interrupted. Attempting to close underlying services.", e);
