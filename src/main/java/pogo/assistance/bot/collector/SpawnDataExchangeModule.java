@@ -22,6 +22,7 @@ import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessagePr
 import pogo.assistance.data.extraction.source.discord.southwest.SouthwestPokemonSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
+import pogo.assistance.utils.debug.ServerLogger;
 
 /**
  * This module registers the listeners we need to put on the data collecting user JDAs.
@@ -38,12 +39,14 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_CORRUPTED_USER_SPAWN_LISTERNER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForCorruptedUserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         final FLPokeMapSpawnMessageProcessor flpmSpawnMessageProcessor = new FLPokeMapSpawnMessageProcessor();
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(flpmSpawnMessageProcessor),
                 ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     /**
@@ -53,11 +56,13 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_BENIN_USER_SPAWN_LISTENER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForBeninUserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
                 ImmutableSet.of(new SDHSpawnMessageProcessor()),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     /**
@@ -72,7 +77,8 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForNinersUserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
                         new PoGoSJSpawnMessageProcessorV2(),
@@ -81,7 +87,8 @@ class SpawnDataExchangeModule {
                         new PokeFairySpawnMessageProcessor(),
                         new PineappleMapSpawnMessageProcessor()),
                 Collections.emptySet(),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     /**
@@ -91,11 +98,13 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_JOHNNY_USER_SPAWN_LISTENER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForJohnnyUserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new PineappleMapSpawnMessageProcessor()),
                 Collections.emptySet(),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     /**
@@ -105,11 +114,13 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_TIMBURTY_USER_SPAWN_LISTENER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForTimburtyUserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new SouthwestPokemonSpawnMessageProcessor()),
                 Collections.emptySet(),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     /**
@@ -121,11 +132,13 @@ class SpawnDataExchangeModule {
     @Named(CollectorJDAModule.NAME_IRVIN88_USER_SPAWN_LISTENER)
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForIrvin88UserJDA(
-            final PokemonSpawnExchange spawnExchange) {
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
-                spawnExchange);
+                spawnExchange,
+                serverLogger);
     }
 
     @Singleton

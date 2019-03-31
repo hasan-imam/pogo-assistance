@@ -73,12 +73,12 @@ public class VerifierBotUtils {
      */
     private static String getNameSegment(final PokedexEntry pokedexEntry) {
         final String name = pokedexEntry.getName();
-        if (name.equalsIgnoreCase("nidoran")) {
+        if (pokedexEntry.getId() == 29 || pokedexEntry.getId() == 32) {
             switch (pokedexEntry.getGender()) {
                 case MALE: return "nidoranm";
                 case FEMALE: return "nidoranf";
-                case NONE: case UNKNOWN: return "nidoran";
-                default: throw new UnsupportedOperationException("Unsupported gender: " + pokedexEntry.getGender());
+                case UNKNOWN: return "nidoran";
+                default: throw new UnsupportedOperationException("Unsupported Nidoran gender: " + pokedexEntry.getGender());
             }
         }
 
