@@ -81,6 +81,7 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
         builder.from(extractLocation(compiledText)
                 .orElseThrow(() -> new IllegalArgumentException("Failed to parse location from compiled text: " + compiledText)));
         builder.pokedexEntry(pokedexEntry);
+        builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
 
         extractLevel(compiledText).ifPresent(builder::level);
         extractCp(compiledText).ifPresent(builder::cp);

@@ -144,6 +144,7 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
                         .orElseThrow(() -> new IllegalArgumentException("Failed to extract IV from line: " + descriptionLines[3])))
                 .level(level)
                 .locationDescription(locationDescription)
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build();
         return Optional.of(pokemonSpawn);
     }

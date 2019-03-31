@@ -81,6 +81,7 @@ public class VAScansSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(point);
         builder.pokedexEntry(pokedexEntry);
+        builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
         Optional.ofNullable(titleMatcher.group("level"))
                 .map(Integer::parseInt)
                 .ifPresent(builder::level);

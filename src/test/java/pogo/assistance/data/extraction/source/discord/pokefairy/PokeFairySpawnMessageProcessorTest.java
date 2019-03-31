@@ -4,16 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.jenetics.jpx.WayPoint;
 import java.util.Collections;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
+import io.jenetics.jpx.WayPoint;
+import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.Pokedex;
+import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -52,6 +56,7 @@ class PokeFairySpawnMessageProcessorTest {
                                 .cp(730)
                                 .level(15)
                                 .locationDescription("1000 Great Highway, San Francisco")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -72,11 +77,12 @@ class PokeFairySpawnMessageProcessorTest {
                                 "https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/74-68.png?5"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.77423857038744, -122.44791810650042))
-                                .pokedexEntry(Pokedex.getPokedexEntryFor(74, Gender.MALE).get())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor(74, Gender.MALE, Collections.singleton(PokedexEntry.Form.ALOLAN)).get())
                                 .iv(91.12)
                                 .cp(726)
                                 .level(20)
                                 .locationDescription("117 Ashbury Street, San Francisco")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -97,11 +103,12 @@ class PokeFairySpawnMessageProcessorTest {
                                 "https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/351-31.png?5"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(37.78826371099465, -122.40571164447206))
-                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE).get())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE, Collections.singleton(PokedexEntry.Form.CASTFORM_RAINY)).get())
                                 .iv(93.34)
                                 .cp(1248)
                                 .level(27)
                                 .locationDescription("233 Post Street, San Francisco")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -127,6 +134,7 @@ class PokeFairySpawnMessageProcessorTest {
                                 .cp(773)
                                 .level(34)
                                 .locationDescription("1199 Great Meadow, San Francisco")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 }
         };
@@ -138,6 +146,8 @@ class PokeFairySpawnMessageProcessorTest {
             final String embedUrl,
             final String thumbnailUrl) {
         final Message message = mock(Message.class, Answers.RETURNS_DEEP_STUBS);
+        when(message.getGuild().getName()).thenReturn("someGuildName");
+        when(message.getChannelType()).thenReturn(ChannelType.TEXT);
         when(message.getAuthor().isBot()).thenReturn(true);
 
         final MessageEmbed messageEmbed = mock(MessageEmbed.class, Answers.RETURNS_DEEP_STUBS);

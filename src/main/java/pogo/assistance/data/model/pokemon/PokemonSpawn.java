@@ -1,6 +1,8 @@
 package pogo.assistance.data.model.pokemon;
 
 import io.jenetics.jpx.Point;
+import pogo.assistance.data.model.SourceMetadata;
+
 import java.time.Instant;
 import java.util.Optional;
 import org.immutables.gson.Gson;
@@ -21,5 +23,7 @@ public interface PokemonSpawn extends Point {
     Optional<Double> getIv();
     Optional<Instant> getDespawnTime();
     Optional<String> getLocationDescription();
+
+    SourceMetadata getSourceMetadata();
 
 }

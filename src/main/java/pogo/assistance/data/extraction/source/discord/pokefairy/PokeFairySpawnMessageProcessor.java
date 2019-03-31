@@ -69,6 +69,7 @@ public class PokeFairySpawnMessageProcessor implements MessageProcessor<PokemonS
                 .iv(iv)
                 .level(level)
                 .locationDescription(locationDescription)
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build();
         return Optional.of(pokemonSpawn);
     }

@@ -5,11 +5,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import io.jenetics.jpx.WayPoint;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
@@ -46,6 +48,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .cp(436)
                                 .level(15)
                                 .locationDescription("Brownsville")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -67,6 +70,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .cp(488)
                                 .level(15)
                                 .locationDescription("Mariners Harbor")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -87,6 +91,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .iv(100)
                                 .cp(420)
                                 .level(10)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -108,6 +113,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .cp(739)
                                 .level(35)
                                 .locationDescription("Midtown")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -129,6 +135,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .cp(558)
                                 .level(21)
                                 .locationDescription("LIC")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -148,6 +155,7 @@ class NycPokeMapSpawnMessageProcessorTest {
                                 .pokedexEntry(Pokedex.getPokedexEntryFor("Wigglytuff", Gender.UNKNOWN).get())
                                 .iv(0)
                                 .cp(853)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 }
         };
@@ -155,6 +163,8 @@ class NycPokeMapSpawnMessageProcessorTest {
 
     private static Message mockMessageWithContent(final String contentStripped) {
         final Message message = mock(Message.class, Answers.RETURNS_DEEP_STUBS);
+        when(message.getGuild().getName()).thenReturn("someGuildName");
+        when(message.getChannelType()).thenReturn(ChannelType.TEXT);
         when(message.getContentStripped()).thenReturn(contentStripped);
         when(message.getAuthor().isBot()).thenReturn(true);
         return message;

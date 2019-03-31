@@ -44,6 +44,7 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()));
         builder.pokedexEntry(pokedexEntry);
+        builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
 
         SpawnMessageParsingUtils.extractLevel(messageEmbed.getTitle()).ifPresent(builder::level);
         SpawnMessageParsingUtils.extractCp(messageEmbed.getTitle()).ifPresent(builder::cp);

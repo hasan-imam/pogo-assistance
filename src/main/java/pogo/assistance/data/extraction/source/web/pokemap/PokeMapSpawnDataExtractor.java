@@ -24,7 +24,9 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
 import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.Region;
+import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 @Slf4j
@@ -62,12 +64,13 @@ public class PokeMapSpawnDataExtractor implements Closeable, PokemonSpawnFetcher
         final AtomicInteger fetchedCount = new AtomicInteger(0);
         final AtomicInteger uniqueCount = new AtomicInteger(0);
         final SpawnSummaryStatistics statistics = new SpawnSummaryStatistics();
+        final SourceMetadata sourceMetadata = ImmutableSourceMetadata.builder().sourceName(region + "-pokemap").build();
         final List<PokemonSpawn> pokemonSpawns = StreamSupport.stream(spawnEntries.spliterator(), false)
                 .peek(__ -> fetchedCount.incrementAndGet())
                 .distinct()
                 .peek(__ -> uniqueCount.incrementAndGet())
                 .map(jsonElement -> gson.fromJson(jsonElement, PokemonSpawnEntry.class))
-                .map(PokemonSpawnEntry::asPokemonSpawn)
+                .map(pokemonSpawnEntry -> pokemonSpawnEntry.asPokemonSpawn(sourceMetadata))
                 .filter(pokemonSpawn -> !pokemonSpawn.getDespawnTime().isPresent()
                         || !pokemonSpawn.getDespawnTime().get().isBefore(Instant.now()))
                 .peek(statistics)

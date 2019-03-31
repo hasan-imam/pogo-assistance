@@ -6,12 +6,15 @@ import static org.mockito.Mockito.when;
 
 import io.jenetics.jpx.WayPoint;
 import java.util.Collections;
+
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
@@ -45,6 +48,7 @@ class VAScansSpawnMessageProcessorTest {
                                 .iv(100)
                                 .cp(824)
                                 .level(31)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -63,6 +67,7 @@ class VAScansSpawnMessageProcessorTest {
                                 .iv(100)
                                 .cp(1376)
                                 .level(28)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -81,6 +86,7 @@ class VAScansSpawnMessageProcessorTest {
                                 .iv(100)
                                 .cp(316)
                                 .level(9)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
                 new Object[] {
@@ -98,6 +104,7 @@ class VAScansSpawnMessageProcessorTest {
                                 .iv(100)
                                 .cp(331)
                                 .level(7)
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someGuildName").build())
                                 .build()
                 },
         };
@@ -109,6 +116,8 @@ class VAScansSpawnMessageProcessorTest {
             final String thumbnailUrl) {
         final Message message = mock(Message.class, Answers.RETURNS_DEEP_STUBS);
         when(message.getAuthor().isBot()).thenReturn(true);
+        when(message.getGuild().getName()).thenReturn("someGuildName");
+        when(message.getChannelType()).thenReturn(ChannelType.TEXT);
 
         final MessageEmbed messageEmbed = mock(MessageEmbed.class, Answers.RETURNS_DEEP_STUBS);
         when(messageEmbed.getTitle()).thenReturn(embedTitle);

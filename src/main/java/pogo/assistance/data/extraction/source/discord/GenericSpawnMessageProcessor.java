@@ -50,6 +50,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .iv(SpawnMessageParsingUtils.extractCombatStats(compiledText, compiledText).flatMap(CombatStats::combinedIv))
                 .level(SpawnMessageParsingUtils.extractLevel(compiledText))
                 .cp(SpawnMessageParsingUtils.extractCp(compiledText))
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build();
         return Optional.of(pokemonSpawn);
     }

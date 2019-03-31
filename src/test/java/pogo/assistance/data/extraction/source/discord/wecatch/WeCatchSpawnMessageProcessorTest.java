@@ -11,6 +11,7 @@ import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.junit.jupiter.api.AfterAll;
@@ -20,8 +21,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.Pokedex;
+import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -34,7 +37,7 @@ class WeCatchSpawnMessageProcessorTest {
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         owningUserJda = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .setToken(DiscordEntityConstants.NINERS_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -71,6 +74,7 @@ class WeCatchSpawnMessageProcessorTest {
                                 .cp(277)
                                 .level(20)
                                 .locationDescription("324台灣桃園市平鎮區延平路三段104巷200號")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
                 new Object[] { // bronzong - gender neutral
@@ -92,6 +96,7 @@ class WeCatchSpawnMessageProcessorTest {
                                 .cp(563)
                                 .level(9)
                                 .locationDescription("710台灣台南市永康區中正路277號")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
                 new Object[] { // castform - normal
@@ -108,11 +113,12 @@ class WeCatchSpawnMessageProcessorTest {
 //                                "https://image.cdstud.io/o/351-29.png"),
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(23.32469150855182, 120.27484410435356))
-                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE).get())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE, Collections.singleton(PokedexEntry.Form.CASTFORM_NORMAL)).get())
                                 .iv(93.34)
                                 .cp(1417)
                                 .level(32)
                                 .locationDescription("737台灣台南市鹽水區南榮科技大學")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
                 new Object[] { // castform - sunny
@@ -130,11 +136,12 @@ class WeCatchSpawnMessageProcessorTest {
                         // TODO: verify form once we support it
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(24.1359195272511, 120.71177779000884))
-                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE).get())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor(351, Gender.FEMALE, Collections.singleton(PokedexEntry.Form.CASTFORM_SUNNY)).get())
                                 .iv(91.12)
                                 .cp(459)
                                 .level(10)
                                 .locationDescription("406台灣台中市太平區祥順路一段11號")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
                 new Object[] { // nidoran - female
@@ -156,6 +163,7 @@ class WeCatchSpawnMessageProcessorTest {
                                 .cp(527)
                                 .level(23)
                                 .locationDescription("尚義8之2號邮政编码: 891")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
                 new Object[] { // alolan geodude
@@ -173,11 +181,12 @@ class WeCatchSpawnMessageProcessorTest {
                         // TODO: verify form once we support it
                         ImmutablePokemonSpawn.builder()
                                 .from(WayPoint.of(23.45309234576382, 120.13894736654322))
-                                .pokedexEntry(Pokedex.getPokedexEntryFor(74, Gender.FEMALE).get())
+                                .pokedexEntry(Pokedex.getPokedexEntryFor(74, Gender.FEMALE, Collections.singleton(PokedexEntry.Form.ALOLAN)).get())
                                 .iv(100)
                                 .cp(923)
                                 .level(25)
                                 .locationDescription("614台灣嘉義縣東石鄉東石村觀海三路300號")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("WeCatch").build())
                                 .build()
                 },
         };
@@ -190,6 +199,8 @@ class WeCatchSpawnMessageProcessorTest {
             final String thumbnailUrl) {
         final Message message = mock(Message.class, Answers.RETURNS_DEEP_STUBS);
         when(message.getAuthor().isBot()).thenReturn(true);
+        when(message.getGuild().getName()).thenReturn("someGuildName");
+        when(message.getChannelType()).thenReturn(ChannelType.TEXT);
 
         final MessageEmbed messageEmbed = mock(MessageEmbed.class, Answers.RETURNS_DEEP_STUBS);
         when(messageEmbed.getTitle()).thenReturn(embedTitle);

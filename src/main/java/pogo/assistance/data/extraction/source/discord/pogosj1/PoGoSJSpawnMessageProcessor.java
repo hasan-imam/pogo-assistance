@@ -72,6 +72,7 @@ public class PoGoSJSpawnMessageProcessor implements MessageProcessor<PokemonSpaw
                 .cp(Integer.parseInt(titleMatcher.group("cp")))
                 .iv(Double.parseDouble(titleMatcher.group("iv")))
                 .locationDescription(descriptionLines[2].replaceFirst("Location:", "").trim())
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build());
     }
 

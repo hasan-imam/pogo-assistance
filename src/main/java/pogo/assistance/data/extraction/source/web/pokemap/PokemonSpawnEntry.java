@@ -1,14 +1,17 @@
 package pogo.assistance.data.extraction.source.web.pokemap;
 
-import com.google.gson.annotations.SerializedName;
-import io.jenetics.jpx.WayPoint;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
+
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Derived;
 import org.immutables.value.Value.Style.ImplementationVisibility;
+import com.google.gson.annotations.SerializedName;
+import io.jenetics.jpx.WayPoint;
+import pogo.assistance.data.model.Region;
+import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.Pokedex;
@@ -19,7 +22,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 /**
  * Interface representing a single pokemon spawn entry in the JSON pokemap sends when we query it for spawns. Immutables
  * generates JSON adapter for it, making it easy to parse the JSON. Converting from this representation to the
- * general {@link PokemonSpawn} is also done {@link #asPokemonSpawn() here}.
+ * general {@link PokemonSpawn} is also done {@link #asPokemonSpawn(Region)} here}.
  */
 @Gson.TypeAdapters
 @Value.Immutable
@@ -102,9 +105,10 @@ interface PokemonSpawnEntry {
     }
 
     @Derived
-    default PokemonSpawn asPokemonSpawn() {
+    default PokemonSpawn asPokemonSpawn(final SourceMetadata sourceMetadata) {
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(WayPoint.of(latitude(), longitude()));
+        builder.sourceMetadata(sourceMetadata);
         builder.pokedexEntry(ImmutablePokedexEntry.builder()
                 .from(Pokedex.getPokedexEntryFor(pokemonId(), genderEnum()).get())
                 .forms(forms())

@@ -100,6 +100,7 @@ public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSp
         final Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageEmbed.getUrl()));
         builder.pokedexEntry(pokedexEntry);
+        builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
 
         extractLevel(compiledText).ifPresent(builder::level);
         extractCp(compiledText).ifPresent(builder::cp);

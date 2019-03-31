@@ -29,8 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.bot.responder.relay.pokedex100.CandySelector;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
 import pogo.assistance.data.extraction.source.web.PokemonSpawnFetcher;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.Region;
-import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
+import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -68,10 +69,11 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
         final AtomicInteger fetchedCount = new AtomicInteger(0);
         final AtomicInteger uniqueCount = new AtomicInteger(0);
         final SpawnSummaryStatistics statistics = new SpawnSummaryStatistics();
+        final SourceMetadata sourceMetadata = ImmutableSourceMetadata.builder().sourceName(region + "-radar").build();
         final List<PokemonSpawn> pokemonSpawns = StreamSupport.stream(spawnEntries.spliterator(), false)
                 .peek(__ -> fetchedCount.incrementAndGet())
                 .map(jsonElement -> gson.fromJson(jsonElement, PokemonSpawnEntry.class))
-                .map(PokemonSpawnEntry::asPokemonSpawn)
+                .map(pokemonSpawnEntry -> pokemonSpawnEntry.asPokemonSpawn(sourceMetadata))
                 .distinct()
                 .peek(__ -> uniqueCount.incrementAndGet())
                 .filter(pokemonSpawn -> !pokemonSpawn.getDespawnTime().isPresent()

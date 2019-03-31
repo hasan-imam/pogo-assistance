@@ -4,14 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.jenetics.jpx.WayPoint;
 import java.util.Collections;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Answers;
+import io.jenetics.jpx.WayPoint;
+import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
@@ -48,6 +51,7 @@ class FLPokeMapSpawnMessageProcessorTest {
                                 .cp(533)
                                 .level(20)
                                 .locationDescription("Orlando")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someBotName").build())
                                 .build()
                 },
                 new Object[] {
@@ -69,6 +73,7 @@ class FLPokeMapSpawnMessageProcessorTest {
                                 .cp(1211)
                                 .level(14)
                                 .locationDescription("Lakeland")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someBotName").build())
                                 .build()
                 },
                 new Object[] {
@@ -90,6 +95,7 @@ class FLPokeMapSpawnMessageProcessorTest {
                                 .cp(72)
                                 .level(3)
                                 .locationDescription("Winter Park")
+                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someBotName").build())
                                 .build()
                 },
                 new Object[] {
@@ -104,6 +110,7 @@ class FLPokeMapSpawnMessageProcessorTest {
 //                                .from(WayPoint.of(53.4766, -2.256032))
 //                                .pokedexEntry(ImmutablePokedexEntry.builder().name("Dratini").id(147).gender(Gender.NONE).build())
 //                                .locationDescription("Manchester")
+//                                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("someBotName").build())
 //                                .build()
                 }
         };
@@ -116,6 +123,8 @@ class FLPokeMapSpawnMessageProcessorTest {
             final String thumbnailUrl) {
         final Message message = mock(Message.class, Answers.RETURNS_DEEP_STUBS);
         when(message.getAuthor().isBot()).thenReturn(true);
+        when(message.getAuthor().getName()).thenReturn("someBotName");
+        when(message.getChannelType()).thenReturn(ChannelType.PRIVATE);
 
         final MessageEmbed messageEmbed = mock(MessageEmbed.class, Answers.RETURNS_DEEP_STUBS);
         when(messageEmbed.getTitle()).thenReturn(embedTitle);

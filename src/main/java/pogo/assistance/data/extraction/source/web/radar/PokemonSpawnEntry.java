@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Verify;
 import com.google.gson.annotations.SerializedName;
 import io.jenetics.jpx.WayPoint;
+import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.Weather;
 import pogo.assistance.data.model.pokemon.ImmutablePokedexEntry;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -151,10 +152,11 @@ interface PokemonSpawnEntry {
     }
 
     @Value.Derived
-    default PokemonSpawn asPokemonSpawn() {
+    default PokemonSpawn asPokemonSpawn(final SourceMetadata sourceMetadata) {
         // TODO implement
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(WayPoint.of(latitude(), longitude()));
+        builder.sourceMetadata(sourceMetadata);
         builder.pokedexEntry(ImmutablePokedexEntry.builder().from(Pokedex.getPokedexEntryFor(pokemonId(), genderEnum()).get())
                 .forms(forms())
                 .build());

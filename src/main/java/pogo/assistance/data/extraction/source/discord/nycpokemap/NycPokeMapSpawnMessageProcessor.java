@@ -103,6 +103,7 @@ public class NycPokeMapSpawnMessageProcessor implements MessageProcessor<Pokemon
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
         builder.from(point);
         builder.pokedexEntry(pokedexEntry);
+        builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
         area.ifPresent(builder::locationDescription);
         iv.ifPresent(builder::iv);
         cp.ifPresent(builder::cp);

@@ -52,6 +52,7 @@ public class SouthwestPokemonSpawnMessageProcessor implements MessageProcessor<P
                 .iv(SpawnMessageParsingUtils.extractCombatStats(compiledText, compiledText).flatMap(CombatStats::combinedIv))
                 .level(SpawnMessageParsingUtils.extractLevel(compiledText))
                 .cp(SpawnMessageParsingUtils.extractCp(compiledText))
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build();
         return Optional.of(pokemonSpawn);
     }

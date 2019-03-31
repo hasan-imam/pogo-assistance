@@ -11,6 +11,9 @@ import com.google.common.primitives.Ints;
 import io.jenetics.jpx.Point;
 import io.jenetics.jpx.WayPoint;
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.core.entities.Message;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
+import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutableCombatStats;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
@@ -170,6 +173,19 @@ public class SpawnMessageParsingUtils {
         Verify.verify(ivFromCombatStats.intValue() == ivFromExtraction.intValue(),
                 "IV from ADS stats (%s) and extraction (%s) mismatched", ivFromCombatStats, ivFromExtraction);
         return combatStats;
+    }
+
+    public static SourceMetadata buildSourceMetadataFromMessage(final Message message) {
+        if (message.getChannelType().isGuild()) {
+            return ImmutableSourceMetadata.builder()
+                    .sourceName(message.getGuild().getName())
+                    .build();
+        } else {
+            // If non guild message, just name the source using the message author
+            return ImmutableSourceMetadata.builder()
+                    .sourceName(message.getAuthor().getName())
+                    .build();
+        }
     }
 
     private static Optional<CombatStats> extractCombatStats(final String textContainingAds) {

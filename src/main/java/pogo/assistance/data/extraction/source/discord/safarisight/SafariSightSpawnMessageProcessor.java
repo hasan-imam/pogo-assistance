@@ -72,6 +72,7 @@ public class SafariSightSpawnMessageProcessor implements MessageProcessor<Pokemo
                 .iv(iv)
                 .level(level)
                 .locationDescription(locationDescription)
+                .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
                 .build();
         return Optional.of(pokemonSpawn);
     }

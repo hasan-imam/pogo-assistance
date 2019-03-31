@@ -59,7 +59,7 @@ public class DiscordEntityConstants {
 
     // Users/bots
 
-    public static final long USER_ID_H13M = 471666614857629696L;
+    public static final long USER_ID_H13M = 561201292693995520L;
     public static final long USER_ID_M15MV1 = 520113608978333706L;
 
     public static final long USER_ID_KYRION = 209827394721284097L;
