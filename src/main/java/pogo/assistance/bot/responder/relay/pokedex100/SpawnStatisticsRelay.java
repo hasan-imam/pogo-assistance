@@ -1,6 +1,7 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
 import java.awt.*;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
@@ -67,11 +68,12 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
         final EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(String.format("Spawn statistics for last %s minutes", getStopwatch().elapsed().toMinutes()), null);
         embedBuilder.setColor(Color.red);
-        embedBuilder.setColor(new Color(0xF40C0C));
         embedBuilder.setColor(new Color(255, 0, 54));
-        statisticsMap.forEach((sourceMetadata, spawnSummaryStatistics) -> {
-            embedBuilder.addField(sourceMetadata.sourceName(), spawnSummaryStatistics.toString(), false);
-        });
+        statisticsMap.entrySet().stream()
+                .sorted(Comparator.comparing(statisticsEntry -> statisticsEntry.getKey().sourceName()))
+                .forEachOrdered(statisticsEntry -> {
+                    embedBuilder.addField(statisticsEntry.getKey().sourceName(), statisticsEntry.getValue().toString(), false);
+                });
 
         // Relay
         final Message messageToServerLog = getServerLogChannel().sendMessage(embedBuilder.build()).complete();

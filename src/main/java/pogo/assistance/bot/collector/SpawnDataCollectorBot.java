@@ -90,7 +90,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
                 logJdaState(irvin88UserJda);
                 logJdaState(controlUserJda);
 
-                if (spawnStatisticsRelay.getStopwatch().elapsed().compareTo(Duration.ofMinutes(60)) > 0) {
+                if (spawnStatisticsRelay.getStopwatch().elapsed().compareTo(Duration.ofHours(6)) > 0) {
                     // Relay spawn stats (roughly) at some intervals
                     spawnStatisticsRelay.relayLatestStats();
                 }
