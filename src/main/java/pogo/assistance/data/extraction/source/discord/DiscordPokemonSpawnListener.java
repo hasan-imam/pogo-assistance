@@ -1,6 +1,5 @@
 package pogo.assistance.data.extraction.source.discord;
 
-import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 

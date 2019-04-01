@@ -92,13 +92,15 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
                 .append(String.format("\t%d candies, %d of them had IV",
                 countTotalCandies, countCandiesHasIv));
 
-        final Map<String, Long> candyCounts = spawns.stream()
-                .map(PokemonSpawn::getPokedexEntry)
-                .filter(CandySelector::isCandy)
-                .map(PokedexEntry::getName)
-                .sorted()
-                .collect(Collectors.groupingBy(Function.identity(), TreeMap::new, Collectors.counting()));
-        message.append(System.lineSeparator()).append(String.format("\tCandy count by pokemon: %s", candyCounts));
+        // Commenting out since this can result in too large of a string
+        // Currently this method is mainly used to send report in discord and candy details isn't too important
+//        final Map<String, Long> candyCounts = spawns.stream()
+//                .map(PokemonSpawn::getPokedexEntry)
+//                .filter(CandySelector::isCandy)
+//                .map(PokedexEntry::getName)
+//                .sorted()
+//                .collect(Collectors.groupingBy(Function.identity(), TreeMap::new, Collectors.counting()));
+//        message.append(System.lineSeparator()).append(String.format("\tCandy count by pokemon: %s", candyCounts));
 
         return message.toString();
     }

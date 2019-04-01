@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 import com.google.common.base.Stopwatch;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Message;
@@ -30,6 +31,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  * @implNote
  *      Listening and relaying methods here are synchronized to prevent concurrent modifications.
  */
+@Slf4j
 @Singleton
 public class SpawnStatisticsRelay implements PokemonSpawnObserver {
 
@@ -64,26 +66,30 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
      * Relays latest spawn statistics and clears the internal states of this instance.
      */
     public synchronized void relayLatestStats() {
-        // Prepare message
-        final EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(String.format("Spawn statistics for last %s minutes", getStopwatch().elapsed().toMinutes()), null);
-        embedBuilder.setColor(Color.red);
-        embedBuilder.setColor(new Color(255, 0, 54));
-        statisticsMap.entrySet().stream()
-                .sorted(Comparator.comparing(statisticsEntry -> statisticsEntry.getKey().sourceName()))
-                .forEachOrdered(statisticsEntry -> {
-                    embedBuilder.addField(statisticsEntry.getKey().sourceName(), statisticsEntry.getValue().toString(), false);
-                });
+        try {
+            // Prepare message
+            final EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle(String.format("Spawn statistics for last %s minutes", getStopwatch().elapsed().toMinutes()), null);
+            embedBuilder.setColor(Color.red);
+            embedBuilder.setColor(new Color(255, 0, 54));
+            statisticsMap.entrySet().stream()
+                    .sorted(Comparator.comparing(statisticsEntry -> statisticsEntry.getKey().sourceName()))
+                    .forEachOrdered(statisticsEntry -> {
+                        embedBuilder.addField(statisticsEntry.getKey().sourceName(), statisticsEntry.getValue().toString(), false);
+                    });
 
-        // Relay
-        final Message messageToServerLog = getServerLogChannel().sendMessage(embedBuilder.build()).complete();
-        final Message messageToH13M = getH13mDmChannel().sendMessage(embedBuilder.build()).complete();
-        final Message messageToJosh = getJoshDmChannel().sendMessage(embedBuilder.build()).complete();
+            // Relay
+            final Message messageToServerLog = getServerLogChannel().sendMessage(embedBuilder.build()).complete();
+            final Message messageToH13M = getH13mDmChannel().sendMessage(embedBuilder.build()).complete();
+            final Message messageToJosh = getJoshDmChannel().sendMessage(embedBuilder.build()).complete();
 
-        // Clear out data
-        if (messageToServerLog != null && messageToH13M != null && messageToJosh != null) {
-            getStopwatch().reset().start();
-            statisticsMap.clear();
+            // Clear out data
+            if (messageToServerLog != null && messageToH13M != null && messageToJosh != null) {
+                getStopwatch().reset().start();
+                statisticsMap.clear();
+            }
+        } catch (final Exception e) {
+            log.error("Failed to send spawn stats report through Discord", e);
         }
     }
 
