@@ -37,9 +37,15 @@ public class BotStarter {
             log.info("Doing batch publish...");
         } else if (input.isInteractiveQuestPublish()) {
             log.info("Handling interactive commands...");
-        } else if (input.isFeed()) {
+        }
+
+        // Following can run in parallel to other things
+
+        if (input.isFeed()) {
             runPokemonSpawnExchange();
-        } else if (input.isResponder()) {
+        }
+
+        if (input.isResponder()) {
             startResponder(input.getListenerIds());
         }
 
@@ -72,11 +78,13 @@ public class BotStarter {
 
         final ResponderBot responderBot = DaggerResponderBotComponent.builder()
                 .accountType(ACCOUNT_TYPE)
-                .userToken(USER_TOKEN)
+                .owningUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .horuseusUserToken(DiscordEntityConstants.HORUSEUS_USER_TOKEN)
+                .controlUserToken(DiscordEntityConstants.M15M_BOT_TOKEN)
                 .listenerIds(listenerIds)
                 .build()
                 .getResponderBot();
-        responderBot.run();
+        responderBot.startAsync();
     }
 
     private static void startJobs(final Set<WorkflowId> inputWorkflowIds) {

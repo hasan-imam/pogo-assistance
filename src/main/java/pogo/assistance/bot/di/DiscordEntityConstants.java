@@ -60,6 +60,7 @@ public class DiscordEntityConstants {
     public static final String JOHNNY_USER_TOKEN = "";
     public static final String TIMBURTY_USER_TOKEN = "";
     public static final String IRVIN88_USER_TOKEN = "";
+    public static final String HORUSEUS_USER_TOKEN = "";
 
     // Users/bots
 

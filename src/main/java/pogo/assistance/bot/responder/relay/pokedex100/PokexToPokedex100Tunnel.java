@@ -3,13 +3,16 @@ package pogo.assistance.bot.responder.relay.pokedex100;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 
+@Slf4j
 public class PokexToPokedex100Tunnel extends ListenerAdapter {
 
     private static final long SERVER_ID_RELAYED_SERVER = 562454496022757377L;
@@ -22,6 +25,12 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
         this.relayingUserJda = relayingUserJda;
     }
 
+    @Override
+    public void onReady(final ReadyEvent event) {
+        log.info("Pokex-to-Pokedex100 tunnel is online!");
+    }
+
+    @Override
     public void onPrivateMessageReceived(final PrivateMessageReceivedEvent event) {
         if (isPokexSpawnNotificationDm(event.getMessage())) {
             handlePokexSpawnNotificationDm(event.getMessage());

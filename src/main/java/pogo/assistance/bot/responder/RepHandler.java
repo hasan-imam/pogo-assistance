@@ -41,6 +41,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  * @implNote
  *      Uses output of {@link Message#getContentStripped()} for matching with patterns, understanding what type of
  *      message it is, etc.
+ *
+ * TODO: As of now, the {@link #onReady(ReadyEvent)} verification fails saying that the guild's verification level is too high
+ * and this user can't send message to that channel. But from real client it is possible to send message. Need to figure out what's
+ * wrong here.
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -53,7 +57,6 @@ public class RepHandler extends ListenerAdapter {
 
     private static final long ROUTER_GUILD_ID = 521260041500622848L;
     private static final long CHANNEL_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
-    private static final long H13M_ID = 471666614857629696L;
 
     private static final Pattern PATTERN_REP_ATTRIBUTION_MSG =
             Pattern.compile("(\uD83C\uDD99  \\|  )(.*)( has given )(.*)( a reputation point!)");
