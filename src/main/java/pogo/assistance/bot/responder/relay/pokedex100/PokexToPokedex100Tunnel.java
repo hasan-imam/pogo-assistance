@@ -14,13 +14,19 @@ import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 
+/**
+ * @implNote
+ *      Many inefficiencies in this class...
+ *       - History lookup takes O(history size) time
+ *       - Not all string replacements may always be necessary
+ */
 @Slf4j
 public class PokexToPokedex100Tunnel extends ListenerAdapter {
 
     private static final long SERVER_ID_RELAYED_SERVER = 562454496022757377L;
     public static final long CHANNEL_ID_RELAYED_CHANNEL = 562454673454268427L;
 
-    private static final int MESSAGE_HISTORY_QUEUE_SIZE_LIMIT = 100;
+    private static final int MESSAGE_HISTORY_QUEUE_SIZE_LIMIT = 30;
 
     private final JDA relayingUserJda;
 
@@ -68,19 +74,29 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
         final String displayedMessage = message.getContentDisplay().trim();
         final String messageToRelay = displayedMessage.split("\n")[0]
                 .replaceFirst("^:(\\w+):[\\s]*", "") // Remove pokemon emote from the beginning
+                .replaceFirst("[\\s]?\\*\\*\\*[\\w]+/[\\w]+\\*\\*\\*", "") // Remove move sets
                 .replaceFirst(":CP:", "CP")
-                .replaceFirst(":100IV:", "100 iv")
-                .replaceFirst(":LVL:", "level")
+                .replaceFirst(":100IV:", "100 IV")
+                .replaceFirst(":LVL:", "Level")
                 .replaceFirst(":Male:", "♂")
-                .replaceFirst(":Female:", "♀");
+                .replaceFirst(":Female:", "♀")
+                .replaceFirst(":Neutral:", "⚲");
 
         // Check if this was already posted
-        final boolean isDuplicate = pastMessages.stream().anyMatch(pastMessage -> pastMessage.equals(messageToRelay));
+        final boolean isDuplicate = pastMessages.stream().anyMatch(pastMessage -> {
+            // Containment check used because earlier message is likely to be from donor feed, which usually has more information
+            // such as height/weight etc. Latter repeated messages are copies from the free channel where such premium info isn't
+            // always included, so likely to result in a message contained in a past message.
+            return pastMessage.contains(messageToRelay);
+        });
         if (!isDuplicate) {
             pastMessages.add(messageToRelay);
             relayingUserJda.getGuildById(SERVER_ID_RELAYED_SERVER).getTextChannelById(CHANNEL_ID_RELAYED_CHANNEL)
                     .sendMessage(messageToRelay)
                     .complete();
+            log.info("Pokex tunnel sent message: {}", messageToRelay);
+        } else {
+            log.info("Pokex tunnel filtering duplicate message: {}", messageToRelay);
         }
 
         // Clear remove element from the queue if it's past the size limit
