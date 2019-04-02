@@ -19,6 +19,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_JOHNNY = "johnny_user_token";
     public static final String NAME_USER_TOKEN_TIMBURTY = "timburty_user_token";
     public static final String NAME_USER_TOKEN_IRVIN88 = "irvin88_user_token";
+    public static final String NAME_USER_TOKEN_HORUSEUS = "horuseus_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -41,6 +42,9 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_TIMBURTY_USER = "timburty_user_jda";
 
     public static final String NAME_JDA_IRVIN88_USER = "irvin88_user_jda";
+
+    public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
+    public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
 
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
@@ -79,15 +83,17 @@ public class DiscordEntityConstants {
             409780035470360576L);
     public static final long USER_ID_SDHVIP_BOT = 520776622887141388L;
     public static final long USER_ID_POGO_BADGERS_BOT = 508688611898687498L;
+    public static final long USER_ID_POKEX_DM_BOT = 271388742558679040L;
 
     // IDs for discord servers/channels
 
     public static final long CHANNEL_ID_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;
 
-    public static final long CHANNEL_ID_DD_BOT_TESTING = 561529516124536833L;
-
     public static final long CHANNEL_ID_PDEX100P_PLAYGROUND = 561519459374858245L;
+
+    public static final long SERVER_ID_DD = 561529276944351243L;
+    public static final long CHANNEL_ID_DD_BOT_TESTING = 561529516124536833L;
 
     public static final long SERVER_ID_POGOSJ1 = 346733317699141632L;
     public static final long CHANNEL_ID_POGOSJ1_TWEETS = 346733581814726657L;

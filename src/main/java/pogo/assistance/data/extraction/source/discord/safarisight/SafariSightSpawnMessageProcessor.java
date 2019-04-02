@@ -21,6 +21,10 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
  * Processes alert messages from FLPM and AP bots (although the name implies only the first).
+ *
+ * Known issue with this processor:
+ *  - Can't process unowns. Example post: https://discordapp.com/channels/@me/555477426826772509/562028467970113537
+ *    Unown + gender + letter throws off the pattern matcher.
  */
 @Slf4j
 public class SafariSightSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
