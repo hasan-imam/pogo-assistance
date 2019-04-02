@@ -74,7 +74,10 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
         final String displayedMessage = message.getContentDisplay().trim();
         final String messageToRelay = displayedMessage.split("\n")[0]
                 .replaceFirst("^:(\\w+):[\\s]*", "") // Remove pokemon emote from the beginning
-                .replaceFirst("[\\s]?\\*\\*\\*[\\w]+/[\\w]+\\*\\*\\*", "") // Remove move sets
+                .replaceFirst("[\\s]?\\*\\*\\*[\\w\\s]+/[\\w\\s]+\\*\\*\\*", "") // Remove move sets
+                .replaceFirst("[_\\s]*[\\d\\.]+kg[_]*", "") // Remove weight and formatting stuff around it
+                .replaceFirst("[_\\s]*[\\d\\.]+m[_]*", "") // Remove height and formatting stuff around it
+                .replaceAll("[\\s]*:BestATK:|[\\s]*:BestDEF:", "") // Remove move set related icons
                 .replaceFirst(":CP:", "CP")
                 .replaceFirst(":100IV:", "100 IV")
                 .replaceFirst(":LVL:", "Level")
@@ -87,6 +90,7 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
             // Containment check used because earlier message is likely to be from donor feed, which usually has more information
             // such as height/weight etc. Latter repeated messages are copies from the free channel where such premium info isn't
             // always included, so likely to result in a message contained in a past message.
+            // **Cranidos** :flag_de: __Bad Vilbel__ **HE**  100 IV  CP **1404** Level **27**  ♂
             return pastMessage.contains(messageToRelay);
         });
         if (!isDuplicate) {
