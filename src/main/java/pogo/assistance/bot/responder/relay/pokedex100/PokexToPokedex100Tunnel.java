@@ -1,5 +1,7 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -18,11 +20,18 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
     private static final long SERVER_ID_RELAYED_SERVER = 562454496022757377L;
     public static final long CHANNEL_ID_RELAYED_CHANNEL = 562454673454268427L;
 
+    private static final int MESSAGE_HISTORY_QUEUE_SIZE_LIMIT = 100;
+
     private final JDA relayingUserJda;
+
+    // To look up past messages and de-duplicate
+    // Using list which would have poor lookup performance, but should be okay since we intend to keep it short
+    private final Deque<String> pastMessages;
 
     @Inject
     public PokexToPokedex100Tunnel(@Named(DiscordEntityConstants.NAME_JDA_M15M_BOT) final JDA relayingUserJda) {
         this.relayingUserJda = relayingUserJda;
+        this.pastMessages = new LinkedList<>();
     }
 
     @Override
@@ -48,7 +57,12 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
         return messageTitle.contains("CP") && messageTitle.contains("LVL");
     }
 
-    private void handlePokexSpawnNotificationDm(final Message message) {
+    /**
+     * @implNote
+     *      Made synchronized to prevent concurrent modification of {@link #pastMessages}. This is the only method that should be
+     *      modifying and accessing the queue.
+     */
+    private synchronized void handlePokexSpawnNotificationDm(final Message message) {
         // Sample message: (at this point - they keep changing format)
         // ":408a: **Cranidos** :flag_tw: **New Taipei City**  :100IV:  :CP: **936** :LVL: **18** ***Take Down/Ancient Power*** :Female:"
         final String displayedMessage = message.getContentDisplay().trim();
@@ -59,9 +73,20 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
                 .replaceFirst(":LVL:", "level")
                 .replaceFirst(":Male:", "♂")
                 .replaceFirst(":Female:", "♀");
-        relayingUserJda.getGuildById(SERVER_ID_RELAYED_SERVER).getTextChannelById(CHANNEL_ID_RELAYED_CHANNEL)
-                .sendMessage(messageToRelay)
-                .complete();
+
+        // Check if this was already posted
+        final boolean isDuplicate = pastMessages.stream().anyMatch(pastMessage -> pastMessage.equals(messageToRelay));
+        if (!isDuplicate) {
+            pastMessages.add(messageToRelay);
+            relayingUserJda.getGuildById(SERVER_ID_RELAYED_SERVER).getTextChannelById(CHANNEL_ID_RELAYED_CHANNEL)
+                    .sendMessage(messageToRelay)
+                    .complete();
+        }
+
+        // Clear remove element from the queue if it's past the size limit
+        if (pastMessages.size() > MESSAGE_HISTORY_QUEUE_SIZE_LIMIT) {
+            pastMessages.poll();
+        }
     }
 
 }
