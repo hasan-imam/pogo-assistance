@@ -23,11 +23,12 @@ public class NovaBotProcessingUtils {
      *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/88-73.png?5
      *  - https://image.cdstud.io/o/351-29.png (we catch channel - castform)
      *  - https://www.serebii.net/sunmoon/pokemon/050-a.png
+     *  - https://raw.githubusercontent.com/whitewillem/PogoAssets/resized/no_border/pokemon_icon_459_00.png
      *
      * The form part of the URL can be missing for things that have multiple forms. In such cases some default (or unknown) form is inferred
      * picked, such as normal castform, non alolan, unown A etc.
      */
-    private static final Pattern EMBED_THUMBNAIL_URL_PATTERN = Pattern.compile("(.+)/(?<id>\\d+)[\\-]?(?<id2>[\\w]+)?\\.png(.*)");
+    private static final Pattern EMBED_THUMBNAIL_URL_PATTERN = Pattern.compile("(.+)/(pokemon_icon_)?(?<id>\\d+)[\\-_]?(?<id2>[\\w]+)?\\.png(.*)");
 
     /**
      * @param gender

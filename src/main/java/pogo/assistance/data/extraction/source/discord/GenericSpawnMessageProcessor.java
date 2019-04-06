@@ -5,6 +5,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.User;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -25,9 +27,8 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 /**
  * @implNote
  *      Assumptions:
- *          - All message has one embed and the embed's thumbnail URL is a novabot asset URL
- *            - This is not true for some of the older NHT messages
- *              Sample asset URL: https://raw.githubusercontent.com/bmpgo/sprites/poracle/pokemon_icon_193_00.png
+ *          - All message has one embed and the embed's thumbnail URL is a novabot asset URL (i.e. parsable by
+ *          {@link NovaBotProcessingUtils#inferPokedexEntryFromNovaBotAssetUrl(String, PokedexEntry.Gender)}).
  */
 public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
@@ -35,7 +36,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     public boolean canProcess(@Nonnull final Message message) {
         return isFromVcPokeScanTargetChannels(message)
                 || isFromNHTTargetChannels(message)
-                || isFromPoGoBadgersDmBot(message);
+                || isFromPoGoBadgersDmBot(message)
+                || isFromPokeSquadTargetChannels(message);
     }
 
     @Override
@@ -67,6 +69,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
 
         final StringBuilder compiler = new StringBuilder();
+        Optional.ofNullable(message.getAuthor()).map(User::getName).ifPresent(name -> compiler.append(name).append(System.lineSeparator()));
         Optional.ofNullable(messageEmbed.getTitle()).ifPresent(title -> compiler.append(title).append(System.lineSeparator()));
         Optional.ofNullable(messageEmbed.getDescription()).ifPresent(description -> compiler.append(description.replaceAll("\\*", " "))
                 .append(System.lineSeparator()));
@@ -120,6 +123,12 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .map(Category::getIdLong)
                 .filter(id -> id == CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED)
                 .isPresent();
+    }
+
+    private static boolean isFromPokeSquadTargetChannels(final Message message) {
+        return message.getChannelType() == ChannelType.TEXT
+                && message.getAuthor().isBot()
+                && SPAWN_CHANNEL_IDS_POKESQUAD.contains(message.getChannel().getIdLong());
     }
 
 }

@@ -73,6 +73,7 @@ class SpawnDataExchangeModule {
      *  - We Catch
      *  - Poke Fairy
      *  - Pineapple
+     *  - PokeSquad
      */
     @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides
@@ -85,7 +86,8 @@ class SpawnDataExchangeModule {
                         new VAScansSpawnMessageProcessor(),
                         new WeCatchSpawnMessageProcessor(),
                         new PokeFairySpawnMessageProcessor(),
-                        new PineappleMapSpawnMessageProcessor()),
+                        new PineappleMapSpawnMessageProcessor(),
+                        new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
                 serverLogger);

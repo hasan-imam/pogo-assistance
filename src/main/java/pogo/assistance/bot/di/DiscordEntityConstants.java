@@ -152,4 +152,12 @@ public class DiscordEntityConstants {
     public static final long CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED = 510562954291314688L;
     public static final long CHANNEL_ID_NORTHHOUSTONTRAINERS_GLOBAL100 = 532661073321525250L;
 
+    public static final long SERVER_ID_POKESQUAD = 323035478460989440L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_POKESQUAD = ImmutableSet.of(
+            534430788737826847L, // rare
+            532958068812677140L, // 0iv
+            532950935463264301L, // 90iv
+            532950971756707840L, // 95iv
+            532950888499642368L, // 100iv
+            532954783321948182L); // 100iv rare
 }

@@ -23,6 +23,7 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnObserver;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
 import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+import pogo.assistance.ui.RenderingUtils;
 
 /**
  * Listens to spawns, collect statistics and when called {@link #relayLatestStats()} relays the statistics to
@@ -69,7 +70,7 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
         try {
             // Prepare message
             final EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle(String.format("Spawn statistics for last %s minutes", getStopwatch().elapsed().toMinutes()), null);
+            embedBuilder.setTitle(String.format("Spawn statistics for last %s", RenderingUtils.toString(getStopwatch().elapsed())), null);
             embedBuilder.setColor(Color.red);
             embedBuilder.setColor(new Color(255, 0, 54));
             statisticsMap.entrySet().stream()
