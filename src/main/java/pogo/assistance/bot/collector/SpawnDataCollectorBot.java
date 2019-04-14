@@ -128,6 +128,9 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
     @Override
     protected void triggerShutdown() {
+        // Relay stats before shutting things down
+        spawnStatisticsRelay.relayLatestStats();
+
         shutdownTriggered.set(true);
         synchronized (shutdownTriggered) {
             shutdownTriggered.notifyAll();

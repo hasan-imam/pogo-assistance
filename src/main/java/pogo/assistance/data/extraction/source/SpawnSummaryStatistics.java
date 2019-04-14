@@ -1,15 +1,11 @@
 package pogo.assistance.data.extraction.source;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import com.google.common.base.MoreObjects;
 import pogo.assistance.bot.responder.relay.pokedex100.CandySelector;
-import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 /**
@@ -17,8 +13,6 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  *      Stats will not be consistent if {@link #toString()} and {@link #accept(PokemonSpawn)} happens concurrently.
  */
 public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
-
-    private final List<PokemonSpawn> spawns = Collections.synchronizedList(new ArrayList<>());
 
     private long countTotal = 0;
     private long countHasIv = 0, countHasCp = 0, countHasLevel = 0;
@@ -29,10 +23,11 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
     private long countWithLevel35 = 0, countWithLevel30 = 0;
     private long countTotalCandies = 0, countCandiesHasIv = 0;
 
+    // Candy pokemon names mapped to the number of spawns for each of those candy pokemons
+    private Map<String, Long> candyCounts = new TreeMap<>();
+
     @Override
     public void accept(final PokemonSpawn pokemonSpawn) {
-        spawns.add(pokemonSpawn);
-
         countTotal++;
         pokemonSpawn.getLevel().ifPresent(level -> {
             countHasLevel++;
@@ -69,7 +64,38 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
             if (pokemonSpawn.getIv().isPresent()) {
                 countCandiesHasIv++;
             }
+            // Increment if present, add entry if absent
+            candyCounts.computeIfPresent(pokemonSpawn.getPokedexEntry().getName(), (__, count) -> count + 1);
+            candyCounts.putIfAbsent(pokemonSpawn.getPokedexEntry().getName(), 1L);
         }
+    }
+
+    public SpawnSummaryStatistics combine(final SpawnSummaryStatistics that) {
+        final SpawnSummaryStatistics combined = new SpawnSummaryStatistics();
+
+        this.countTotal += that.countTotal;
+        this.countHasIv += that.countHasIv;
+        this.countHasCp += that.countHasCp;
+        this.countHasLevel += that.countHasLevel;
+
+        this.countWithIv100 += that.countWithIv100;
+        this.countWithIv90 += that.countWithIv90;
+        this.countWithIv80 += that.countWithIv80;
+        this.countWithIv50 += that.countWithIv50;
+        this.countWithIv0 += that.countWithIv0;
+
+        this.countWithCp3000 += that.countWithCp3000;
+        this.countWithCp2000 += that.countWithCp2000;
+        this.countWithLevel35 += that.countWithLevel35;
+        this.countWithLevel30 += that.countWithLevel30;
+        this.countTotalCandies += that.countTotalCandies;
+        this.countCandiesHasIv += that.countCandiesHasIv;
+
+        that.candyCounts.forEach((pokemonName, thatCount) -> {
+            this.candyCounts.compute(pokemonName, (__, thisCount) -> MoreObjects.firstNonNull(thisCount, 0L) + thatCount);
+        });
+
+        return combined;
     }
 
     /**
@@ -92,14 +118,8 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
                 .append(String.format("\t%d candies, %d of them had IV",
                 countTotalCandies, countCandiesHasIv));
 
-        // Commenting out since this can result in too large of a string
-        // Currently this method is mainly used to send report in discord and candy details isn't too important
-//        final Map<String, Long> candyCounts = spawns.stream()
-//                .map(PokemonSpawn::getPokedexEntry)
-//                .filter(CandySelector::isCandy)
-//                .map(PokedexEntry::getName)
-//                .sorted()
-//                .collect(Collectors.groupingBy(Function.identity(), TreeMap::new, Collectors.counting()));
+//        // Commenting out since this can result in too large of a string
+//        // Currently this method is mainly used to send report in discord and candy details isn't too important
 //        message.append(System.lineSeparator()).append(String.format("\tCandy count by pokemon: %s", candyCounts));
 
         return message.toString();

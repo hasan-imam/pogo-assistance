@@ -77,7 +77,9 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
                             RenderingUtils.toString(Duration.ofSeconds(getStopwatch().elapsed().getSeconds()))), // round off to seconds
                     null);
             embedBuilder.setColor(Color.red);
-            embedBuilder.setColor(new Color(255, 0, 54));
+            statisticsMap.values().stream()
+                    .reduce(SpawnSummaryStatistics::combine)
+                    .ifPresent(summaryStatistics -> embedBuilder.addField("All sources combined", summaryStatistics.toString(), false));
             statisticsMap.entrySet().stream()
                     .sorted(Comparator.comparing(statisticsEntry -> statisticsEntry.getKey().sourceName()))
                     .forEachOrdered(statisticsEntry -> {

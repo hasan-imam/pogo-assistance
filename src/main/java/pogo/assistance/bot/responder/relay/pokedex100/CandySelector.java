@@ -1,5 +1,6 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,6 +20,7 @@ public class CandySelector {
             .build();
 
     private static final Set<String> NON_NESTING = ImmutableSet.<String>builder()
+            .add("Togetic")
             .add("Aerodactyl")
             .add("Shieldon").add("Bastiodon")
             .add("lapras")
@@ -38,7 +40,7 @@ public class CandySelector {
             .add("feebas")
             .add("chimecho")
             .add("clamperl")
-//            .add("bagon").add("shelgon").add("salamence")
+            .add("bagon").add("shelgon").add("salamence")
             .add("beldum").add("metang")
             .add("cranidos").add("rampardos")
             .add("combee").add("vespiquen")
@@ -66,11 +68,11 @@ public class CandySelector {
         CANDY_POKEMON_IDS = CANDY_POKEMON_NAMES.stream()
                 .map(pokemonName -> Pokedex.getPokedexEntryFor(pokemonName, null))
                 .map(pokedexEntry -> pokedexEntry.get().getId())
-                .collect(Collectors.toSet());
+                .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
         NON_CANDY_POKEMON_IDS = IntStream.rangeClosed(1, 493)
                 .filter(id -> !CANDY_POKEMON_IDS.contains(id))
                 .boxed()
-                .collect(Collectors.toSet());
+                .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
     }
 
     public static boolean isCandy(final PokedexEntry pokedexEntry) {
