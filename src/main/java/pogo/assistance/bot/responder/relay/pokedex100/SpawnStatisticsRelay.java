@@ -78,7 +78,7 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
                     null);
             embedBuilder.setColor(Color.red);
             statisticsMap.values().stream()
-                    .reduce(SpawnSummaryStatistics::combine)
+                    .reduce(SpawnSummaryStatistics::accumulate)
                     .ifPresent(summaryStatistics -> embedBuilder.addField("All sources combined", summaryStatistics.toString(), false));
             statisticsMap.entrySet().stream()
                     .sorted(Comparator.comparing(statisticsEntry -> statisticsEntry.getKey().sourceName()))

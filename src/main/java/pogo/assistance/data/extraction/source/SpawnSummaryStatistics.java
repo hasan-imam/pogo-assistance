@@ -70,32 +70,35 @@ public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
         }
     }
 
-    public SpawnSummaryStatistics combine(final SpawnSummaryStatistics that) {
+    public SpawnSummaryStatistics accumulate(final SpawnSummaryStatistics that) {
         final SpawnSummaryStatistics combined = new SpawnSummaryStatistics();
-
-        this.countTotal += that.countTotal;
-        this.countHasIv += that.countHasIv;
-        this.countHasCp += that.countHasCp;
-        this.countHasLevel += that.countHasLevel;
-
-        this.countWithIv100 += that.countWithIv100;
-        this.countWithIv90 += that.countWithIv90;
-        this.countWithIv80 += that.countWithIv80;
-        this.countWithIv50 += that.countWithIv50;
-        this.countWithIv0 += that.countWithIv0;
-
-        this.countWithCp3000 += that.countWithCp3000;
-        this.countWithCp2000 += that.countWithCp2000;
-        this.countWithLevel35 += that.countWithLevel35;
-        this.countWithLevel30 += that.countWithLevel30;
-        this.countTotalCandies += that.countTotalCandies;
-        this.countCandiesHasIv += that.countCandiesHasIv;
-
-        that.candyCounts.forEach((pokemonName, thatCount) -> {
-            this.candyCounts.compute(pokemonName, (__, thisCount) -> MoreObjects.firstNonNull(thisCount, 0L) + thatCount);
-        });
-
+        SpawnSummaryStatistics.addStats(this, combined);
+        SpawnSummaryStatistics.addStats(that, combined);
         return combined;
+    }
+    
+    private static void addStats(final SpawnSummaryStatistics fromObject, final SpawnSummaryStatistics toObject) {
+        toObject.countTotal += fromObject.countTotal;
+        toObject.countHasIv += fromObject.countHasIv;
+        toObject.countHasCp += fromObject.countHasCp;
+        toObject.countHasLevel += fromObject.countHasLevel;
+
+        toObject.countWithIv100 += fromObject.countWithIv100;
+        toObject.countWithIv90 += fromObject.countWithIv90;
+        toObject.countWithIv80 += fromObject.countWithIv80;
+        toObject.countWithIv50 += fromObject.countWithIv50;
+        toObject.countWithIv0 += fromObject.countWithIv0;
+
+        toObject.countWithCp3000 += fromObject.countWithCp3000;
+        toObject.countWithCp2000 += fromObject.countWithCp2000;
+        toObject.countWithLevel35 += fromObject.countWithLevel35;
+        toObject.countWithLevel30 += fromObject.countWithLevel30;
+        toObject.countTotalCandies += fromObject.countTotalCandies;
+        toObject.countCandiesHasIv += fromObject.countCandiesHasIv;
+
+        fromObject.candyCounts.forEach((pokemonName, fromObjectCount) -> {
+            toObject.candyCounts.compute(pokemonName, (__, toObjectCount) -> MoreObjects.firstNonNull(toObjectCount, 0L) + fromObjectCount);
+        });
     }
 
     /**
