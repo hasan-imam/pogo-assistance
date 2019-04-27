@@ -60,7 +60,8 @@ class RadarUtils {
 
     public static final Map<Region, URI> BASE_URLS_OF_SOURCES = ImmutableMap.of(
             Region.CL, URI.create("http://radarpokemon.cl"),
-            Region.EXTON, URI.create("https://www.extonpokemap.com")); // TODO fix EXTON
+            Region.FL, URI.create("http://map.poketrainer.club"),
+            Region.EXTON, URI.create("https://www.extonpokemap.com"));
 
     private static final Set<String> NECESSARY_COOKIES = ImmutableSet.of("SESSION-TOKEN", "CSRF-TOKEN");
 

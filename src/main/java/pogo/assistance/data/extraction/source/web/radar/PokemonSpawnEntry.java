@@ -34,7 +34,7 @@ interface PokemonSpawnEntry {
     @SerializedName("lon")
     double longitude();
 
-    // Exton map uses the value, CL map uses the alternate
+    // Exton/FL (Ash Club) map uses the value, CL map uses the alternate
     @SerializedName(value = "expire_timestamp_verified", alternate = "expire_timestamp_true")
     boolean despawnTimeVerified();
 
@@ -98,7 +98,6 @@ interface PokemonSpawnEntry {
     @Value.Derived
     default Optional<Double> iv() {
         if (attack().isPresent() && defence().isPresent() && stamina().isPresent()) {
-            // TODO: implement this properly - not sure if this is correct
             return Optional.of(100.0 * (attack().get() + defence().get() + stamina().get()) / 45);
         }
         return Optional.empty();

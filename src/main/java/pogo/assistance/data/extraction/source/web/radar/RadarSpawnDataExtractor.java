@@ -136,6 +136,12 @@ public class RadarSpawnDataExtractor implements Closeable, PokemonSpawnFetcher {
                 params.add(new BasicNameValuePair("min_lon", "-90.66072463989259"));
                 params.add(new BasicNameValuePair("max_lon", "-62.887287139892585"));
                 break;
+            case FL:
+                params.add(new BasicNameValuePair("min_lat", "27.05173041063884"));
+                params.add(new BasicNameValuePair("max_lat", "29.99532528229044"));
+                params.add(new BasicNameValuePair("min_lon", "-83.16092491149904"));
+                params.add(new BasicNameValuePair("max_lon", "-79.17838096618654"));
+                break;
             case EXTON:
                 params.add(new BasicNameValuePair("min_lat", "38.90684728656818"));
                 params.add(new BasicNameValuePair("max_lat", "41.46619022337922"));
