@@ -74,6 +74,8 @@ class SpawnDataExchangeModule {
      *  - Poke Fairy
      *  - Pineapple
      *  - PokeSquad
+     *  - SGV Scans
+     *  - BMPGO World
      */
     @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides

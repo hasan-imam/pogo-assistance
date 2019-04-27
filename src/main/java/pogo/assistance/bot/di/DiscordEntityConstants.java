@@ -160,4 +160,31 @@ public class DiscordEntityConstants {
             532950971756707840L, // 95iv
             532950888499642368L, // 100iv
             532954783321948182L); // 100iv rare
+
+    public static final long SERVER_ID_POGO_NINJA = 213950622473388032L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_POGO_NINJA = ImmutableSet.of(522525269760802817L);
+
+    public static final long SERVER_ID_SGV_SCANS = 532078398843912192L;
+    public static final Set<Long> CATEGORY_IDS_SGV_SCANS_IV_FEED = ImmutableSet.<Long>builder()
+            .add(533035470062485514L) // SGV
+            .add(537027953221959680L) // ALHAMBRA-MPK
+            .add(537027907311239181L) // ARCADIA-MONROVIA-DUARTE
+            .add(537027594361634826L) // TG-SG-SM-ROSEMEAD
+            .add(542907988659142657L) // EL MONTE
+            .add(542908143957704704L) // PASADENA
+            .add(546179226705985566L) // MONTEBELLO MALL
+            .add(563249073407131669L) // COVINA
+            .add(566435366488506388L) // AZUSA-GLENDORA
+            .add(534917557438644241L) // ALHAMBRA-MPK II
+            .build();
+
+    public static final long SERVER_ID_BMPGO_WORLD = 498552619195695114L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_BMPGO_WORLD = ImmutableSet.<Long>builder()
+            .add(522730705902501889L) // 100-iv
+            .add(530139543190503454L) // level-35-90-99-iv
+            .add(525313353216688129L) // 90-99-iv
+            .add(522789463601184768L) // rare-iv-89
+            .add(522359037841375242L) // possibly-shiny-89
+            .add(522771583140495366L) // regional-iv-89
+            .build();
 }

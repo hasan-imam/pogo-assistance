@@ -1,9 +1,12 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
@@ -18,6 +21,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
+import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -34,17 +38,23 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
-        return isFromVcPokeScanTargetChannels(message)
+        return isFromSGVScansTargetChannels(message)
+                || isFromVcPokeScanTargetChannels(message)
                 || isFromNHTTargetChannels(message)
                 || isFromPoGoBadgersDmBot(message)
-                || isFromPokeSquadTargetChannels(message);
+                || isFromPokeSquadTargetChannels(message)
+                || isFromBMPGOWorldsTargetChannels(message);
     }
 
     @Override
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
+        // Ignore DMs from this source that doesn't contain iv/cp/level etc.
         if (isFromPoGoBadgersDmBot(message)) {
-            // Ignore DMs from this source that doesn't contain iv/cp/level etc.
             if (message.getEmbeds().get(0).getDescription().split("\n").length <= 2) {
+                return Optional.empty();
+            }
+        } else if (isFromSGVScansTargetChannels(message)) {
+            if (message.getEmbeds().get(0).getDescription().split("\n").length <= 6) {
                 return Optional.empty();
             }
         }
@@ -71,7 +81,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final StringBuilder compiler = new StringBuilder();
         Optional.ofNullable(message.getAuthor()).map(User::getName).ifPresent(name -> compiler.append(name).append(System.lineSeparator()));
         Optional.ofNullable(messageEmbed.getTitle()).ifPresent(title -> compiler.append(title).append(System.lineSeparator()));
-        Optional.ofNullable(messageEmbed.getDescription()).ifPresent(description -> compiler.append(description.replaceAll("\\*", " "))
+        Optional.ofNullable(messageEmbed.getDescription()).ifPresent(description -> compiler.append(description.replaceAll("\\*", ""))
                 .append(System.lineSeparator()));
         messageEmbed.getFields().forEach(field -> {
             compiler.append(field.getName());
@@ -129,6 +139,26 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         return message.getChannelType() == ChannelType.TEXT
                 && message.getAuthor().isBot()
                 && SPAWN_CHANNEL_IDS_POKESQUAD.contains(message.getChannel().getIdLong());
+    }
+
+    private static boolean isFromSGVScansTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_SGV_SCANS) {
+            return false;
+        }
+
+        if (Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_SGV_SCANS_IV_FEED::contains).isPresent()) {
+            final String channelName = message.getChannel().getName().toLowerCase();
+            return channelName.contains("iv") || channelName.contains("all-spawns") || channelName.contains("unown");
+        }
+
+        return false;
+    }
+
+    private static boolean isFromBMPGOWorldsTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_BMPGO_WORLD
+                && DiscordEntityConstants.SPAWN_CHANNEL_IDS_BMPGO_WORLD.contains(message.getChannel().getIdLong());
     }
 
 }

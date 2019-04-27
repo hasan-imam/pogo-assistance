@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Verify;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
@@ -67,13 +68,15 @@ public class SpawnMessageParsingUtils {
      *  - CP: 123
      *  - (CP: 123)
      *  - CP123
+     *  - 123cp
      *
-     * Verify online: https://regex101.com/r/bHvnAf/7
+     * Verify online: https://regex101.com/r/bHvnAf/8
      */
     private static final Pattern CP_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
-                    "(CP)[:\\s]*" +
-                    "(?<cp>[\\d\\?]{1,4})" +
+                    "(((CP)[:\\s]*(?<cp>[\\d\\?]{1,4}))" + // 'CP', then digits
+                    "|" +
+                    "((?<cp2>[\\d\\?]{1,4})[:\\s]*(?i)cp))" + // digits, then 'CP'
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**
@@ -85,11 +88,11 @@ public class SpawnMessageParsingUtils {
      *  - lvl 13
      *  - lvl: 13
      *
-     * Verify online: https://regex101.com/r/lxvJaS/4
+     * Verify online: https://regex101.com/r/lxvJaS/5
      */
     private static final Pattern LEVEL_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects beginning of line, white space, '(', '/', '|' etc. separators at the beginning
-                    "(Level[\\s]+|L[:]?|(Lvl|lvl)[:\\s]+)" +
+                    "(Level[:\\s]+|L[:]?|(Lvl|lvl)[:\\s]+)" +
                     "(?<level>[\\d\\?]{1,2})" +
                     "($|\\)|\\|/|\\s+)");
 
@@ -145,8 +148,9 @@ public class SpawnMessageParsingUtils {
     public static Optional<Integer> extractCp(final String text) {
         final Matcher cpMatcher = CP_PATTERN.matcher(text);
         Verify.verify(cpMatcher.find());
-        if (!cpMatcher.group("cp").equals("?")) {
-            return Optional.ofNullable(Ints.tryParse(cpMatcher.group("cp")));
+        final String cp = MoreObjects.firstNonNull(cpMatcher.group("cp"), cpMatcher.group("cp2"));
+        if (!cp.equals("?")) {
+            return Optional.ofNullable(Ints.tryParse(cp));
         }
         return Optional.empty();
     }

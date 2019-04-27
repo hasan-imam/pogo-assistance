@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnObserver;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
@@ -76,8 +77,15 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     }
 
     private void sendCommandToSuperBotP(final String command) {
-        getCommandRelayChannel()
-                .sendMessage(new MessageBuilder(command).build())
-                .queueAfter(ThreadLocalRandom.current().nextInt(30), TimeUnit.SECONDS);
+        try {
+            getCommandRelayChannel()
+                    .sendMessage(new MessageBuilder(command).build())
+                    .queueAfter(ThreadLocalRandom.current().nextInt(30), TimeUnit.SECONDS);
+        } catch (final InsufficientPermissionException e) {
+            // Sometimes the bot's access to posting spawns is restricting in lieu of killing the bot with all of its
+            // functionalities. We don't want to log exceptions for such cases since it fills up disk with long logs.
+            // Silencing those exceptions here but we should have validation checks at start time to ensure it has
+            // access to posting things at.
+        }
     }
 }
