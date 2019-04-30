@@ -46,6 +46,9 @@ public class CandySelector {
             .add("combee").add("vespiquen")
             .add("bronzor").add("bronzong")
             .add("finneon").add("lumineon")
+            .add("Uxie")
+            .add("Azelf")
+            .add("Mesprit")
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
