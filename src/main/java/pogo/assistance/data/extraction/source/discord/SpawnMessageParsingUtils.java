@@ -50,15 +50,15 @@ public class SpawnMessageParsingUtils {
      *  - (14A / 6D / 13S)
      *  - A:15 D:15 S:15
      *
-     * Verify online: https://regex101.com/r/vsxUsw/1
+     * Verify online: https://regex101.com/r/vsxUsw/2
      */
     private static final Pattern ADS_STAT_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
-                    "(Atk:|A:)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
+                    "(Atk:|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
                     "[/\\|\\s]+" +
-                    "(Def:|D:)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
+                    "(Def:|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
                     "[/\\|\\s]+" +
-                    "(Sta:|S:)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
+                    "(Sta:|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**
@@ -82,19 +82,23 @@ public class SpawnMessageParsingUtils {
     /**
      * Example matched strings:
      *  - Level 13
+     *  - Level13
      *  - (L13)
      *  - L13
      *  - L:13
      *  - lvl 13
      *  - lvl: 13
      *
-     * Verify online: https://regex101.com/r/lxvJaS/5
+     * Verify online: https://regex101.com/r/lxvJaS/6
      */
     private static final Pattern LEVEL_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects beginning of line, white space, '(', '/', '|' etc. separators at the beginning
-                    "(Level[:\\s]+|L[:]?|(Lvl|lvl)[:\\s]+)" +
+                    "(Level[:\\s]?|L[:]?|(Lvl|lvl)[:\\s]+)" +
                     "(?<level>[\\d\\?]{1,2})" +
                     "($|\\)|\\|/|\\s+)");
+
+    private static final Pattern FEMALE_GENDER_PATTERN = Pattern.compile("♀|:female:|Female");
+    private static final Pattern MALE_GENDER_PATTERN = Pattern.compile("♂|:male:|Male");
 
     public static Point parseGoogleMapQueryLink(final String url) {
         final Matcher mapUrlMatcher = GOOGLE_MAP_QUERY_URL.matcher(url);
@@ -102,6 +106,7 @@ public class SpawnMessageParsingUtils {
         return WayPoint.of(Double.parseDouble(mapUrlMatcher.group("latitude")), Double.parseDouble(mapUrlMatcher.group("longitude")));
     }
 
+    @Deprecated
     public static Gender parseGenderFromSign(@Nullable final String sign) {
         if (sign == null || sign.isEmpty()) {
             return Gender.UNKNOWN;
@@ -129,17 +134,12 @@ public class SpawnMessageParsingUtils {
      * e.g. word "Male" somewhere in text but it wasn't suppose to mean gender of the pokemon.
      */
     public static Optional<Gender> extractGender(final String text) {
-        // Gender appears as "♀Female" or "♂Male"
-        if (text.contains("♂")) {
-            return Optional.of(Gender.MALE);
-        } else if (text.contains("♀")) {
+        if (FEMALE_GENDER_PATTERN.matcher(text).find()) {
             return Optional.of(Gender.FEMALE);
+        } else if (MALE_GENDER_PATTERN.matcher(text).find()) {
+            return Optional.of(Gender.MALE);
         } else if (text.contains("⚲")) {
             return Optional.of(Gender.NONE);
-        } else if (text.contains("Male")) {
-            return Optional.of(Gender.MALE);
-        } else if (text.contains("Female")) {
-            return Optional.of(Gender.FEMALE);
         }
 
         return Optional.empty();
@@ -174,8 +174,9 @@ public class SpawnMessageParsingUtils {
                 "Both ADS stats and IVs were expected to be present in input");
         final Double ivFromCombatStats = combatStats.get().combinedIv().get();
         final Double ivFromExtraction = extractedIv.get();
-        // Different data sources round doubles off differently so for comparison we only take the integer part
-        Verify.verify(ivFromCombatStats.intValue() == ivFromExtraction.intValue(),
+        // Different data sources round doubles off differently so for validation,
+        // we just check the difference between the parsed and calculated values.
+        Verify.verify(Math.abs(ivFromCombatStats - ivFromExtraction) < 1.0,
                 "IV from ADS stats (%s) and extraction (%s) mismatched", ivFromCombatStats, ivFromExtraction);
         return combatStats;
     }
