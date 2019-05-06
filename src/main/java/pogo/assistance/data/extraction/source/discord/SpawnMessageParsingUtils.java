@@ -31,6 +31,15 @@ public class SpawnMessageParsingUtils {
             Pattern.compile("(.+(q=|query=))(?<latitude>[-\\d\\.]+),(?<longitude>[-\\d\\.]+)(.*)");
 
     /**
+     * Example matched strings;
+     *  - <:checkmark:574778007441637388>
+     *  - <:check_mark_2:574778007441637388>
+     *
+     * https://regex101.com/r/SdOUIl/1
+     */
+    private static final Pattern EMOJI_PATTERN = Pattern.compile("<:(?<emoji>[\\w\\d_]+):\\d+>");
+
+    /**
      * Example matched strings:
      *  - 100.00%
      *  - 1.1%
@@ -97,8 +106,8 @@ public class SpawnMessageParsingUtils {
                     "(?<level>[\\d\\?]{1,2})" +
                     "($|\\)|\\|/|\\s+)");
 
-    private static final Pattern FEMALE_GENDER_PATTERN = Pattern.compile("♀|:female:|Female");
-    private static final Pattern MALE_GENDER_PATTERN = Pattern.compile("♂|:male:|Male");
+    private static final Pattern FEMALE_GENDER_PATTERN = Pattern.compile("♀|:female:|Female", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MALE_GENDER_PATTERN = Pattern.compile("♂|:male:|Male", Pattern.CASE_INSENSITIVE);
 
     public static Point parseGoogleMapQueryLink(final String url) {
         final Matcher mapUrlMatcher = GOOGLE_MAP_QUERY_URL.matcher(url);
@@ -122,6 +131,27 @@ public class SpawnMessageParsingUtils {
             default:
                 throw new IllegalArgumentException("Unrecognized/missing gender: " + sign);
         }
+    }
+
+    public static String replaceEmojiWithPlainText(final String text) {
+        final Matcher matcher = EMOJI_PATTERN.matcher(text);
+        final StringBuffer sb = new StringBuffer(text.length());
+        while (matcher.find()) {
+            final String emojiText = matcher.group("emoji").toUpperCase();
+            // Replace original emoji name with something based on its intent. E.g. "IV2" emote indicates IV information, so is replaces with IV
+            // Current logic only checks for some known emoji names. If not match is found, we just keep the original name.
+            final String replaceEmojiText;
+            if (emojiText.contains("LV")) {
+                replaceEmojiText = "Level";
+            } else if (emojiText.contains("IV2")) {
+                replaceEmojiText = "IV";
+            } else {
+                replaceEmojiText = emojiText;
+            }
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(replaceEmojiText));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     /**

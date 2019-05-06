@@ -91,7 +91,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             compiler.append(System.lineSeparator());
         });
         Optional.ofNullable(messageEmbed.getUrl()).ifPresent(mapUrl -> compiler.append(mapUrl).append(System.lineSeparator()));
-        return compiler.toString();
+        return SpawnMessageParsingUtils.replaceEmojiWithPlainText(compiler.toString());
     }
 
     private static boolean isFromSouthwestPokemonTargetChannel(final Message message) {
