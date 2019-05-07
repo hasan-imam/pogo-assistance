@@ -97,6 +97,7 @@ class SpawnDataExchangeModule {
     /**
      * 'Johnny' user has access to:
      *  - Chicagoland
+     *  - PoGo Alerts 847
      */
     @Named(CollectorJDAModule.NAME_JOHNNY_USER_SPAWN_LISTENER)
     @Provides
@@ -104,7 +105,9 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange,
             final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
-                ImmutableSet.of(new PineappleMapSpawnMessageProcessor()),
+                ImmutableSet.of(
+                        new PineappleMapSpawnMessageProcessor(),
+                        new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
                 serverLogger);

@@ -6,6 +6,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
@@ -44,7 +45,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromNHTTargetChannels(message)
                 || isFromPoGoBadgersDmBot(message)
                 || isFromPokeSquadTargetChannels(message)
-                || isFromBMPGOWorldsTargetChannels(message);
+                || isFromBMPGOWorldsTargetChannels(message)
+                || isFromPoGoAlerts847TargetChannels(message);
     }
 
     @Override
@@ -199,6 +201,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_BMPGO_WORLD
                 && DiscordEntityConstants.SPAWN_CHANNEL_IDS_BMPGO_WORLD.contains(message.getChannel().getIdLong());
+    }
+
+    private static boolean isFromPoGoAlerts847TargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_POGO_ALERTS_847
+                && message.getChannel().getIdLong() == 553598599670398983L;
     }
 
 }

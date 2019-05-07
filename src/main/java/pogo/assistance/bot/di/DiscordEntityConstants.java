@@ -187,4 +187,6 @@ public class DiscordEntityConstants {
             .add(522359037841375242L) // possibly-shiny-89
             .add(522771583140495366L) // regional-iv-89
             .build();
+
+    public static final long SERVER_ID_POGO_ALERTS_847 = 303349928766210049L;
 }
