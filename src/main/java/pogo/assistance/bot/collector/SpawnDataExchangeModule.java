@@ -34,6 +34,7 @@ class SpawnDataExchangeModule {
      *  - FLPM alerts
      *  - Alpha Pokes alerts
      *  - Safari Sight Nova
+     *  - Pokemon Maps Florida
      */
     @Named(CollectorJDAModule.NAME_CORRUPTED_USER_SPAWN_LISTERNER)
     @Provides
@@ -42,7 +43,7 @@ class SpawnDataExchangeModule {
             final ServerLogger serverLogger) {
         final FLPokeMapSpawnMessageProcessor flpmSpawnMessageProcessor = new FLPokeMapSpawnMessageProcessor();
         return new DiscordPokemonSpawnListener(
-                ImmutableSet.of(flpmSpawnMessageProcessor),
+                ImmutableSet.of(flpmSpawnMessageProcessor, new GenericSpawnMessageProcessor()),
                 ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger);
@@ -75,6 +76,7 @@ class SpawnDataExchangeModule {
      *  - PokeSquad
      *  - SGV Scans
      *  - BMPGO World
+     *  - Valley PoGo
      */
     @Named(CollectorJDAModule.NAME_NINERS_USER_SPAWN_LISTENER)
     @Provides

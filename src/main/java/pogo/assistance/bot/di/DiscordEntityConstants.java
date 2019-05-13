@@ -189,4 +189,11 @@ public class DiscordEntityConstants {
             .build();
 
     public static final long SERVER_ID_POGO_ALERTS_847 = 303349928766210049L;
+
+    public static final long SERVER_ID_POKEMON_MAPS_FLORIDA = 560001508628889629L;
+    public static final long CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS = 560747511480844310L;
+
+    public static final long SERVER_ID_VALLEY_POGO = 397624389601984523L;
+    public static final long CHANNEL_ID_VALLEY_POGO_PERFECT_100 = 545256808705425428L;
+
 }

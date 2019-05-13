@@ -24,7 +24,8 @@ public class NovaBotProcessingUtils {
      *  - https://image.cdstud.io/o/351-29.png (we catch channel - castform)
      *  - https://www.serebii.net/sunmoon/pokemon/050-a.png
      *  - https://raw.githubusercontent.com/whitewillem/PogoAssets/resized/no_border/pokemon_icon_459_00.png
-     *  - https://www.serebii.net/sunmoon/pokemon/019-a.png (PoGo Alerts 847 - alolan ratata. We ignore the 'a' in current impl)
+     *  - https://www.serebii.net/sunmoon/pokemon/019-a.png (PoGo Alerts 847 - alolan rattata. We ignore the 'a' in current impl)
+     *  - https://raw.githubusercontent.com/plinytheelder/PoGo-Icons/master/pogo/019_046.png (Valley PoGo - alolan rattata)
      *
      * The form part of the URL can be missing for things that have multiple forms. In such cases some default (or unknown) form is inferred
      * picked, such as normal castform, non alolan, unown A etc.
