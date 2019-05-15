@@ -84,7 +84,7 @@ class FLPokeMapSpawnMessageProcessorIntegrationTest {
     private static Stream<Message> flpmAlertBot7Dms() {
         // 201,137 message in this DM channel when checked on Feb 27, 2019
         // Earliest message dates back to 2018-12-27T10:23:32.155Z
-        return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT_7).openPrivateChannel().complete())
+        return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT).openPrivateChannel().complete())
                 .filter(PROCESSOR::canProcess)
                 .limit(20000);
     }

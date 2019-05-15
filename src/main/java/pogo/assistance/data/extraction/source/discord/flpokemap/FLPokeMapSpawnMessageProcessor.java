@@ -1,7 +1,7 @@
 package pogo.assistance.data.extraction.source.discord.flpokemap;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_AP_ALERT_BOT;
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT_7;
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -52,7 +52,7 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
         switch (message.getChannel().getType()) {
             case PRIVATE:
                 final long authorId = message.getAuthor().getIdLong();
-                return authorId == USER_ID_FLPM_ALERT_BOT_7 || authorId == USER_ID_AP_ALERT_BOT;
+                return authorId == USER_ID_FLPM_ALERT_BOT || authorId == USER_ID_AP_ALERT_BOT;
             case TEXT:
                 // Check if it's one of the many spawn posting channels under the AlphaPokes server
 
