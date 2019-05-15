@@ -55,7 +55,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
                 log.info("Sending 90+ IV command: {}", command);
-            } else if (pokemonSpawn.getIv().orElse(-1.0) >= 0.0) {
+            } else if (pokemonSpawn.getIv().orElse(-1.0) == 0.0) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
                 log.info("Sending 0 IV command: {}", command);
             } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry()) && pokemonSpawn.getIv().isPresent()) {
