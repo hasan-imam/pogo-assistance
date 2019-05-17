@@ -3,14 +3,11 @@ package pogo.assistance.data.extraction.source.discord;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.*;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CORRUPTED_USER_TOKEN;
-import static pogo.assistance.bot.di.DiscordEntityConstants.JOHNNY_USER_TOKEN;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 
 import java.util.Collection;
 import java.util.Optional;

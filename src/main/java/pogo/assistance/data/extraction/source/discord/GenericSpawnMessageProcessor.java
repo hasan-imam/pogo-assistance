@@ -57,7 +57,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     @Override
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
-        // Ignore DMs from this source that doesn't contain iv/cp/level etc.
+        // Ignore messages from this source that doesn't contain iv/cp/level etc.
+        // This is based on length check since messages that lack information has known number of lines in them.
         if (isFromPoGoBadgersDmBot(message)) {
             if (message.getEmbeds().get(0).getDescription().split("\n").length <= 2) {
                 return Optional.empty();

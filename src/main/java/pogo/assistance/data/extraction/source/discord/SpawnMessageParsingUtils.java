@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Verify;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
@@ -79,13 +78,21 @@ public class SpawnMessageParsingUtils {
      *  - CP123
      *  - 123cp
      *
-     * Verify online: https://regex101.com/r/bHvnAf/8
+     * Verify online: https://regex101.com/r/bHvnAf/9
      */
-    private static final Pattern CP_PATTERN = Pattern.compile(
+    private static final Pattern CP_PATTERN_1 = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
-                    "(((CP)[:\\s]*(?<cp>[\\d\\?]{1,4}))" + // 'CP', then digits
-                    "|" +
-                    "((?<cp2>[\\d\\?]{1,4})[:\\s]*(?i)cp))" + // digits, then 'CP'
+                    "((CP)[:\\s]*(?<cp1>[\\d\\?]{1,4}))" + // 'CP', then digits
+                    "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
+    /**
+     * Example matched strings:
+     *  - 123cp
+     *
+     * Verify online: https://regex101.com/r/MFgpAo/1
+     */
+    private static final Pattern CP_PATTERN_2 = Pattern.compile(
+            "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
+                    "((?<cp2>[\\d\\?]{1,4})[:\\s]*(?i)cp)" + // digits, then 'CP'
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**
@@ -176,13 +183,27 @@ public class SpawnMessageParsingUtils {
     }
 
     public static Optional<Integer> extractCp(final String text) {
-        final Matcher cpMatcher = CP_PATTERN.matcher(text);
-        Verify.verify(cpMatcher.find());
-        final String cp = MoreObjects.firstNonNull(cpMatcher.group("cp"), cpMatcher.group("cp2"));
-        if (!cp.equals("?")) {
-            return Optional.ofNullable(Ints.tryParse(cp));
+        final Matcher firstCpMatcher = CP_PATTERN_1.matcher(text);
+        if (firstCpMatcher.find()) {
+            final String cp = firstCpMatcher.group("cp1");
+            if (!cp.equals("?")) {
+                return Optional.ofNullable(Ints.tryParse(cp));
+            } else {
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+
+        final Matcher secondCpMatcher = CP_PATTERN_2.matcher(text);
+        if (secondCpMatcher.find()) {
+            final String cp = secondCpMatcher.group("cp2");
+            if (!cp.equals("?")) {
+                return Optional.ofNullable(Ints.tryParse(cp));
+            } else {
+                return Optional.empty();
+            }
+        }
+
+        throw new IllegalArgumentException("None of the CP patterns matched");
     }
 
     public static Optional<Integer> extractLevel(final String text) {
