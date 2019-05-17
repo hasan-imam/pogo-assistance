@@ -50,7 +50,8 @@ class PokeMapUtils {
 
     public static final Map<Region, URI> BASE_URLS_OF_SOURCES = ImmutableMap.of(
             Region.NYC, URI.create("https://nycpokemap.com"),
-            Region.SG, URI.create("https://sgpokemap.com"));
+            Region.SG, URI.create("https://sgpokemap.com"),
+            Region.YVR, URI.create("https://vanpokemap.com"));
 
     public static Optional<String> executeQuery(final CloseableHttpClient closeableHttpClient, final HttpUriRequest httpGetRequest) {
         final URI requestUri = httpGetRequest.getURI();

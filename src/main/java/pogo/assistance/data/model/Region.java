@@ -14,7 +14,8 @@ public enum  Region {
     JP(":flag_jp:"),
     NYC(":flag_us:"),
     EXTON(":flag_us:"),
-    SG(":flag_sg:");
+    SG(":flag_sg:"),
+    YVR(":flag_ca:");
 
     @Getter
     private final String flagEmote;
