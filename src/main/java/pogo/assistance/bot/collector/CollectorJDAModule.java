@@ -1,6 +1,7 @@
 package pogo.assistance.bot.collector;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CONNOISSEUR_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
@@ -8,6 +9,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_BENIN;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_CONNOISSEUR;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_CORRUPTED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_IRVIN88;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_JOHNNY;
@@ -35,6 +37,7 @@ class CollectorJDAModule {
     static final String NAME_JOHNNY_USER_SPAWN_LISTENER = "johnny_user_spawn_listener";
     static final String NAME_TIMBURTY_USER_SPAWN_LISTENER = "timburty_user_spawn_listener";
     static final String NAME_IRVIN88_USER_SPAWN_LISTENER = "irvin88_user_spawn_listener";
+    static final String NAME_CONNOISSEUR_USER_SPAWN_LISTENER = "connoisseur_user_spawn_listener";
 
     @Singleton
     @Provides
@@ -133,6 +136,24 @@ class CollectorJDAModule {
     public static JDA provideIrvin88UserJda(
             @Named(NAME_USER_TOKEN_IRVIN88) final String token,
             @Named(NAME_IRVIN88_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
+
+        final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
+        jdaBuilder.setToken(token);
+        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+
+        try {
+            return jdaBuilder.build().awaitReady();
+        } catch (final InterruptedException | LoginException e) {
+            throw new RuntimeException("Failed to setup JDA", e);
+        }
+    }
+
+    @Singleton
+    @Provides
+    @Named(NAME_JDA_CONNOISSEUR_USER)
+    public static JDA provideConnoisseurUserJda(
+            @Named(NAME_USER_TOKEN_CONNOISSEUR) final String token,
+            @Named(NAME_CONNOISSEUR_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);

@@ -150,6 +150,23 @@ class SpawnDataExchangeModule {
                 serverLogger);
     }
 
+    /**
+     * 'connoisseur' user has access to:
+     *  - PokeXplorer
+     *  - Pokemon Go Sofia
+     */
+    @Named(CollectorJDAModule.NAME_CONNOISSEUR_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForConnoisseurUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange,
+                serverLogger);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(

@@ -11,7 +11,6 @@ public class DiscordEntityConstants {
     // Name for common named attributes. Used as args to @Named annotation.
 
     public static final String NAME_USER_TOKEN_OWNER = "owning_user_token";
-    public static final String NAME_USER_TOKEN_M15MV1 = "m15mv1_user_token";
     public static final String NAME_USER_TOKEN_M15M = "m15m_bot_token";
     public static final String NAME_USER_TOKEN_CORRUPTED = "corrupted_user_token";
     public static final String NAME_USER_TOKEN_BENIN = "benin_user_token";
@@ -20,6 +19,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_TIMBURTY = "timburty_user_token";
     public static final String NAME_USER_TOKEN_IRVIN88 = "irvin88_user_token";
     public static final String NAME_USER_TOKEN_HORUSEUS = "horuseus_user_token";
+    public static final String NAME_USER_TOKEN_CONNOISSEUR = "connoisseur_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -46,6 +46,8 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
 
+    public static final String NAME_JDA_CONNOISSEUR_USER = "connoisseur_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
@@ -61,6 +63,7 @@ public class DiscordEntityConstants {
     public static final String TIMBURTY_USER_TOKEN = "";
     public static final String IRVIN88_USER_TOKEN = "";
     public static final String HORUSEUS_USER_TOKEN = "";
+    public static final String CONNOISSEUR_USER_TOKEN = "";
 
     // Users/bots
 
