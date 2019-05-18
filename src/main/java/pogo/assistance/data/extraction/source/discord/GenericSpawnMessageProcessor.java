@@ -1,7 +1,9 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_POGO_PERFECT_100;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
@@ -9,7 +11,9 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_1
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
@@ -52,7 +56,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromBMPGOWorldsTargetChannels(message)
                 || isFromPoGoAlerts847TargetChannels(message)
                 || isFromPokemonMapsFloridaTargetChannels(message)
-                || isFromValleyPoGoTargetChannel(message);
+                || isFromValleyPoGoTargetChannel(message)
+                || isFromPoGoSofiaTargetChannels(message)
+                || isFromPokeXplorerTargetChannels(message);
     }
 
     @Override
@@ -233,6 +239,22 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_VALLEY_POGO
                 && message.getChannel().getIdLong() == CHANNEL_ID_VALLEY_POGO_PERFECT_100;
+    }
+
+    private static boolean isFromPoGoSofiaTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_POGO_SOFIA
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> id == CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES).isPresent()
+                && message.getChannel().getName().matches("(.*iv.*)|(.*lvl.*)|rare|unown");
+    }
+
+    private static boolean isFromPokeXplorerTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_POKE_XPLORER
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POKE_XPLORER_FEEDS::contains).isPresent()
+                && message.getChannel().getName().matches("(.*-iv)|(.*lvl.*)");
     }
 
 }

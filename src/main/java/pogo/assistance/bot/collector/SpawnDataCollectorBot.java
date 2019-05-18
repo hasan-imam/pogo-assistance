@@ -1,6 +1,7 @@
 package pogo.assistance.bot.collector;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CONNOISSEUR_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
@@ -9,12 +10,14 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 
 import java.time.Duration;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
@@ -26,12 +29,7 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
 public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
     private final JDA controlUserJda;
-    private final JDA corruptedUserJda;
-    private final JDA beninUserJda;
-    private final JDA ninersUserJda;
-    private final JDA johnnyUserJda;
-    private final JDA timburtyUserJda;
-    private final JDA irvin88UserJda;
+    private final Set<JDA> dataSourceJdas;
     private final SpawnStatisticsRelay spawnStatisticsRelay;
     private final PokemonSpawnWebCrawler pokemonSpawnWebCrawler;
 
@@ -50,24 +48,20 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_JOHNNY_USER) final JDA johnnyUserJda,
             @Named(NAME_JDA_TIMBURTY_USER) final JDA timburtyUserJda,
             @Named(NAME_JDA_IRVIN88_USER) final JDA irvin88UserJda,
+            @Named(NAME_JDA_CONNOISSEUR_USER) final JDA connoisseurUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
         Verify.verify(hasRegisteredListener(m15mBotJda), "Control user JDA is expected to have at least one listener (kill switch)");
-        Verify.verify(hasRegisteredListener(corruptedUserJda), "Corrupted user JDA is expected to have registered listener(s)");
-        Verify.verify(hasRegisteredListener(beninUserJda), "Benin user JDA is expected to have registered listener(s)");
-        Verify.verify(hasRegisteredListener(ninersUserJda), "Niners user JDA is expected to have registered listener(s)");
-        Verify.verify(hasRegisteredListener(johnnyUserJda), "Johnny user JDA is expected to have registered listener(s)");
-        Verify.verify(hasRegisteredListener(timburtyUserJda), "Timburty user JDA is expected to have registered listener(s)");
-        Verify.verify(hasRegisteredListener(irvin88UserJda), "Irvin88 user JDA is expected to have registered listener(s)");
-
         this.controlUserJda = m15mBotJda;
-        this.corruptedUserJda = corruptedUserJda;
-        this.beninUserJda = beninUserJda;
-        this.ninersUserJda = ninersUserJda;
-        this.johnnyUserJda = johnnyUserJda;
-        this.timburtyUserJda = timburtyUserJda;
-        this.irvin88UserJda = irvin88UserJda;
+
+        this.dataSourceJdas = ImmutableSet.of(corruptedUserJda, beninUserJda, ninersUserJda,
+                johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda);
+        this.dataSourceJdas.forEach(jda -> Verify.verify(
+                hasRegisteredListener(jda),
+                "%s user JDA is expected to have registered listener(s)",
+                jda.getSelfUser().getName()));
+
         this.spawnStatisticsRelay = spawnStatisticsRelay;
         this.pokemonSpawnWebCrawler = pokemonSpawnWebCrawler;
     }
@@ -82,13 +76,8 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     public void run() {
         while (!shutdownTriggered.get() && controlUserJda.getStatus() != Status.SHUTDOWN) {
             try {
-                logJdaState(corruptedUserJda);
-                logJdaState(beninUserJda);
-                logJdaState(ninersUserJda);
-                logJdaState(johnnyUserJda);
-                logJdaState(timburtyUserJda);
-                logJdaState(irvin88UserJda);
                 logJdaState(controlUserJda);
+                dataSourceJdas.forEach(SpawnDataCollectorBot::logJdaState);
 
                 if (spawnStatisticsRelay.getStopwatch().elapsed().compareTo(Duration.ofHours(6)) > 0) {
                     // Relay spawn stats (roughly) at some intervals
@@ -115,12 +104,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
     protected void shutDown() {
         pokemonSpawnWebCrawler.stopAsync();
 
-        corruptedUserJda.shutdown();
-        beninUserJda.shutdown();
-        ninersUserJda.shutdown();
-        johnnyUserJda.shutdown();
-        timburtyUserJda.shutdown();
-
+        dataSourceJdas.forEach(JDA::shutdown);
         controlUserJda.shutdown();
 
         pokemonSpawnWebCrawler.awaitTerminated();

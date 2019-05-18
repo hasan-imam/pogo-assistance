@@ -199,4 +199,20 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_VALLEY_POGO = 397624389601984523L;
     public static final long CHANNEL_ID_VALLEY_POGO_PERFECT_100 = 545256808705425428L;
 
+    public static final long SERVER_ID_POGO_SOFIA = 320813469014294529L;
+    public static final long CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES = 522764598718496788L;
+
+    public static final long SERVER_ID_POKE_XPLORER = 516999588708745217L;
+    public static final Set<Long> CATEGORY_IDS_POKE_XPLORER_FEEDS = ImmutableSet.<Long>builder()
+            .add(577705038840070144L) // SOLANO
+            .add(535841739236442122L) // BOAZ
+            .add(535842066572247051L) // HUNTSVILLE
+            .add(552559108969070613L) // HENDERSONVILLE
+            .add(552559847506444298L) // FELTCHER
+            .add(552560149319909396L) // ASHEVILLE
+            .add(557427702265544714L) // BREVARD
+            .add(565211408225271829L) // AUBURN
+            .add(565211507659505695L) // OPELIKA
+            .build();
+
 }
