@@ -215,4 +215,8 @@ public class DiscordEntityConstants {
             .add(565211507659505695L) // OPELIKA
             .build();
 
+    public static final long SERVER_ID_PGAN = 237964415822069760L;
+    public static final Set<Long> USER_ID_PGAN_BOTS = ImmutableSet.of(
+            343127550752587788L,
+            290601744042295296L);
 }
