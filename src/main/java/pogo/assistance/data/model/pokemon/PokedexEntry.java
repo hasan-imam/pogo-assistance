@@ -60,7 +60,16 @@ public interface PokedexEntry {
         // Unown forms - there are logic that heavily depends on these names and them being declared in specific order!
         UNOWN_A, UNOWN_B, UNOWN_C, UNOWN_D, UNOWN_E, UNOWN_F, UNOWN_G, UNOWN_H, UNOWN_I, UNOWN_J, UNOWN_K, UNOWN_L, UNOWN_M,
         UNOWN_N, UNOWN_O, UNOWN_P, UNOWN_Q, UNOWN_R, UNOWN_S, UNOWN_T, UNOWN_U, UNOWN_V, UNOWN_W, UNOWN_X, UNOWN_Y, UNOWN_Z,
-        UNOWN_EXCLAMATION, UNOWN_QUESTION
+        UNOWN_EXCLAMATION, UNOWN_QUESTION,
+
+        // Burmy and Wormadam forms
+        PLANT_CLOAK, SANDY_CLOAK, TRASH_CLOAK,
+
+        // Cherrim forms
+        SUNSHINE, OVERCAST,
+
+        // Shellos and Gastrodon forms
+        EAST_SEA, WEST_SEA
     }
 
 }

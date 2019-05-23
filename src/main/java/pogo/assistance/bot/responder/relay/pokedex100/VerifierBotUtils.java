@@ -1,6 +1,13 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
 import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.ALOLAN;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.EAST_SEA;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.OVERCAST;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.PLANT_CLOAK;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.SANDY_CLOAK;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.SUNSHINE;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.TRASH_CLOAK;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.WEST_SEA;
 import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.FEMALE;
 import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.MALE;
 
@@ -91,6 +98,38 @@ public class VerifierBotUtils {
                 return name + "snowy";
             } else if (pokedexEntry.getForms().contains(Form.CASTFORM_NORMAL)) {
                 return name + "normal";
+            } else {
+                return name;
+            }
+        }
+
+        if (name.equalsIgnoreCase("burmy") || name.equalsIgnoreCase("wormadam")) {
+            if (pokedexEntry.getForms().contains(PLANT_CLOAK)) {
+                return name + "plant";
+            } else if (pokedexEntry.getForms().contains(SANDY_CLOAK)) {
+                return name + "sand";
+            } else if (pokedexEntry.getForms().contains(TRASH_CLOAK)) {
+                return name + "trash";
+            } else {
+                return name;
+            }
+        }
+
+        if (name.equalsIgnoreCase("cherrim")) {
+            if (pokedexEntry.getForms().contains(SUNSHINE)) {
+                return name + "sunshine";
+            } else if (pokedexEntry.getForms().contains(OVERCAST)) {
+                return name + "overcast";
+            } else {
+                return name;
+            }
+        }
+
+        if (name.equalsIgnoreCase("shellos") || name.equalsIgnoreCase("gastrodon")) {
+            if (pokedexEntry.getForms().contains(EAST_SEA)) {
+                return name + "e";
+            } else if (pokedexEntry.getForms().contains(WEST_SEA)) {
+                return name + "w";
             } else {
                 return name;
             }

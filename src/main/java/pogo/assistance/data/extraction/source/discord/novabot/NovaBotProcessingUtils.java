@@ -11,16 +11,18 @@ import com.google.common.base.Verify;
 import com.google.common.primitives.Ints;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 
+@Slf4j
 @UtilityClass
 public class NovaBotProcessingUtils {
 
     /*
      * Example thumbnail URLs:
      *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/401.png
-     *  - https://raw.githubusercontent.com/novabot-sprites/novabot-sprites/master/88-73.png?5
+     *  - https://raw.githubusercontent.com/mizu-github/PogoAssets/sugimori/nova_256/412-118.png?5
      *  - https://image.cdstud.io/o/351-29.png (we catch channel - castform)
      *  - https://www.serebii.net/sunmoon/pokemon/050-a.png
      *  - https://raw.githubusercontent.com/whitewillem/PogoAssets/resized/no_border/pokemon_icon_459_00.png
@@ -66,6 +68,7 @@ public class NovaBotProcessingUtils {
                 } else if (id2 == 28) {
                     return Collections.singleton(PokedexEntry.Form.UNOWN_QUESTION);
                 } else {
+                    log.error("Unexpected unown form ID: {}", id2);
                     return Collections.emptySet();
                 }
             } else if (pokemonId == 351) { // Castform
@@ -79,9 +82,23 @@ public class NovaBotProcessingUtils {
                     case 32:
                         return Collections.singleton(PokedexEntry.Form.CASTFORM_SNOWY);
                     default:
+                        log.error("Unexpected castform form ID: {}", id2);
                         return Collections.emptySet();
                 }
-            }
+            } /*else if (pokemonId == 412) { // Burmy
+                // This mapping is based on mizu-github/PogoAssets repo. May not match to same forms in another repo.
+                switch (id2) {
+                    case 118:
+                        return Collections.singleton(PokedexEntry.Form.PLANT_CLOAK);
+                    case 119:
+                        return Collections.singleton(PokedexEntry.Form.SANDY_CLOAK);
+                    case 120:
+                        return Collections.singleton(PokedexEntry.Form.TRASH_CLOAK);
+                    default:
+                        log.error("Unexpected burmy form ID: {}", id2);
+                        return Collections.emptySet();
+                }
+            }*/
             // TODO: implement other form handling
             // see: https://github.com/novabot-sprites/novabot-sprites/blob/master/rename-charles-forms.sh
         }
