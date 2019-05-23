@@ -1,6 +1,10 @@
 package pogo.assistance.data.extraction.source.discord.sandiego;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -18,7 +22,6 @@ import net.dv8tion.jda.core.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
-import pogo.assistance.data.model.pokemon.Pokedex;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -46,19 +49,20 @@ class SDHSpawnMessageProcessorIntegrationTest {
     @MethodSource(value = {"SDHVIPBotDirectMessages"})
     void process_MessageFromSDVVIPBot_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
-        final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
-                .orElseThrow(() -> new AssertionError(failureMsgWithJumpUrl));
-        assertTrue(pokemonSpawn.getLevel().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getCp().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getIv().isPresent(), failureMsgWithJumpUrl);
-        assertTrue((Pokedex.isGenderLess(pokemonSpawn.getPokedexEntry().getId()) && pokemonSpawn.getPokedexEntry().getGender() == PokedexEntry.Gender.NONE)
-                || pokemonSpawn.getPokedexEntry().getGender() == PokedexEntry.Gender.MALE
-                || pokemonSpawn.getPokedexEntry().getGender() == PokedexEntry.Gender.FEMALE);
+        final Optional<PokemonSpawn> result = PROCESSOR.processWithoutThrowing(message);
+        assumeTrue(result.isPresent(), "Skipped spawn with missing iv/cp/level: " + message.getJumpUrl());
+        final PokemonSpawn pokemonSpawn = result.get();
+        assertAll(failureMsgWithJumpUrl,
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent(), "missing level"),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent(), "missing cp"),
+                () -> assertTrue(pokemonSpawn.getIv().isPresent(), "missing iv"),
+                () -> assertThat(pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN)));
     }
 
     private static Stream<Message> SDHVIPBotDirectMessages() {
         return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_SDHVIP_BOT).openPrivateChannel().complete())
                 .filter(PROCESSOR::canProcess)
-                .limit(4000);
+                .limit(100);
     }
+
 }

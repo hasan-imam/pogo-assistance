@@ -73,7 +73,13 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             }
 
             rateLimiter.acquire();
-            sendCommandToSuperBotP(command);
+
+            // Route SDH spawns to donor channels to reduce visibility
+            if (pokemonSpawn.getSourceMetadata().sourceName().toUpperCase().contains("SDHVIP")) {
+                sendCommandToSuperBotP(command + " d"); // Add 'd' to send to donor channel
+            } else {
+                sendCommandToSuperBotP(command);
+            }
         } catch (final RuntimeException e) {
             log.error("Error relaying spawn: " + pokemonSpawn, e);
         }

@@ -18,7 +18,6 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_PGAN_BOTS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
 
 import java.util.Optional;
@@ -48,9 +47,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
-        return isFromPganBot(message)
-                || isFromSdhvipBot(message)
-                || isFromSouthwestPokemonTargetChannel(message)
+        return isFromSouthwestPokemonTargetChannel(message)
                 || isFromSGVScansTargetChannels(message)
                 || isFromVcPokeScanTargetChannels(message)
                 || isFromNHTTargetChannels(message)
@@ -68,11 +65,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
         // Ignore messages from this source that doesn't contain iv/cp/level etc.
         // This is based on length check since messages that lack information has known number of lines in them.
-        if (isFromSdhvipBot(message)) {
-            if (message.getEmbeds().get(0).getDescription().split("\n").length <= 3) {
-                return Optional.empty();
-            }
-        } else if (isFromPoGoBadgersDmBot(message)) {
+        if (isFromPoGoBadgersDmBot(message)) {
             if (message.getEmbeds().get(0).getDescription().split("\n").length <= 2) {
                 return Optional.empty();
             }
@@ -118,17 +111,6 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         });
         Optional.ofNullable(messageEmbed.getUrl()).ifPresent(mapUrl -> compiler.append(mapUrl).append(System.lineSeparator()));
         return SpawnMessageParsingUtils.replaceEmojiWithPlainText(compiler.toString());
-    }
-
-    private static boolean isFromPganBot(final Message message) {
-        return false; // disabled temporarily
-//        return message.getChannelType() == ChannelType.PRIVATE
-//                && USER_ID_PGAN_BOTS.contains(message.getAuthor().getIdLong());
-    }
-
-    private static boolean isFromSdhvipBot(final Message message) {
-        return message.getChannelType() == ChannelType.PRIVATE
-                && message.getAuthor().getIdLong() == DiscordEntityConstants.USER_ID_SDHVIP_BOT;
     }
 
     private static boolean isFromSouthwestPokemonTargetChannel(final Message message) {
