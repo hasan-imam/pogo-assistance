@@ -14,6 +14,7 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.pgan.PGANSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessorV2;
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
@@ -163,6 +164,38 @@ class SpawnDataExchangeModule {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
+                spawnExchange,
+                serverLogger);
+    }
+
+    /**
+     * 'chronic' user has access to:
+     *  - PGAN
+     */
+    @Named(CollectorJDAModule.NAME_CHRONIC_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForChronicUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                Collections.emptySet(),
+                ImmutableSet.of(new PGANSpawnMessageProcessor()),
+                spawnExchange,
+                serverLogger);
+    }
+
+    /**
+     * 'crank' user has access to:
+     *  - PGAN
+     */
+    @Named(CollectorJDAModule.NAME_CRANK_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForCrankUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                Collections.emptySet(),
+                ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger);
     }

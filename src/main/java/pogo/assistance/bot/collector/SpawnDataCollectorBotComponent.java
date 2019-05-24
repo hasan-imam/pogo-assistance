@@ -46,6 +46,14 @@ public interface SpawnDataCollectorBotComponent {
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_CONNOISSEUR) final String connoisseurUserToken);
 
         @BindsInstance
+        SpawnDataCollectorBotComponent.Builder chronicUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_CHRONIC) final String chronicUserToken);
+
+        @BindsInstance
+        SpawnDataCollectorBotComponent.Builder crankUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_CRANK) final String crankUserToken);
+
+        @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 

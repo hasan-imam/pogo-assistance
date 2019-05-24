@@ -28,6 +28,9 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 @Slf4j
 public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
+    /**
+     * Verify online: https://regex101.com/r/V10pLh/1
+     */
     private static final Pattern URL_PATTERN = Pattern.compile("\\[(?<description>.*)]\\((?<url>.*http.*\\.com.*)\\)");
 
     @Override

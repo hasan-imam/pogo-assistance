@@ -20,12 +20,11 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_IRVIN88 = "irvin88_user_token";
     public static final String NAME_USER_TOKEN_HORUSEUS = "horuseus_user_token";
     public static final String NAME_USER_TOKEN_CONNOISSEUR = "connoisseur_user_token";
+    public static final String NAME_USER_TOKEN_CHRONIC = "chronic_user_token";
+    public static final String NAME_USER_TOKEN_CRANK = "crank_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
-
-    public static final String NAME_JDA_BUILDER_M15MV1_USER = "m15mv1_user_jda_builder";
-    public static final String NAME_JDA_M15MV1_USER = "m15mv1_user_jda";
 
     public static final String NAME_JDA_BUILDER_M15M_BOT = "m15m_bot_jda_builder";
     public static final String NAME_JDA_M15M_BOT = "m15m_bot_jda";
@@ -34,19 +33,16 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_CORRUPTED_USER = "corrupted_user_jda";
 
     public static final String NAME_JDA_BENIN_USER = "benin_user_jda";
-
     public static final String NAME_JDA_NINERS_USER = "niners_user_jda";
-
     public static final String NAME_JDA_JOHNNY_USER = "johnny_user_jda";
-
     public static final String NAME_JDA_TIMBURTY_USER = "timburty_user_jda";
-
     public static final String NAME_JDA_IRVIN88_USER = "irvin88_user_jda";
+    public static final String NAME_JDA_CONNOISSEUR_USER = "connoisseur_user_jda";
+    public static final String NAME_JDA_CHRONIC_USER = "chronic_user_jda";
+    public static final String NAME_JDA_CRANK_USER = "crank_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
-
-    public static final String NAME_JDA_CONNOISSEUR_USER = "connoisseur_user_jda";
 
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
@@ -64,6 +60,8 @@ public class DiscordEntityConstants {
     public static final String IRVIN88_USER_TOKEN = "";
     public static final String HORUSEUS_USER_TOKEN = "";
     public static final String CONNOISSEUR_USER_TOKEN = "";
+    public static final String CHRONIC_USER_TOKEN = "";
+    public static final String CRANK_USER_TOKEN = "";
 
     // Users/bots
 
@@ -218,5 +216,6 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_PGAN = 237964415822069760L;
     public static final Set<Long> USER_ID_PGAN_BOTS = ImmutableSet.of(
             343127550752587788L,
+            343128185744916520L,
             290601744042295296L);
 }

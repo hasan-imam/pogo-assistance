@@ -1,8 +1,10 @@
 package pogo.assistance.bot.collector;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CHRONIC_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CONNOISSEUR_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CRANK_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
@@ -49,6 +51,8 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_TIMBURTY_USER) final JDA timburtyUserJda,
             @Named(NAME_JDA_IRVIN88_USER) final JDA irvin88UserJda,
             @Named(NAME_JDA_CONNOISSEUR_USER) final JDA connoisseurUserJda,
+            @Named(NAME_JDA_CHRONIC_USER) final JDA chronicUserJda,
+            @Named(NAME_JDA_CRANK_USER) final JDA crankUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
@@ -56,7 +60,8 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         this.controlUserJda = m15mBotJda;
 
         this.dataSourceJdas = ImmutableSet.of(corruptedUserJda, beninUserJda, ninersUserJda,
-                johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda);
+                johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda,
+                chronicUserJda, crankUserJda);
         this.dataSourceJdas.forEach(jda -> Verify.verify(
                 hasRegisteredListener(jda),
                 "%s user JDA is expected to have registered listener(s)",
