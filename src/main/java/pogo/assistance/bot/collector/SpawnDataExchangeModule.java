@@ -138,6 +138,7 @@ class SpawnDataExchangeModule {
      *  - VCPokeScan
      *  - PoGoBadger's Den
      *  - North Houston Trainers
+     *  - PGAN
      */
     @Named(CollectorJDAModule.NAME_IRVIN88_USER_SPAWN_LISTENER)
     @Provides
@@ -146,7 +147,7 @@ class SpawnDataExchangeModule {
             final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
-                Collections.emptySet(),
+                ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger);
     }
