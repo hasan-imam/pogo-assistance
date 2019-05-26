@@ -3,12 +3,11 @@ package pogo.assistance.data.extraction.source.discord;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 
 import java.util.Collection;
 import java.util.Optional;

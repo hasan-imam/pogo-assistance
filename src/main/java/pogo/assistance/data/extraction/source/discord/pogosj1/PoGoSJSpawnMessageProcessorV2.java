@@ -33,6 +33,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  * info in the message.
  */
 @Slf4j
+@Deprecated
 public class PoGoSJSpawnMessageProcessorV2 implements MessageProcessor<PokemonSpawn> {
 
     private static final Set<Long> TARGET_CHANNELS = ImmutableSet.of(

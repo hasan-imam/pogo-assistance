@@ -99,8 +99,18 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_POGOSJ1 = 346733317699141632L;
     public static final long CHANNEL_ID_POGOSJ1_TWEETS = 346733581814726657L;
+    public static final long CHANNEL_ID_POGOSJ1_0IV = 373572173425803265L;
     public static final long CHANNEL_ID_POGOSJ1_100IV = 348769770671308800L;
     public static final long CHANNEL_ID_POGOSJ1_100IVMAX = 371106133382922250L;
+    public static final Set<Long> CHANNEL_IDS_POGOSJ1_ULTRA_ALERTS = ImmutableSet.of(
+            CHANNEL_ID_POGOSJ1_TWEETS,
+            CHANNEL_ID_POGOSJ1_0IV,
+            CHANNEL_ID_POGOSJ1_100IV,
+            CHANNEL_ID_POGOSJ1_100IVMAX);
+    public static final Set<Long> CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS = ImmutableSet.of(
+            361185397415477258L,  // ULTRA ALERTS
+            361185952078626818L,  // CANDY CHANNELS
+            361185672607825932L); // GEO-CHANNELS
 
     public static final long SERVER_ID_NYCPOKEMAP = 301247864833572864L;
     public static final long CATEGORY_ID_IV_CP_LVL_ALERTS = 416791808954073114L;

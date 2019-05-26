@@ -16,7 +16,6 @@ import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcess
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pgan.PGANSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
-import pogo.assistance.data.extraction.source.discord.pogosj1.PoGoSJSpawnMessageProcessorV2;
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessageProcessor;
@@ -69,7 +68,6 @@ class SpawnDataExchangeModule {
     /**
      * 'Niners' user has access to:
      *  - POGO SJ
-     *  - NYC PokeMap (unused here since we have crawler for it)
      *  - VAScans
      *  - We Catch
      *  - Poke Fairy
@@ -86,7 +84,6 @@ class SpawnDataExchangeModule {
             final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
-                        new PoGoSJSpawnMessageProcessorV2(),
                         new VAScansSpawnMessageProcessor(),
                         new WeCatchSpawnMessageProcessor(),
                         new PokeFairySpawnMessageProcessor(),

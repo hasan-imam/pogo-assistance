@@ -221,8 +221,19 @@ public class SpawnMessageParsingUtils {
         if (!extractedIv.isPresent() && !combatStats.isPresent()) {
             return Optional.empty();
         }
-        Verify.verify(extractedIv.isPresent() && combatStats.isPresent(),
-                "Both ADS stats and IVs were expected to be present in input");
+
+        if (extractedIv.filter(iv -> iv == 100.0).isPresent() && !combatStats.isPresent()) {
+            // Some sources (e.g. PoGoSJ1) don't put the detailed stats if the IV is 100%
+            // Prepare combat stats POJO with only the extracted IV value
+            return Optional.of(ImmutableCombatStats.builder()
+                    .combinedIv(extractedIv)
+                    .build());
+        } else {
+            // For all non-perfect IVs, make sure both IV and combat stats were present
+            Verify.verify(extractedIv.isPresent() && combatStats.isPresent(),
+                    "Both ADS stats and IVs were expected to be present in input");
+        }
+
         final Double ivFromCombatStats = combatStats.get().combinedIv().get();
         final Double ivFromExtraction = extractedIv.get();
         // Different data sources round doubles off differently so for validation,

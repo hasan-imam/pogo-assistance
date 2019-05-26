@@ -5,7 +5,10 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.security.auth.login.LoginException;
@@ -17,12 +20,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
-class GenericSpawnMessageProcessorSDHVIPIntegrationTest {
+class GenericSpawnMessageProcessorPoGoSJ1IntegrationTest {
 
     private static JDA jda;
 
@@ -31,7 +36,7 @@ class GenericSpawnMessageProcessorSDHVIPIntegrationTest {
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         jda = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.BENIN_USER_TOKEN)
+                .setToken(DiscordEntityConstants.NINERS_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -42,8 +47,8 @@ class GenericSpawnMessageProcessorSDHVIPIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = {"SDHVIPBotDirectMessages"})
-    void process_MessageFromSDVVIPBot_ReturnsExpected(final Message message) {
+    @MethodSource(value = { "PoGoSJ1SpawnMessages" })
+    void process_PoGoSJ1SpawnMessages_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final Optional<PokemonSpawn> result = PROCESSOR.processWithoutThrowing(message);
         assumeTrue(result.isPresent(), "Skipped spawn with missing iv/cp/level: " + message.getJumpUrl());
@@ -55,10 +60,24 @@ class GenericSpawnMessageProcessorSDHVIPIntegrationTest {
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN)));
     }
 
-    private static Stream<Message> SDHVIPBotDirectMessages() {
-        return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_SDHVIP_BOT).openPrivateChannel().complete())
-                .filter(PROCESSOR::canProcess)
-                .limit(4000);
+    private static Stream<Message> PoGoSJ1SpawnMessages() {
+        return jda.getGuildById(SERVER_ID_POGOSJ1).getCategories().stream()
+                .filter(category -> CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS.contains(category.getIdLong()))
+                .map(Category::getTextChannels)
+                .flatMap(Collection::stream)
+                .map(messageChannel -> {
+                    try {
+                        return MessageStream.lookbackMessageStream(messageChannel);
+                    } catch (final InsufficientPermissionException e) {
+                        // There seems to be a channel that gets listed in this operation but we don't have permission to view
+                        System.err.println("Don't have permission to lookup message history for channel: " + messageChannel.getName());
+                        return Stream.<Message>empty();
+                    }
+                })
+                // Take some message from all channels, even the non-feed ones
+                .flatMap(regionalMessageStream -> regionalMessageStream.limit(500))
+                // Filter out messages that cannot be processed (e.g. from non-feed channels)
+                .filter(PROCESSOR::canProcess);
     }
 
 }
