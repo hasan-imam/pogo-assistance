@@ -49,6 +49,13 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     public void observe(final PokemonSpawn pokemonSpawn) {
         try {
             final String command;
+
+            // Temporary measure to reduce the number of snorlax posts
+            if (pokemonSpawn.getPokedexEntry().getId() == 143 && pokemonSpawn.getIv().orElse(-1.0) < 95.0
+                    && pokemonSpawn.getCp().orElse(-1) < 2700) {
+                return;
+            }
+
             if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
                 command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn, false);
                 log.info("Sending 100 IV command: {}", command);
