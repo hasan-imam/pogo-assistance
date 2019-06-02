@@ -1,6 +1,7 @@
 package pogo.assistance.data.extraction.source.discord;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_CVM_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_GPGM_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
@@ -13,6 +14,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_GPGM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
@@ -65,7 +67,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPoGoSofiaTargetChannels(message)
                 || isFromPokeXplorerTargetChannels(message)
                 || isFromUtahPoGoTargetChannels(message)
-                || isFromCVMTargetChannels(message);
+                || isFromCVMTargetChannels(message)
+                || isFromGPGMTargetChannels(message);
     }
 
     @Override
@@ -298,6 +301,17 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .orElse(null);
         return CATEGORY_IDS_CVM_FEEDS.contains(categoryId)
                 && channelName.matches("(.*pokemon)|(.*iv)|(.*event)");
+    }
+
+    private static boolean isFromGPGMTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_GPGM) {
+            return false;
+        }
+
+        return Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .filter(CATEGORY_IDS_GPGM_FEEDS::contains)
+                .isPresent();
     }
 
 }

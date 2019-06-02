@@ -266,4 +266,12 @@ public class DiscordEntityConstants {
             .add(422245947200765983L) // WINTERS
             .add(526672210463817739L) // NORTH NATOMAS
             .build();
+
+    public static final long SERVER_ID_GPGM = 401321052262760450L;
+    public static final Set<Long> CATEGORY_IDS_GPGM_FEEDS = ImmutableSet.<Long>builder()
+            .add(567443788415500330L) // PORT HOPE & COBOURG
+            .add(567443612208594965L) // TRENTON
+            .add(567443682672771112L) // BELLEVILLE
+            .add(425488827625242664L) // KINGSTON
+            .build();
 }
