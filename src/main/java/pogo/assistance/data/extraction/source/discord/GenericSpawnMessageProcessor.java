@@ -124,11 +124,11 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             return false;
         }
 
+        final String channelName = message.getChannel().getName();
         final String categoryId = Optional.ofNullable(message.getCategory()).map(Category::getId).orElse("");
         switch (categoryId) {
             case "501877862878674944": // ILLINOIS POKEMON
             case "514347470801862667": // WISCONSIN POKEMON
-                return !message.getChannel().getName().contains("quest");
             case "556256006858866689": // LONDON CANARY WHARF
             case "556256886287106058": // LONDON CENTRAL EAST
             case "556256853353431040": // LONDON CENTRAL WEST
@@ -139,19 +139,26 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             case "556257301452030003": // LONDON BARNET
             case "556257350458277890": // LONDON BROMLEY
             case "556256621634781185": // LONDON CHINGFORD
+            case "565427412561559552": // LONDON CHARLTON
+            case "560667251955466250": // LONDON CLAPTON
             case "556271357013524481": // LONDON DULWICH
             case "556256427149361212": // LONDON EALING
             case "556256462914060291": // LONDON ENFIELD
             case "556271396242718743": // LONDON GREENWICH
-            case "556271445441773588": // LONDON LEWISHAM
+            case "560667326043783178": // LONDON HAMPSTEAD
             case "556256125952196608": // LONDON HARROW
+            case "560667395526492170": // LONDON HOLLOWAY
+            case "556271445441773588": // LONDON LEWISHAM
+            case "560667528519745536": // LONDON STOKE NEWINGTON WOODBERRY
+            case "580261123551395840": // LONDON WALTHAMSTOW
             case "556256551392903169": // LONDON WOODGREEN & HARINGEY
             case "556256673333903360": // LONDON WOOLWICH
-                return !message.getChannel().getName().contains("quest")
-                        && !message.getChannel().getName().contains("raid")
-                        && !message.getChannel().getName().contains("egg");
+                return !channelName.contains("quest")
+                        && !channelName.contains("raid")
+                        && !channelName.contains("egg")
+                        && !channelName.contains("lure");
             case "546137025430945803": // LONDON CD
-                return !message.getChannel().getName().contains("zee");
+                return !channelName.contains("zee");
             default:
                 return false;
         }
