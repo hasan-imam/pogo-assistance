@@ -255,4 +255,15 @@ public class DiscordEntityConstants {
             .add(550682366558076928L) // CENTERVILLE
             .add(561543822883029007L) // FARMINGTON
             .build();
+
+    public static final long SERVER_ID_CVM = 305941907136053250L;
+    public static final Set<Long> CATEGORY_IDS_CVM_FEEDS = ImmutableSet.<Long>builder()
+            .add(422195279484420117L) // DAVIS
+            .add(422243137839431691L) // DIXON
+            .add(422244882300796938L) // FAIRFIELD
+            .add(422248759657758741L) // VACAVILLE
+            .add(422248839198670848L) // WOODLAND
+            .add(422245947200765983L) // WINTERS
+            .add(526672210463817739L) // NORTH NATOMAS
+            .build();
 }

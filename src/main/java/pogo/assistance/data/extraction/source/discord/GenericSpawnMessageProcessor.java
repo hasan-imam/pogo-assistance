@@ -1,5 +1,6 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_CVM_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
@@ -11,6 +12,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_PO
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
@@ -62,7 +64,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromValleyPoGoTargetChannel(message)
                 || isFromPoGoSofiaTargetChannels(message)
                 || isFromPokeXplorerTargetChannels(message)
-                || isFromUtahPoGoTargetChannels(message);
+                || isFromUtahPoGoTargetChannels(message)
+                || isFromCVMTargetChannels(message);
     }
 
     @Override
@@ -80,6 +83,10 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             }
         } else if (isFromPoGoSJ1TargetChannels(message)) {
             if (embedDescription.contains("(?/?/?)") || embedDescription.contains("CP:?") || embedDescription.contains("(L?)")) {
+                return Optional.empty();
+            }
+        } else if (isFromCVMTargetChannels(message)) {
+            if (message.getEmbeds().get(0).getTitle().contains("?% ?cp (L?)") || embedDescription.contains("?% ?/ ?/ ?")) {
                 return Optional.empty();
             }
         }
@@ -278,6 +285,19 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .orElse(null);
         return CATEGORY_IDS_UTAH_POGO_FEEDS.contains(categoryId)
                 && (channelName.matches("(ivs-.*)") || categoryId == CATEGORY_ID_UTAH_POGO_POKEMON);
+    }
+
+    private static boolean isFromCVMTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_CVM) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+        return CATEGORY_IDS_CVM_FEEDS.contains(categoryId)
+                && channelName.matches("(.*pokemon)|(.*iv)|(.*event)");
     }
 
 }
