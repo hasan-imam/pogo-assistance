@@ -22,6 +22,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_CONNOISSEUR = "connoisseur_user_token";
     public static final String NAME_USER_TOKEN_CHRONIC = "chronic_user_token";
     public static final String NAME_USER_TOKEN_CRANK = "crank_user_token";
+    public static final String NAME_USER_TOKEN_POGO_HERO = "pogo_hero_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -40,6 +41,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_CONNOISSEUR_USER = "connoisseur_user_jda";
     public static final String NAME_JDA_CHRONIC_USER = "chronic_user_jda";
     public static final String NAME_JDA_CRANK_USER = "crank_user_jda";
+    public static final String NAME_JDA_POGO_HERO_USER = "pogo_hero_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -62,6 +64,7 @@ public class DiscordEntityConstants {
     public static final String CONNOISSEUR_USER_TOKEN = "";
     public static final String CHRONIC_USER_TOKEN = "";
     public static final String CRANK_USER_TOKEN = "";
+    public static final String POGO_HERO_USER_TOKEN = "";
 
     // Users/bots
 
@@ -228,4 +231,18 @@ public class DiscordEntityConstants {
             343127550752587788L,
             343128185744916520L,
             290601744042295296L);
+
+    public static final long SERVER_ID_UTAH_POGO = 473845802943643679L;
+    public static final long CATEGORY_ID_UTAH_POGO_POKEMON = 475705825508327434L;
+    public static final Set<Long> CATEGORY_IDS_UTAH_POGO_FEEDS = ImmutableSet.<Long>builder()
+            .add(CATEGORY_ID_UTAH_POGO_POKEMON) // POKEMON
+            .add(529826586002980914L) // MAGNA-WESTVALLEY
+            .add(529826953302114354L) // TAYLORSVILLE-WESTVALLEY-EAST
+            .add(530275157508358144L) // SLC
+            .add(529827346358992911L) // HERRIMAN-RIVERTON
+            .add(550682557130473492L) // NORTH SALT LAKE
+            .add(550682301256826890L) // BOUNTIFUL
+            .add(550682366558076928L) // CENTERVILLE
+            .add(561543822883029007L) // FARMINGTON
+            .build();
 }

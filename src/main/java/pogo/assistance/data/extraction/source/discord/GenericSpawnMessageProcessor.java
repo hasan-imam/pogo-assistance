@@ -3,9 +3,11 @@ package pogo.assistance.data.extraction.source.discord;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_POGO_PERFECT_100;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
@@ -17,6 +19,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_UTAH_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
@@ -34,6 +37,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
+import pogo.assistance.data.extraction.source.discord.sgv.SGVMessageProcessorUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
@@ -61,7 +65,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPokemonMapsFloridaTargetChannels(message)
                 || isFromValleyPoGoTargetChannel(message)
                 || isFromPoGoSofiaTargetChannels(message)
-                || isFromPokeXplorerTargetChannels(message);
+                || isFromPokeXplorerTargetChannels(message)
+                || isFromUtahPoGoTargetChannels(message);
     }
 
     @Override
@@ -274,6 +279,19 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getGuild().getIdLong() == SERVER_ID_POKE_XPLORER
                 && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POKE_XPLORER_FEEDS::contains).isPresent()
                 && message.getChannel().getName().matches("(.*-iv)|(.*lvl.*)");
+    }
+
+    private static boolean isFromUtahPoGoTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_UTAH_POGO) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+        return CATEGORY_IDS_UTAH_POGO_FEEDS.contains(categoryId)
+                && (channelName.matches("(ivs-.*)") || categoryId == CATEGORY_ID_UTAH_POGO_POKEMON);
     }
 
 }

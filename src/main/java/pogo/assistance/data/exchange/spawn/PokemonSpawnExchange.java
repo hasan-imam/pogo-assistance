@@ -1,13 +1,15 @@
 package pogo.assistance.data.exchange.spawn;
 
-import com.google.common.base.Verify;
-import com.google.common.util.concurrent.UncaughtExceptionHandlers;
 import java.io.Closeable;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.inject.Singleton;
+
+import com.google.common.base.Verify;
+import com.google.common.util.concurrent.UncaughtExceptionHandlers;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
@@ -41,7 +43,7 @@ public class PokemonSpawnExchange implements Closeable {
         observerThread.start();
     }
 
-    public void offer(final PokemonSpawn pokemonSpawn) {
+    public void offer(@NonNull final PokemonSpawn pokemonSpawn) {
         if (!spawnDuplicateDetector.isUnique(pokemonSpawn)) {
             log.trace("Ignoring duplicate spawn: {}", pokemonSpawn);
             return;

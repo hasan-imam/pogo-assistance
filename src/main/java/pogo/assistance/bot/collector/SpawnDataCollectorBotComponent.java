@@ -54,6 +54,10 @@ public interface SpawnDataCollectorBotComponent {
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_CRANK) final String crankUserToken);
 
         @BindsInstance
+        SpawnDataCollectorBotComponent.Builder poGoHeroUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_POGO_HERO) final String poGoHeroUserToken);
+
+        @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 

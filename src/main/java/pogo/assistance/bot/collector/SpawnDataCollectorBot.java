@@ -9,6 +9,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USE
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_POGO_HERO_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
 
 import java.time.Duration;
@@ -53,6 +54,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_CONNOISSEUR_USER) final JDA connoisseurUserJda,
             @Named(NAME_JDA_CHRONIC_USER) final JDA chronicUserJda,
             @Named(NAME_JDA_CRANK_USER) final JDA crankUserJda,
+            @Named(NAME_JDA_POGO_HERO_USER) final JDA poGoHeroUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
@@ -60,7 +62,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
         this.controlUserJda = m15mBotJda;
 
         this.dataSourceJdas = ImmutableSet.of(corruptedUserJda, beninUserJda, ninersUserJda,
-                johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda,
+                johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda, poGoHeroUserJda,
                 chronicUserJda, crankUserJda);
         this.dataSourceJdas.forEach(jda -> Verify.verify(
                 hasRegisteredListener(jda),

@@ -63,6 +63,7 @@ public class BotStarter {
                 .connoisseurUserToken(DiscordEntityConstants.CONNOISSEUR_USER_TOKEN)
                 .chronicUserToken(DiscordEntityConstants.CHRONIC_USER_TOKEN)
                 .crankUserToken(DiscordEntityConstants.CRANK_USER_TOKEN)
+                .poGoHeroUserToken(DiscordEntityConstants.POGO_HERO_USER_TOKEN)
                 .controlUserToken(DiscordEntityConstants.M15M_BOT_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();

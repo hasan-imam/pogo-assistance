@@ -69,7 +69,8 @@ class GenericSpawnMessageProcessorSGVIntegrationTest {
                 .flatMap(Collection::stream)
                 .map(MessageStream::lookbackMessageStream)
                 // Take some message from all channels, even the non-feed ones
-                .flatMap(regionalMessageStream -> regionalMessageStream.limit(250))
+                // Don't go too far in the past since map URLs expire and result in parsing error
+                .flatMap(regionalMessageStream -> regionalMessageStream.limit(5))
                 // Filter out messages that cannot be processed (e.g. from non-feed channels)
                 .filter(PROCESSOR::canProcess);
     }

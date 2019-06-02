@@ -198,6 +198,23 @@ class SpawnDataExchangeModule {
                 serverLogger);
     }
 
+    /**
+     * 'pogo hero' user has access to:
+     *  - Utah
+     *  - CVM
+     */
+    @Named(CollectorJDAModule.NAME_POGO_HERO_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForPoGoHeroUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange,
+                serverLogger);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(
