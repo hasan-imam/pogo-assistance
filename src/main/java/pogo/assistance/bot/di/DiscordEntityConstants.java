@@ -205,7 +205,17 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_POGO_ALERTS_847 = 303349928766210049L;
 
     public static final long SERVER_ID_POKEMON_MAPS_FLORIDA = 560001508628889629L;
-    public static final long CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS = 560747511480844310L;
+    public static final Set<Long> CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS = ImmutableSet.<Long>builder()
+            .add(560747511480844310L) // CLEARWATER / DTCW
+            .add(583297357274284032L) // NORTH TAMPA / USF
+            .add(584464280867438592L) // SOUTH TAMPA / YBOR
+            .add(584467711325896704L) // EAST TAMPA / BRANDON
+            .add(584469974714679480L) // SAFETY HARBOR / OLDSMAR
+            .add(584463140775919649L) // ST. PETESBURG / DTSP
+            .add(584462223926231116L) // PALM HARBOR / DUNEDIN
+            .add(579961624786501632L) // SARASOTA
+            .add(584468866038497301L) // BRADENTON
+            .build();
 
     public static final long SERVER_ID_VALLEY_POGO = 397624389601984523L;
     public static final long CHANNEL_ID_VALLEY_POGO_PERFECT_100 = 545256808705425428L;

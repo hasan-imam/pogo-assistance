@@ -1,11 +1,11 @@
 package pogo.assistance.data.extraction.source.discord;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_POGO_PERFECT_100;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
@@ -241,7 +241,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         return message.getAuthor().isBot()
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_POKEMON_MAPS_FLORIDA
-                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> id == CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS).isPresent();
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS::contains).isPresent();
     }
 
     private static boolean isFromValleyPoGoTargetChannel(final Message message) {

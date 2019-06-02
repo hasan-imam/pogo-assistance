@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CORRUPTED_USER_TOKEN;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
 
@@ -64,7 +64,7 @@ class GenericSpawnMessageProcessorPokemonMapsFloridaIntegrationTest {
 
     private static Stream<Message> PokemonMapsFloridaFeedMessages() {
         return jda.getGuildById(SERVER_ID_POKEMON_MAPS_FLORIDA).getCategories().stream()
-                .filter(category -> CATEGORY_ID_POKEMON_MAPS_FLORIDA_FEEDS == category.getIdLong())
+                .filter(category -> CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS.contains(category.getIdLong()))
                 .map(Category::getTextChannels)
                 .flatMap(Collection::stream)
                 .map(MessageStream::lookbackMessageStream)
