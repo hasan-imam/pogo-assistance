@@ -2,7 +2,6 @@ package pogo.assistance.data.extraction.source.discord;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_SGV_SCANS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
@@ -18,7 +17,6 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERT
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SGV_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_UTAH_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
@@ -37,7 +35,6 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
-import pogo.assistance.data.extraction.source.discord.sgv.SGVMessageProcessorUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
@@ -54,7 +51,6 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     @Override
     public boolean canProcess(@Nonnull final Message message) {
         return isFromSouthwestPokemonTargetChannel(message)
-                || isFromSGVScansTargetChannels(message)
                 || isFromVcPokeScanTargetChannels(message)
                 || isFromPoGoSJ1TargetChannels(message)
                 || isFromNHTTargetChannels(message)
@@ -76,10 +72,6 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final String embedDescription = message.getEmbeds().get(0).getDescription();
         if (isFromPoGoBadgersDmBot(message)) {
             if (embedDescription.split("\n").length <= 2) {
-                return Optional.empty();
-            }
-        } else if (isFromSGVScansTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 6) {
                 return Optional.empty();
             }
         } else if (isFromPokemonMapsFloridaTargetChannels(message)) {
@@ -222,19 +214,6 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         return message.getChannelType() == ChannelType.TEXT
                 && message.getAuthor().isBot()
                 && SPAWN_CHANNEL_IDS_POKESQUAD.contains(message.getChannel().getIdLong());
-    }
-
-    private static boolean isFromSGVScansTargetChannels(final Message message) {
-        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_SGV_SCANS) {
-            return false;
-        }
-
-        if (Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_SGV_SCANS_IV_FEED::contains).isPresent()) {
-            final String channelName = message.getChannel().getName().toLowerCase();
-            return channelName.contains("iv") || channelName.contains("all-spawns") || channelName.contains("unown");
-        }
-
-        return false;
     }
 
     private static boolean isFromBMPGOWorldsTargetChannels(final Message message) {

@@ -19,6 +19,7 @@ import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapS
 import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.sgv.SGVSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.vascans.VAScansSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.wecatch.WeCatchSpawnMessageProcessor;
 import pogo.assistance.utils.debug.ServerLogger;
@@ -88,6 +89,7 @@ class SpawnDataExchangeModule {
                         new WeCatchSpawnMessageProcessor(),
                         new PokeFairySpawnMessageProcessor(),
                         new PineappleMapSpawnMessageProcessor(),
+                        new SGVSpawnMessageProcessor(),
                         new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,

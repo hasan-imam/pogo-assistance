@@ -1,4 +1,4 @@
-package pogo.assistance.data.extraction.source.discord;
+package pogo.assistance.data.extraction.source.discord.sgv;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,14 +24,16 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.Message;
+import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
-class GenericSpawnMessageProcessorSGVIntegrationTest {
+class SGVSpawnMessageProcessorIntegrationTest {
 
     private static JDA jda;
 
-    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new GenericSpawnMessageProcessor();
+    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new SGVSpawnMessageProcessor(true);
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
@@ -70,7 +72,7 @@ class GenericSpawnMessageProcessorSGVIntegrationTest {
                 .map(MessageStream::lookbackMessageStream)
                 // Take some message from all channels, even the non-feed ones
                 // Don't go too far in the past since map URLs expire and result in parsing error
-                .flatMap(regionalMessageStream -> regionalMessageStream.limit(5))
+                .flatMap(regionalMessageStream -> regionalMessageStream.limit(10))
                 // Filter out messages that cannot be processed (e.g. from non-feed channels)
                 .filter(PROCESSOR::canProcess);
     }
