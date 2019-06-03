@@ -16,7 +16,6 @@ import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcess
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pgan.PGANSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
-import pogo.assistance.data.extraction.source.discord.pokefairy.PokeFairySpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.sandiego.SDHSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.sgv.SGVSpawnMessageProcessor;
@@ -71,7 +70,7 @@ class SpawnDataExchangeModule {
      *  - POGO SJ
      *  - VAScans
      *  - We Catch
-     *  - Poke Fairy
+     *  - TPF Fairymaps
      *  - Pineapple
      *  - PokeSquad
      *  - SGV Scans
@@ -87,7 +86,6 @@ class SpawnDataExchangeModule {
                 ImmutableSet.of(
                         new VAScansSpawnMessageProcessor(),
                         new WeCatchSpawnMessageProcessor(),
-                        new PokeFairySpawnMessageProcessor(),
                         new PineappleMapSpawnMessageProcessor(),
                         new SGVSpawnMessageProcessor(),
                         new GenericSpawnMessageProcessor()),

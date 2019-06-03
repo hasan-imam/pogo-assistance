@@ -135,8 +135,8 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_WECATCH = 409426776419336202L;
     public static final long CHANNEL_ID_WECATCH_IV90UP = 493530728915664912L;
 
-    public static final long SERVER_ID_POKEFAIRY = 395409007038300170L;
-    public static final long CHANNEL_ID_POKEFAIRY_NEOSF90IV = 520135251717259274L;
+    public static final long SERVER_ID_TPF = 395409007038300170L;
+    public static final long CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV = 520135251717259274L;
 
     public static final long SERVER_ID_PINEAPPLE = 519605654529245224L;
     public static final long CHANNEL_ID_PINEAPPLE_NEWARK_100IV = 524609486011367434L;

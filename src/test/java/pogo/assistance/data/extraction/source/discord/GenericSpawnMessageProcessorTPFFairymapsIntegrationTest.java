@@ -1,4 +1,4 @@
-package pogo.assistance.data.extraction.source.discord.pokefairy;
+package pogo.assistance.data.extraction.source.discord;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,7 +12,6 @@ import javax.security.auth.login.LoginException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import net.dv8tion.jda.core.AccountType;
@@ -20,22 +19,19 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.data.extraction.source.discord.MessageProcessor;
-import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
-@Disabled("Runs real query against server - only to be used for hand/integration testing")
-class PokeFairySpawnMessageProcessorIntegrationTest {
+class GenericSpawnMessageProcessorTPFFairymapsIntegrationTest {
 
     private static JDA jda;
 
-    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new PokeFairySpawnMessageProcessor();
+    private static final MessageProcessor<PokemonSpawn> PROCESSOR = new GenericSpawnMessageProcessor();
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         jda = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.OWNING_USER_TOKEN)
+                .setToken(DiscordEntityConstants.NINERS_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -63,7 +59,7 @@ class PokeFairySpawnMessageProcessorIntegrationTest {
     }
 
     private static Stream<Message> neoSf90ivPosts() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_POKEFAIRY_NEOSF90IV))
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV))
                 .filter(PROCESSOR::canProcess)
                 .limit(16000);
     }
