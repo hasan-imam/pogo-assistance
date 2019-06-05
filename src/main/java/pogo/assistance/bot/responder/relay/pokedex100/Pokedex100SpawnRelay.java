@@ -51,7 +51,10 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             final String command;
 
             // Temporary measure to reduce the number of larvitar posts
-            if (pokemonSpawn.getPokedexEntry().getId() == 246 && pokemonSpawn.getIv().orElse(-1.0) < 95.0) {
+            if ((pokemonSpawn.getPokedexEntry().getId() == 246
+                    || pokemonSpawn.getPokedexEntry().getId() == 345
+                    || pokemonSpawn.getPokedexEntry().getId() == 74)
+                    && pokemonSpawn.getIv().orElse(-1.0) < 95.0) {
                 return;
             }
 
