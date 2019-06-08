@@ -27,7 +27,7 @@ public class CandySelector {
             .add("hitmonlee").add("hitmonchan")
             .add("lickitung")
             .add("chansey").add("blissey")
-//            .add("snorlax")
+            .add("snorlax")
             .add("dratini").add("dragonair").add("dragonite")
             .add("mareep")
             .add("unown")
