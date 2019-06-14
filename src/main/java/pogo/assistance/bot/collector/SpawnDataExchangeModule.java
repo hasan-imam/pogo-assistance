@@ -50,8 +50,7 @@ class SpawnDataExchangeModule {
     }
 
     /**
-     * 'Benin' user has access to:
-     *  - San Diego Hills
+     * 'Benin' user has access to: (none at the moment)
      */
     @Named(CollectorJDAModule.NAME_BENIN_USER_SPAWN_LISTENER)
     @Provides
@@ -60,7 +59,7 @@ class SpawnDataExchangeModule {
             final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
-                ImmutableSet.of(new SDHSpawnMessageProcessor()),
+                Collections.emptySet(),
                 spawnExchange,
                 serverLogger);
     }
@@ -211,6 +210,22 @@ class SpawnDataExchangeModule {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
+                spawnExchange,
+                serverLogger);
+    }
+
+    /**
+     * 'Michellex' user has access to:
+     *  - San Diego Hills
+     */
+    @Named(CollectorJDAModule.NAME_MICHELLEX_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForMichellexUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                Collections.emptySet(),
+                ImmutableSet.of(new SDHSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger);
     }

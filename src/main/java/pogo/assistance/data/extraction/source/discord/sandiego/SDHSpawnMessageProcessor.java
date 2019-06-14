@@ -12,11 +12,13 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Verify;
 import io.jenetics.jpx.Point;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.LocationLinkParsingUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
@@ -35,13 +37,23 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
-        return message.getChannelType() == ChannelType.PRIVATE
-                && message.getAuthor().getIdLong() == DiscordEntityConstants.USER_ID_SDHVIP_BOT;
+        if (message.getChannelType() == ChannelType.PRIVATE) {
+            return DiscordEntityConstants.USER_IDS_SDHVIP_BOT.contains(message.getAuthor().getIdLong());
+        }
+
+        if (message.getAuthor().isBot() && message.getChannel().getType() == ChannelType.TEXT) {
+            return Optional.ofNullable(message.getCategory())
+                    .map(Category::getIdLong)
+                    .filter(categoryId -> categoryId == DiscordEntityConstants.CATEGORY_ID_SDHVIP_SIGHTING_REPORTS)
+                    .isPresent();
+        }
+
+        return false;
     }
 
     @Override
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
-        if (message.getEmbeds().get(0).getDescription().split("\n").length <= 3) {
+        if (message.getEmbeds().get(0).getDescription().split("\n").length <= 5) {
             return Optional.empty();
         }
 
@@ -49,7 +61,8 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
         final MessageEmbed messageEmbed = message.getEmbeds().get(0); // Assuming all message has embed
         final Optional<PokedexEntry.Gender> gender = SpawnMessageParsingUtils.extractGender(compiledText);
         final PokemonSpawn pokemonSpawn = ImmutablePokemonSpawn.builder()
-                .from(extractLocationFromCompiledText(compiledText))
+                .from(LocationLinkParsingUtils.extractLocation(compiledText))
+//                .from(extractLocationFromCompiledText(compiledText))
                 .pokedexEntry(NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(messageEmbed.getThumbnail().getUrl(), gender.orElse(null)))
                 .iv(SpawnMessageParsingUtils.extractCombatStats(compiledText, compiledText).flatMap(CombatStats::combinedIv))
                 .level(SpawnMessageParsingUtils.extractLevel(compiledText))

@@ -30,7 +30,7 @@ public class VerifierBotUtils {
      * @return
      *      100iv post command for SuperBotP. Example command: "geodude cp445 m 44.5555,55.4444"
      */
-    static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster) {
+    static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster, final boolean isForDonors) {
         Preconditions.checkArgument(pokemonSpawn.getIv().isPresent() && pokemonSpawn.getIv().get() == 100.0);
         Preconditions.checkArgument(pokemonSpawn.getCp().isPresent());
         return String.format("%s cp%d %s %f,%f%s",
@@ -39,10 +39,11 @@ public class VerifierBotUtils {
                 getGenderSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getLatitude().toDegrees(),
                 pokemonSpawn.getLongitude().toDegrees(),
-                mentionPoster ? " n" : "");
+                mentionPoster ? " n" : "",
+                isForDonors ? " d" : "");
     }
 
-    static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster) {
+    static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster, final boolean isForDonors) {
         Preconditions.checkArgument(!pokemonSpawn.getIv().isPresent() || pokemonSpawn.getIv().get() < 100.0);
         final StringBuilder stringBuilder = new StringBuilder("?df");
 
@@ -69,6 +70,10 @@ public class VerifierBotUtils {
 
         if (!mentionPoster) {
             stringBuilder.append(" n"); // needed to NOT mention verifier name for 90+ iv posts
+        }
+
+        if (isForDonors) {
+            stringBuilder.append(" d");
         }
 
         return stringBuilder.toString();

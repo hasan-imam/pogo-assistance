@@ -23,6 +23,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_CHRONIC = "chronic_user_token";
     public static final String NAME_USER_TOKEN_CRANK = "crank_user_token";
     public static final String NAME_USER_TOKEN_POGO_HERO = "pogo_hero_user_token";
+    public static final String NAME_USER_TOKEN_MICHELLEX = "michellex_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -42,6 +43,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_CHRONIC_USER = "chronic_user_jda";
     public static final String NAME_JDA_CRANK_USER = "crank_user_jda";
     public static final String NAME_JDA_POGO_HERO_USER = "pogo_hero_user_jda";
+    public static final String NAME_JDA_MICHELLEX_USER = "michellex_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -65,6 +67,7 @@ public class DiscordEntityConstants {
     public static final String CHRONIC_USER_TOKEN = "";
     public static final String CRANK_USER_TOKEN = "";
     public static final String POGO_HERO_USER_TOKEN = "";
+    public static final String MICHELLEX_USER_TOKEN = "";
 
     // Users/bots
 
@@ -86,11 +89,14 @@ public class DiscordEntityConstants {
             409919681106018315L,
             409786475564105728L,
             409780035470360576L);
-    public static final long USER_ID_SDHVIP_BOT = 520776622887141388L;
     public static final long USER_ID_POGO_BADGERS_BOT = 508688611898687498L;
     public static final long USER_ID_POKEX_DM_BOT = 271388742558679040L;
 
     // IDs for discord servers/channels
+
+    public static final Long SERVER_ID_SDHVIP = 433736422932086786L;
+    public static final Set<Long> USER_IDS_SDHVIP_BOT = ImmutableSet.of(520698304200310785L, 520699525216731146L);
+    public static final long CATEGORY_ID_SDHVIP_SIGHTING_REPORTS = 433736798166974467L;
 
     public static final long CHANNEL_ID_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;

@@ -58,6 +58,10 @@ public interface SpawnDataCollectorBotComponent {
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_POGO_HERO) final String poGoHeroUserToken);
 
         @BindsInstance
+        SpawnDataCollectorBotComponent.Builder michellexUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_MICHELLEX) final String michellexUserToken);
+
+        @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 

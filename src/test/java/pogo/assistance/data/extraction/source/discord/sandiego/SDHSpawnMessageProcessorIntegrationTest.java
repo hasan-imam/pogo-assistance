@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_SDHVIP_SIGHTING_REPORTS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SDHVIP;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -35,7 +37,7 @@ class SDHSpawnMessageProcessorIntegrationTest {
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         jda = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.BENIN_USER_TOKEN)
+                .setToken(DiscordEntityConstants.MICHELLEX_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -46,7 +48,7 @@ class SDHSpawnMessageProcessorIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = {"SDHVIPBotDirectMessages"})
+    @MethodSource(value = { "SDHVIPBotDirectMessages", "SDHVIPSightingReportsCategoryMessages" })
     void process_MessageFromSDVVIPBot_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final Optional<PokemonSpawn> result = PROCESSOR.processWithoutThrowing(message);
@@ -60,9 +62,18 @@ class SDHSpawnMessageProcessorIntegrationTest {
     }
 
     private static Stream<Message> SDHVIPBotDirectMessages() {
-        return MessageStream.lookbackMessageStream(jda.getUserById(DiscordEntityConstants.USER_ID_SDHVIP_BOT).openPrivateChannel().complete())
+        return DiscordEntityConstants.USER_IDS_SDHVIP_BOT.stream()
+                .map(botUserId -> jda.getUserById(botUserId))
+                .map(botUser -> botUser.openPrivateChannel().complete())
+                .flatMap(MessageStream::lookbackMessageStream)
                 .filter(PROCESSOR::canProcess)
-                .limit(100);
+                .limit(1000);
+    }
+
+    private static Stream<Message> SDHVIPSightingReportsCategoryMessages() {
+        return jda.getGuildById(SERVER_ID_SDHVIP).getCategoryById(CATEGORY_ID_SDHVIP_SIGHTING_REPORTS).getTextChannels().stream()
+                .map(MessageStream::lookbackMessageStream)
+                .flatMap(regionalMessageStream -> regionalMessageStream.limit(500).filter(PROCESSOR::canProcess));
     }
 
 }

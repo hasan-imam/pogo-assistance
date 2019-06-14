@@ -47,35 +47,30 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     @Override
     public void observe(final PokemonSpawn pokemonSpawn) {
+        // Need to send certain spawns to donor channels to reduce visibility
+        final String sourceName = pokemonSpawn.getSourceMetadata().sourceName().toUpperCase();
+        final boolean isForDonors = sourceName.contains("SDHVIP") || sourceName.contains("SANDIEGOHILLS");
+
         try {
             final String command;
 
-            // Temporary measure in response to adventure week and slakoth comm day
-            if ((pokemonSpawn.getPokedexEntry().getId() == 246
-                    || pokemonSpawn.getPokedexEntry().getId() == 345
-                    || pokemonSpawn.getPokedexEntry().getId() == 74
-                    || pokemonSpawn.getPokedexEntry().getId() == 287)
-                    && pokemonSpawn.getIv().orElse(-1.0) < 95.0) {
-                return;
-            }
-
             if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
-                command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn, false);
+                command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending 100 IV command: {}", command);
             } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
-                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending 90+ IV command: {}", command);
             } else if (pokemonSpawn.getIv().orElse(-1.0) == 0.0) {
-                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending 0 IV command: {}", command);
             } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry()) && pokemonSpawn.getIv().isPresent()) {
                 // Check presence of IV on the candies. This is to limit the number of posts since most of the spawns
                 // don't have IV info on them (especially the spawns coming from pokemaps).
                 // TODO: Can we do this in a better way?
-                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending candy command: {}", command);
             } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
-                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false);
+                command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending high CP command: {}", command);
             } else {
                 log.trace("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
@@ -84,12 +79,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
             rateLimiter.acquire();
 
-            // Route SDH spawns to donor channels to reduce visibility
-            if (pokemonSpawn.getSourceMetadata().sourceName().toUpperCase().contains("SDHVIP")) {
-                sendCommandToSuperBotP(command + " d"); // Add 'd' to send to donor channel
-            } else {
-                sendCommandToSuperBotP(command);
-            }
+            sendCommandToSuperBotP(command);
         } catch (final RuntimeException e) {
             log.error("Error relaying spawn: " + pokemonSpawn, e);
         }

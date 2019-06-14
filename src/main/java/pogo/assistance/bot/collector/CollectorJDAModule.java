@@ -8,6 +8,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CRANK_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_MICHELLEX_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_POGO_HERO_USER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
@@ -19,6 +20,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_CRAN
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_IRVIN88;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_JOHNNY;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_M15M;
+import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_MICHELLEX;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_NINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_POGO_HERO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_USER_TOKEN_TIMBURTY;
@@ -47,6 +49,7 @@ class CollectorJDAModule {
     static final String NAME_CHRONIC_USER_SPAWN_LISTENER = "chronic_user_spawn_listener";
     static final String NAME_CRANK_USER_SPAWN_LISTENER = "crank_user_spawn_listener";
     static final String NAME_POGO_HERO_USER_SPAWN_LISTENER = "pogo_hero_user_spawn_listener";
+    static final String NAME_MICHELLEX_USER_SPAWN_LISTENER = "michellex_user_spawn_listener";
 
     @Singleton
     @Provides
@@ -217,6 +220,24 @@ class CollectorJDAModule {
     public static JDA providePoGoHeroUserJda(
             @Named(NAME_USER_TOKEN_POGO_HERO) final String token,
             @Named(NAME_POGO_HERO_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
+
+        final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
+        jdaBuilder.setToken(token);
+        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+
+        try {
+            return jdaBuilder.build().awaitReady();
+        } catch (final InterruptedException | LoginException e) {
+            throw new RuntimeException("Failed to setup JDA", e);
+        }
+    }
+
+    @Singleton
+    @Provides
+    @Named(NAME_JDA_MICHELLEX_USER)
+    public static JDA provideMichellexUserJda(
+            @Named(NAME_USER_TOKEN_MICHELLEX) final String token,
+            @Named(NAME_MICHELLEX_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
