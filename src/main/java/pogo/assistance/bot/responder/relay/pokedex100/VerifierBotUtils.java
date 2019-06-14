@@ -33,7 +33,7 @@ public class VerifierBotUtils {
     static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster, final boolean isForDonors) {
         Preconditions.checkArgument(pokemonSpawn.getIv().isPresent() && pokemonSpawn.getIv().get() == 100.0);
         Preconditions.checkArgument(pokemonSpawn.getCp().isPresent());
-        return String.format("%s cp%d %s %f,%f%s",
+        return String.format("%s cp%d %s %f,%f%s%s",
                 getNameSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getCp().get(),
                 getGenderSegment(pokemonSpawn.getPokedexEntry()),
