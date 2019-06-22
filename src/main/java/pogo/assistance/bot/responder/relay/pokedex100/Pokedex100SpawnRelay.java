@@ -71,7 +71,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
                 // TODO: Can we do this in a better way?
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending candy command: {}", command);
-            } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
+            } else if (pokemonSpawn.getCp().orElse(0) >= 2000 && pokemonSpawn.getIv().isPresent()) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
                 log.info("Sending high CP command: {}", command);
             } else {
