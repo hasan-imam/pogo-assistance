@@ -1,12 +1,16 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Category;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
@@ -65,11 +69,23 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
             try {
                 processor.process(message).ifPresent(spawnExchange::offer);
             } catch (final Exception e) {
-                // Log failed message and the error stack trace
+                // Log the failed message
+                final String messageSource;
+                if (message.getChannelType().isGuild()) {
+                    messageSource = String.format("%s -> %s -> %s%n",
+                            Optional.ofNullable(message.getGuild()).map(Guild::toString).orElse("Unknown guild"),
+                            Optional.ofNullable(message.getCategory()).map(Category::toString).orElse("Unknown category"),
+                            Optional.ofNullable(message.getChannel()).map(MessageChannel::toString).orElse("Unknown channel"));
+                } else {
+                    messageSource = message.getAuthor().getName();
+                }
+                logger.sendDebugMessage(new MessageBuilder(message).append(
+                        messageSource,
+                        MessageBuilder.Formatting.BLOCK,
+                        MessageBuilder.Formatting.BOLD).build());
+
+                // Log the error stack trace
                 final String stackTrace = Throwables.getStackTraceAsString(e);
-                logger.sendDebugMessage(new MessageBuilder(message)
-                        .appendCodeLine(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message).sourceName())
-                        .build());
                 new MessageBuilder()
                         .appendCodeBlock(stackTrace, "bash")
                         .buildAll(MessageBuilder.SplitPolicy.ANYWHERE)

@@ -89,7 +89,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 return Optional.empty();
             }
         } else if (isFromPoGoSJ1TargetChannels(message)) {
-            if (embedDescription.contains("(?/?/?)") || embedDescription.contains("CP:?") || embedDescription.contains("(L?)")) {
+            if (message.getEmbeds().get(0).getTitle().contains("(?/?/?)")
+                    || embedDescription.contains("(?/?/?)") || embedDescription.contains("CP:?") || embedDescription.contains("(L?)")) {
                 return Optional.empty();
             }
         } else if (isFromCVMTargetChannels(message)) {
