@@ -318,7 +318,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .orElse(null);
 
         return CATEGORY_IDS_GPGM_FEEDS.contains(categoryId)
-                && !channelName.matches("(.*egg)|(.*raid)");
+                && !channelName.matches("(.*egg.*)|(.*raid.*)");
     }
 
     private static boolean isFromTPFFairyMaps(final Message message) {
