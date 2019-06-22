@@ -67,10 +67,12 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
             } catch (final Exception e) {
                 // Log failed message and the error stack trace
                 final String stackTrace = Throwables.getStackTraceAsString(e);
-                logger.sendDebugMessage(message);
+                logger.sendDebugMessage(new MessageBuilder(message)
+                        .appendCodeLine(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message).sourceName())
+                        .build());
                 new MessageBuilder()
                         .appendCodeBlock(stackTrace, "bash")
-                        .buildAll(MessageBuilder.SplitPolicy.NEWLINE)
+                        .buildAll(MessageBuilder.SplitPolicy.ANYWHERE)
                         .forEach(logger::sendDebugMessage);
             }
         });
