@@ -312,10 +312,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             return false;
         }
 
-        return Optional.ofNullable(message.getCategory())
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
                 .map(Category::getIdLong)
-                .filter(CATEGORY_IDS_GPGM_FEEDS::contains)
-                .isPresent();
+                .orElse(null);
+
+        return CATEGORY_IDS_GPGM_FEEDS.contains(categoryId)
+                && !channelName.matches("(.*egg)|(.*raid)");
     }
 
     private static boolean isFromTPFFairyMaps(final Message message) {
