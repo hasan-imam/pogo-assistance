@@ -49,7 +49,9 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     public void observe(final PokemonSpawn pokemonSpawn) {
         // Need to send certain spawns to donor channels to reduce visibility
         final String sourceName = pokemonSpawn.getSourceMetadata().sourceName().toUpperCase();
-        final boolean isForDonors = sourceName.contains("SDHVIP") || sourceName.contains("SANDIEGOHILLS");
+        final boolean isForDonors = sourceName.contains("SDHVIP")
+                || sourceName.contains("SANDIEGOHILLS")
+                || sourceName.contains("LVRaidMap");
 
         try {
             final String command;

@@ -57,7 +57,8 @@ dependencies {
     compile 'com.google.guava:guava:27.0.1-jre'
 
     // Handling GPS data in GPX format: https://github.com/jenetics/jpx
-    implementation 'com.github.jenetics:jpx:master-SNAPSHOT'
+//    implementation 'com.github.jenetics:jpx:master-SNAPSHOT'
+    implementation 'com.github.jenetics:jpx:v1.4.0'
 
     // jsoup HTML parser library @ https://jsoup.org/
     compile 'org.jsoup:jsoup:1.12.1'

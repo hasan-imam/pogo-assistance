@@ -63,9 +63,9 @@ public class SpawnMessageParsingUtils {
     private static final Pattern ADS_STAT_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
                     "(Atk:|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
-                    "[/\\|\\s]+" +
+                    "[/\\|\\-\\s]+" +
                     "(Def:|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
-                    "[/\\|\\s]+" +
+                    "[/\\|\\-\\s]+" +
                     "(Sta:|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 

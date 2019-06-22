@@ -280,4 +280,7 @@ public class DiscordEntityConstants {
             .add(567443682672771112L) // BELLEVILLE
             .add(425488827625242664L) // KINGSTON
             .build();
+
+    public static final long SERVER_ID_LVRM = 443145770573758465L;
+    public static final long CATEGORY_ID_LVRM_IV_HUNTING = 514969848845959181L;
 }

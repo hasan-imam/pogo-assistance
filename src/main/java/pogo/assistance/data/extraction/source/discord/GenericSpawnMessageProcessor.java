@@ -6,6 +6,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_LVRM_IV_HUNTING;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
@@ -70,7 +71,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromUtahPoGoTargetChannels(message)
                 || isFromCVMTargetChannels(message)
                 || isFromGPGMTargetChannels(message)
-                || isFromTPFFairyMaps(message);
+                || isFromTPFFairyMaps(message)
+                || isFromLVRMTargetChannels(message);
     }
 
     @Override
@@ -318,6 +320,11 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     private static boolean isFromTPFFairyMaps(final Message message) {
         return message.getAuthor().isBot() && message.getChannel().getIdLong() == CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV;
+    }
+
+    private static boolean isFromLVRMTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> id == CATEGORY_ID_LVRM_IV_HUNTING).isPresent();
     }
 
 }
