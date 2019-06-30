@@ -1,5 +1,6 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -7,6 +8,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,6 +27,15 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 @Slf4j
 @Singleton
 public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
+
+    // Pokemons on this list are too common, so criteria for posting them is more restrictive
+    private static final Set<Integer> CRAP_POKEMON_IDS = ImmutableSet.<Integer>builder()
+            .add(13).add(21).add(48)
+            .add(163).add(167)
+            .add(218).add(273).add(293)
+            .add(316).add(322).add(331).add(339).add(399)
+            .add(401)
+            .build();
 
     private final Provider<JDA> relayingUserJda;
 
@@ -47,6 +58,10 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     @Override
     public void observe(final PokemonSpawn pokemonSpawn) {
+        if (shouldBeExcluded(pokemonSpawn)) {
+            return;
+        }
+
         // Need to send certain spawns to donor channels to reduce visibility
         final String sourceName = pokemonSpawn.getSourceMetadata().sourceName().toUpperCase();
         final boolean isForDonors = sourceName.contains("SDHVIP")
@@ -99,4 +114,19 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             // access to posting things at.
         }
     }
+
+    private static boolean shouldBeExcluded(final PokemonSpawn pokemonSpawn) {
+        // If any of the exclusion rules apply, return false
+        if (pokemonSpawn.getPokedexEntry().getId() == 103) {
+            return (pokemonSpawn.getCp().orElse(-1) < 2400)
+                    && (pokemonSpawn.getIv().orElse(-1.0) < 90.0);
+        }
+
+        if (CRAP_POKEMON_IDS.contains(pokemonSpawn.getPokedexEntry().getId())) {
+            return pokemonSpawn.getIv().orElse(-1.0) < 100.0;
+        }
+
+        return false;
+    }
+
 }
