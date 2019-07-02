@@ -230,6 +230,23 @@ class SpawnDataExchangeModule {
                 serverLogger);
     }
 
+    /**
+     * 'PokePeter' user has access to:
+     *  - Toast Maps
+     *  - Oak Park
+     */
+    @Named(CollectorJDAModule.NAME_POKE_PETER_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForPokePeterUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger) {
+        return new DiscordPokemonSpawnListener(
+                Collections.emptySet(),
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                spawnExchange,
+                serverLogger);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(

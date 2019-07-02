@@ -24,6 +24,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_CRANK = "crank_user_token";
     public static final String NAME_USER_TOKEN_POGO_HERO = "pogo_hero_user_token";
     public static final String NAME_USER_TOKEN_MICHELLEX = "michellex_user_token";
+    public static final String NAME_USER_TOKEN_POKE_PETER = "poke_peter_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -44,6 +45,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_CRANK_USER = "crank_user_jda";
     public static final String NAME_JDA_POGO_HERO_USER = "pogo_hero_user_jda";
     public static final String NAME_JDA_MICHELLEX_USER = "michellex_user_jda";
+    public static final String NAME_JDA_POKE_PETER_USER = "poke_peter_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -68,6 +70,7 @@ public class DiscordEntityConstants {
     public static final String CRANK_USER_TOKEN = "";
     public static final String POGO_HERO_USER_TOKEN = "";
     public static final String MICHELLEX_USER_TOKEN = "";
+    public static final String POKE_PETER_USER_TOKEN = "";
 
     // Users/bots
 
@@ -283,4 +286,14 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_LVRM = 443145770573758465L;
     public static final long CATEGORY_ID_LVRM_IV_HUNTING = 514969848845959181L;
+
+    public static final long SERVER_ID_TOAST_MAPS = 493858109563863043L;
+    public static final long CATEGORY_ID_TOAST_MAPS_TEST_STUFF = 558386903355752493L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_TOAST_MAPS = ImmutableSet.<Long>builder()
+            .add(558468422569295892L) // global-iv
+            .add(583869538190360591L) // global-thiccness
+            .build();
+
+    public static final long SERVER_ID_OAK_PARK = 338751348650672128L;
+    public static final long CATEGORY_ID_OAK_PARK_IV_SCANNERS = 414280150415573002L;
 }

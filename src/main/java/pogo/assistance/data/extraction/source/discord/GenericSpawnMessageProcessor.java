@@ -8,6 +8,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XP
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_LVRM_IV_HUNTING;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_OAK_PARK_IV_SCANNERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV;
@@ -18,15 +19,18 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORL
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_GPGM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OAK_PARK;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TOAST_MAPS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_UTAH_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_TOAST_MAPS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
 
 import java.util.Optional;
@@ -37,6 +41,7 @@ import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.User;
 import pogo.assistance.bot.di.DiscordEntityConstants;
@@ -72,7 +77,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromCVMTargetChannels(message)
                 || isFromGPGMTargetChannels(message)
                 || isFromTPFFairyMaps(message)
-                || isFromLVRMTargetChannels(message);
+                || isFromLVRMTargetChannels(message)
+                || isFromToastMapsTargetChannels(message)
+                || isFromOakParkTargetChannels(message);
     }
 
     @Override
@@ -329,6 +336,20 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     private static boolean isFromLVRMTargetChannels(final Message message) {
         return message.getAuthor().isBot()
                 && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> id == CATEGORY_ID_LVRM_IV_HUNTING).isPresent();
+    }
+
+    private static boolean isFromToastMapsTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_TOAST_MAPS
+                && Optional.ofNullable(message.getChannel()).map(MessageChannel::getIdLong).filter(SPAWN_CHANNEL_IDS_TOAST_MAPS::contains).isPresent();
+    }
+
+    private static boolean isFromOakParkTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_OAK_PARK
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> CATEGORY_ID_OAK_PARK_IV_SCANNERS == id).isPresent();
     }
 
 }
