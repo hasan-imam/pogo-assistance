@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pogo.assistance.bot.di.DiscordEntityConstants.JOHNNY_USER_TOKEN;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
-import static pogo.assistance.bot.di.DiscordEntityConstants.TIMBURTY_USER_TOKEN;
 
 import java.util.Optional;
 import java.util.stream.Stream;

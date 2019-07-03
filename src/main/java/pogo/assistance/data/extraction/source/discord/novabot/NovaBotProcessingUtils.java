@@ -56,7 +56,12 @@ public class NovaBotProcessingUtils {
             final int id2 = Optional.ofNullable(matcher.group("id2"))
                     .map(Ints::tryParse)
                     .orElse(-1);
-            if (Pokedex.canHaveAlolanForm(pokemonId)) {
+            if (url.toLowerCase().contains("serebii") && id2 == -1) {
+                // Special handling for images from www.serebii.net
+                if (Optional.ofNullable(matcher.group("id2")).filter("a"::equals).isPresent()) {
+                    return Collections.singleton(PokedexEntry.Form.ALOLAN);
+                }
+            } else if (Pokedex.canHaveAlolanForm(pokemonId)) {
                 // By some miracle/coincidence, all alolan form id2 happens to be even numbers
                 return (id2 % 2 == 0) ? Collections.singleton(PokedexEntry.Form.ALOLAN) : Collections.emptySet();
             } else if (pokemonId == 201) { // Unown
