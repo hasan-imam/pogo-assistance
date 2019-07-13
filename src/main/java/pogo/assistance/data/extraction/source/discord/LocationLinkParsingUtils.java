@@ -25,7 +25,7 @@ public class LocationLinkParsingUtils {
      *  - http://maps.google.com/maps?q=37.4332914692569,-122.115651980398
      *  - https://www.google.com/maps/search/?api=1&query=37.5542702090763,-77.4791150614027
      */
-    private static final Pattern GOOGLE_MAP_URL =
+    public static final Pattern GOOGLE_MAP_URL =
             Pattern.compile("(http.+google.+(q=|query=))(?<latitude>[-\\d\\.]+),(?<longitude>[-\\d\\.]+)");
 
     /**

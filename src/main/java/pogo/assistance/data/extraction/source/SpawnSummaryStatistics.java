@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import com.google.common.base.MoreObjects;
+import lombok.Getter;
 import pogo.assistance.bot.responder.relay.pokedex100.CandySelector;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
@@ -12,6 +13,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
  * @implSpec
  *      Stats will not be consistent if {@link #toString()} and {@link #accept(PokemonSpawn)} happens concurrently.
  */
+@Getter
 public class SpawnSummaryStatistics implements Consumer<PokemonSpawn> {
 
     private long countTotal = 0;

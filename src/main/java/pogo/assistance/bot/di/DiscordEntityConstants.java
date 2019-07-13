@@ -82,6 +82,7 @@ public class DiscordEntityConstants {
     public static final long USER_ID_WOPZ = 237557740342476801L;
     public static final long USER_ID_GHOST = 331557091884138496L;
     public static final long USER_ID_HERO = 367080731350138880L;
+    public static final long USER_ID_MUK = 237050065900797962L;
 
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
     public static final long USER_ID_FLPM_ALERT_BOT = 419298077975904256L;
@@ -108,6 +109,7 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_DD = 561529276944351243L;
     public static final long CHANNEL_ID_DD_BOT_TESTING = 561529516124536833L;
+    public static final long CHANNEL_ID_DD_RELAY_REPORTS = 599651172369956898L;
 
     public static final long SERVER_ID_POGOSJ1 = 346733317699141632L;
     public static final long CHANNEL_ID_POGOSJ1_TWEETS = 346733581814726657L;

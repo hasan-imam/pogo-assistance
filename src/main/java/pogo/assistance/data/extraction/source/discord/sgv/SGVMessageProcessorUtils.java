@@ -15,6 +15,7 @@ import com.google.common.base.Verify;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import pogo.assistance.data.extraction.source.discord.LocationLinkParsingUtils;
 
 @Slf4j
 @UtilityClass
@@ -27,6 +28,13 @@ public class SGVMessageProcessorUtils {
     private static final Pattern SGV_REDIRECT_URL = Pattern.compile("(?<versxurl>http[s]?://ver\\.sx[/\\w\\d]+)");
 
     public static String getGoogleMapUrl(final String compiledMessage) {
+        // First try to extract a google map URL
+        final Matcher googleMapUrlMatcher = LocationLinkParsingUtils.GOOGLE_MAP_URL.matcher(compiledMessage);
+        if (googleMapUrlMatcher.find()) {
+            return googleMapUrlMatcher.group();
+        }
+
+        // Since the message doesn't have a direct map URL, try to extract a versx server URL and resolve google map URL from that
         final Matcher matcher = SGV_REDIRECT_URL.matcher(compiledMessage);
         Verify.verify(matcher.find());
         final String versxurl = matcher.group("versxurl");
