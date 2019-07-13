@@ -21,6 +21,11 @@ import lombok.experimental.UtilityClass;
 public class LocationLinkParsingUtils {
 
     /**
+     * Verify online: https://regex101.com/r/5y0bcx/1
+     */
+    public static final Pattern MARKDOWN_LINK = Pattern.compile("\\[(?<text>[^\\]]*)\\]\\((?<link>[^\\)]*)\\)");
+
+    /**
      * Example map URLs:
      *  - http://maps.google.com/maps?q=37.4332914692569,-122.115651980398
      *  - https://www.google.com/maps/search/?api=1&query=37.5542702090763,-77.4791150614027
@@ -44,7 +49,7 @@ public class LocationLinkParsingUtils {
     public static Point extractLocation(final String compiledText) {
         final AtomicInteger countPointsExtracted = new AtomicInteger(0);
         final Map<Point, Long> pointToOccurrence = Stream.of(GOOGLE_MAP_URL, APPLE_MAP_URL, WAZE_MAP_URL)
-                .map(pattern -> extractPointsUsingPattern(compiledText, pattern))
+                .map(pattern -> extractPointsUsingPattern(removeInvisibleMarkdownLinks(compiledText), pattern))
                 .flatMap(Collection::stream)
                 .peek(point -> countPointsExtracted.incrementAndGet())
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -65,6 +70,20 @@ public class LocationLinkParsingUtils {
             points.add(WayPoint.of(Double.parseDouble(mapUrlMatcher.group("latitude")), Double.parseDouble(mapUrlMatcher.group("longitude"))));
         }
         return points;
+    }
+
+    private static String removeInvisibleMarkdownLinks(final String text) {
+        final StringBuffer filteredTextBuffer = new StringBuffer();
+        final Matcher linkMatcher = MARKDOWN_LINK.matcher(text);
+        while (linkMatcher.find()) {
+            // Find markdown links whose text (click-able section of link) contains no letter/digits and remove them
+            // This process removes links unreadable to humans but exists to throw off machines
+            if (linkMatcher.group("text").replaceAll("[^\\d^\\w]", "").isEmpty()) {
+                linkMatcher.appendReplacement(filteredTextBuffer, "");
+            }
+        }
+        linkMatcher.appendTail(filteredTextBuffer);
+        return filteredTextBuffer.toString();
     }
 
 }
