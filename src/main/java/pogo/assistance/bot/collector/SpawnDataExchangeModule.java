@@ -205,6 +205,8 @@ class SpawnDataExchangeModule {
      *  - OC Scans
      *  - LV Raid Map
      *  - Pogo Ulm Karte
+     *  - Indigo Plateau
+     *  - pogochch2.0
      */
     @Named(CollectorJDAModule.NAME_POGO_HERO_USER_SPAWN_LISTENER)
     @Provides

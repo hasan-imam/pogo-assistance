@@ -341,4 +341,10 @@ public class DiscordEntityConstants {
             .add(597271434548740096L) // 100-sauga
             .add(597273467620032533L) // 91-99-sauga
             .build();
+
+    public static final long SERVER_ID_POGO_CHCH = 413522045058547713L;
+    public static final Set<Long> CHANNEL_IDS_POGO_CHCH_FEEDS = ImmutableSet.<Long>builder()
+            .add(544485199023570964L) // hundred-wild-spawn-no-chat
+            .add(546063393048625152L) // 90-and-over-no-chat
+            .build();
 }
