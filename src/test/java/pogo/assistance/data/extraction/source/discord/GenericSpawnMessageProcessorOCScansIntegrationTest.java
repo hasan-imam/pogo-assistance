@@ -7,8 +7,8 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_TPF_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TPF_PAID;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_OC_SCANS_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OC_SCANS;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -29,7 +29,7 @@ import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
-class GenericSpawnMessageProcessorTPFFairymapsIntegrationTest {
+class GenericSpawnMessageProcessorOCScansIntegrationTest {
 
     private static JDA jda;
 
@@ -38,7 +38,7 @@ class GenericSpawnMessageProcessorTPFFairymapsIntegrationTest {
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         jda = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.NINERS_USER_TOKEN)
+                .setToken(DiscordEntityConstants.POGO_HERO_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -49,8 +49,8 @@ class GenericSpawnMessageProcessorTPFFairymapsIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = { "neoSf90ivPosts", "paidTPFServerSpawns" })
-    void process_NeoSf90IVChannelMessages_ReturnsExpected(final Message message) {
+    @MethodSource(value = { "OCScansSpawnMessages" })
+    void process_LVRM_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final Optional<PokemonSpawn> result = PROCESSOR.processWithoutThrowing(message);
         assumeTrue(result.isPresent(), "Skipped spawn with missing iv/cp/level: " + message.getJumpUrl());
@@ -65,22 +65,18 @@ class GenericSpawnMessageProcessorTPFFairymapsIntegrationTest {
         final Double ivRoundedUp = Math.ceil(pokemonSpawn.getIv().get());
         if (channelName.contains("100")) {
             assertThat(failureMsgWithJumpUrl, ivRoundedUp, equalTo(100.0));
+        } else if (channelName.contains("98")) {
+            assertThat(failureMsgWithJumpUrl, ivRoundedUp, greaterThanOrEqualTo(98.0));
         } else if (channelName.contains("90")) {
             assertThat(failureMsgWithJumpUrl, ivRoundedUp, greaterThanOrEqualTo(90.0));
         } else if (channelName.contains("0")) {
-            assertThat(failureMsgWithJumpUrl, ivRoundedUp, equalTo(0.0));
+            assertThat(failureMsgWithJumpUrl, ivRoundedUp, greaterThanOrEqualTo(0.0));
         }
     }
 
-    private static Stream<Message> neoSf90ivPosts() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV))
-                .filter(PROCESSOR::canProcess)
-                .limit(16000);
-    }
-
-    private static Stream<Message> paidTPFServerSpawns() {
-        return jda.getGuildById(SERVER_ID_TPF_PAID).getCategories().stream()
-                .filter(category -> CATEGORY_IDS_TPF_FEEDS.contains(category.getIdLong()))
+    private static Stream<Message> OCScansSpawnMessages() {
+        return jda.getGuildById(SERVER_ID_OC_SCANS).getCategories().stream()
+                .filter(category -> CATEGORY_IDS_OC_SCANS_FEEDS.contains(category.getIdLong()))
                 .map(Category::getTextChannels)
                 .flatMap(Collection::stream)
                 .map(messageChannel -> {

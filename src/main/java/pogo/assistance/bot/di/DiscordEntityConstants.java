@@ -144,7 +144,15 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_WECATCH = 409426776419336202L;
     public static final long CHANNEL_ID_WECATCH_IV90UP = 493530728915664912L;
 
-    public static final long SERVER_ID_TPF = 395409007038300170L;
+    public static final long SERVER_ID_TPF_BASIC = 395409007038300170L;
+    public static final long SERVER_ID_TPF_PAID = 462255540651950090L;
+    public static final Set<Long> CATEGORY_IDS_TPF_FEEDS = ImmutableSet.<Long>builder()
+            // All categories are under the paid server
+            .add(531596648623636505L) // SF MAP CHANNELS
+            .add(551440473449955342L) // PENINSULA MAP CHANNELS
+            .add(551480783697739789L) // EAST BAY MAP CHANNELS
+            .add(551441426592956417L) // ALL GEO MAP CHANNELS
+            .build();
     public static final long CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV = 520135251717259274L;
 
     public static final long SERVER_ID_PINEAPPLE = 519605654529245224L;
@@ -296,4 +304,33 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_OAK_PARK = 338751348650672128L;
     public static final long CATEGORY_ID_OAK_PARK_IV_SCANNERS = 414280150415573002L;
+
+    public static final long SERVER_ID_OC_SCANS = 574451996656926720L;
+    // Many of these categories have already disappeared but still keeping them in case they come back
+    // TODO: review the set after a while and update as needed
+    public static final Set<Long> CATEGORY_IDS_OC_SCANS_FEEDS = ImmutableSet.<Long>builder()
+            .add(582939716395991050L) // DONOR ONLY
+            .add(574453270156804106L) // LAKE FOREST
+            .add(582582418477940756L) // MISSION VIEJO
+            .add(583754315139907601L) // RANCHO SANTA MARGARITA
+            .add(585631136756138035L) // IRVINE SPECTRUM
+            .add(587561761717354517L) // LADERA RANCH
+            .add(588550029879279619L) // COSTA MESA
+            .add(579848978561237030L) // ANAHEIM
+            .add(582934011991556096L) // SANTA ANA
+            .add(586446917618106398L) // GARDEN GROVE
+            .add(587563323478900766L) // ORANGE
+            .add(588549652412891136L) // NEWPORT BEACH
+            .add(588550660056678420L) // WESTMINSTER
+            .build();
+
+    public static final long SERVER_ID_POGO_ULM_KARTE = 505742401827241994L;
+    public static final Set<Long> CATEGORY_IDS_POGO_ULM_KARTE_FEEDS = ImmutableSet.<Long>builder()
+            .add(583706381295812628L) // POKE IV ULM
+            .add(577245430950133771L) // POKE IV EBERSBACH
+            .add(586629486884290580L) // POKE IV GEISLINGEN
+            .add(577245645971259393L) // POKE IV MEMMINGEN
+            .add(586635549104930828L) // POKE IV LEUTKIRCH
+            .add(586629665448525836L) // POKE IV KEMPTEN
+            .build();
 }

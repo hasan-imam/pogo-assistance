@@ -3,8 +3,10 @@ package pogo.assistance.data.extraction.source.discord;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_CVM_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_GPGM_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGO_ULM_KARTE_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_TPF_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_LVRM_IV_HUNTING;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
@@ -20,12 +22,16 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_GPGM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OAK_PARK;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OC_SCANS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ULM_KARTE;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TOAST_MAPS;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TPF_BASIC;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TPF_PAID;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_UTAH_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
@@ -79,7 +85,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromTPFFairyMaps(message)
                 || isFromLVRMTargetChannels(message)
                 || isFromToastMapsTargetChannels(message)
-                || isFromOakParkTargetChannels(message);
+                || isFromOakParkTargetChannels(message)
+                || isFromOCScansTargetChannels(message)
+                || isFromPogoUlmKarteTargetChannels(message);
     }
 
     @Override
@@ -102,6 +110,10 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             }
         } else if (isFromCVMTargetChannels(message)) {
             if (message.getEmbeds().get(0).getTitle().contains("?% ?cp (L?)") || embedDescription.contains("?% ?/ ?/ ?")) {
+                return Optional.empty();
+            }
+        } else if (isFromOCScansTargetChannels(message)) {
+            if (embedDescription.split("\n").length <= 4) {
                 return Optional.empty();
             }
         }
@@ -209,6 +221,28 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             case "360804192589447169": // SANTA PAULA
             case "468453386266738688": // FILLMORE
                 return !channelName.contains("raid") && !channelName.contains("chat") && !channelName.contains("quest");
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isFromOCScansTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_OC_SCANS) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final String categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getId)
+                .orElse(null);
+        if (categoryId == null) { // Some channels do not fall under a category (ungrouped)
+            return false;
+        }
+
+        switch (categoryId) {
+            case "582939716395991050": // DONOR ONLY
+            case "586446917618106398": // GARDEN GROVE FEED
+                return channelName.contains("iv") || channelName.contains("cp") || channelName.contains("spawn");
             default:
                 return false;
         }
@@ -330,7 +364,21 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     }
 
     private static boolean isFromTPFFairyMaps(final Message message) {
-        return message.getAuthor().isBot() && message.getChannel().getIdLong() == CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV;
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT
+                || (message.getGuild().getIdLong() != SERVER_ID_TPF_BASIC && message.getGuild().getIdLong() != SERVER_ID_TPF_PAID)) {
+            return false;
+        }
+
+        if (message.getChannel().getIdLong() == CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV) {
+            return true;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+        return CATEGORY_IDS_TPF_FEEDS.contains(categoryId)
+                && channelName.matches("(.*iv.*)|(.*pvp_wreckers.*)");
     }
 
     private static boolean isFromLVRMTargetChannels(final Message message) {
@@ -350,6 +398,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_OAK_PARK
                 && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(id -> CATEGORY_ID_OAK_PARK_IV_SCANNERS == id).isPresent();
+    }
+
+    private static boolean isFromPogoUlmKarteTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_POGO_ULM_KARTE
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POGO_ULM_KARTE_FEEDS::contains).isPresent();
     }
 
 }

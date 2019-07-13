@@ -69,7 +69,7 @@ class SpawnDataExchangeModule {
      *  - POGO SJ
      *  - VAScans
      *  - We Catch
-     *  - TPF Fairymaps
+     *  - TPF Fairymaps (basic + paid)
      *  - Pineapple
      *  - PokeSquad
      *  - SGV Scans
@@ -199,8 +199,12 @@ class SpawnDataExchangeModule {
 
     /**
      * 'pogo hero' user has access to:
-     *  - Utah
+     *  - Utah Pokemon Go
      *  - CVM
+     *  - GPGM
+     *  - OC Scans
+     *  - LV Raid Map
+     *  - Pogo Ulm Karte
      */
     @Named(CollectorJDAModule.NAME_POGO_HERO_USER_SPAWN_LISTENER)
     @Provides
