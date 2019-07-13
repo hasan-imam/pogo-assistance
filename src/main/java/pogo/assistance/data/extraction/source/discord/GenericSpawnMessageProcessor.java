@@ -13,6 +13,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOU
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_OAK_PARK_IV_SCANNERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
+import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_IDS_INDIGO_PLATEAU_FEEDS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_POGO_PERFECT_100;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
@@ -20,6 +21,7 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_1
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_GPGM;
+import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_INDIGO_PLATEAU;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OAK_PARK;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OC_SCANS;
@@ -87,7 +89,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromToastMapsTargetChannels(message)
                 || isFromOakParkTargetChannels(message)
                 || isFromOCScansTargetChannels(message)
-                || isFromPogoUlmKarteTargetChannels(message);
+                || isFromPogoUlmKarteTargetChannels(message)
+                || isFromIndigoPlateauTargetChannels(message);
     }
 
     @Override
@@ -405,6 +408,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_POGO_ULM_KARTE
                 && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POGO_ULM_KARTE_FEEDS::contains).isPresent();
+    }
+
+    private static boolean isFromIndigoPlateauTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_INDIGO_PLATEAU
+                && Optional.ofNullable(message.getChannel()).map(MessageChannel::getIdLong).filter(CHANNEL_IDS_INDIGO_PLATEAU_FEEDS::contains).isPresent();
     }
 
 }

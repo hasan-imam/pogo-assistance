@@ -333,4 +333,12 @@ public class DiscordEntityConstants {
             .add(586635549104930828L) // POKE IV LEUTKIRCH
             .add(586629665448525836L) // POKE IV KEMPTEN
             .build();
+
+    public static final long SERVER_ID_INDIGO_PLATEAU = 398695671001251842L;
+    public static final Set<Long> CHANNEL_IDS_INDIGO_PLATEAU_FEEDS = ImmutableSet.<Long>builder()
+            .add(546376030311546910L) // 100-durham
+            .add(546375859397853205L) // 91-99-durham
+            .add(597271434548740096L) // 100-sauga
+            .add(597273467620032533L) // 91-99-sauga
+            .build();
 }
