@@ -1,33 +1,33 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import java.util.Optional;
-import javax.security.auth.login.LoginException;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.core.requests.RestAction;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
 
-@Disabled("Should only be enabled after changing code to point to test server/channel. Otherwise will send message to real output channel.")
+import javax.security.auth.login.LoginException;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static org.mockito.Mockito.*;
+
 class PokexToPokedex100TunnelTest {
 
     private static JDA userJdaReceivingPokexDm;
-    private static JDA userJdaRelayingPokexDm;
 
     @BeforeAll
     static void setUp() throws LoginException, InterruptedException {
         userJdaReceivingPokexDm = new JDABuilder(AccountType.CLIENT)
-                .setToken(DiscordEntityConstants.HORUSEUS_USER_TOKEN)
-                .build()
-                .awaitReady();
-        userJdaRelayingPokexDm = new JDABuilder(AccountType.BOT)
-                .setToken(DiscordEntityConstants.M15M_BOT_TOKEN)
+                .setToken(DiscordEntityConstants.CHRONIC_USER_TOKEN)
                 .build()
                 .awaitReady();
     }
@@ -35,16 +35,37 @@ class PokexToPokedex100TunnelTest {
     @AfterAll
     static void tearDown() {
         Optional.ofNullable(userJdaReceivingPokexDm).ifPresent(JDA::shutdown);
-        Optional.ofNullable(userJdaRelayingPokexDm).ifPresent(JDA::shutdown);
     }
 
-    @Disabled
-    @Test
-    void onPrivateMessageReceived_SpawnDm_Relays() {
-        final PokexToPokedex100Tunnel pokexToPokedex100Tunnel = new PokexToPokedex100Tunnel(userJdaRelayingPokexDm);
-        MessageStream.lookbackMessageStream(userJdaReceivingPokexDm.getUserById(DiscordEntityConstants.USER_ID_POKEX_DM_BOT).openPrivateChannel().complete())
-                .forEach(message -> {
-                    pokexToPokedex100Tunnel.onPrivateMessageReceived(new PrivateMessageReceivedEvent(userJdaReceivingPokexDm, message.getIdLong(), message));
-                });
+    @ParameterizedTest
+    @MethodSource(value = { "pokexBotDms", "pokedex100BotDms" })
+    void onPrivateMessageReceived_SpawnDmFromBot_Relays(final Message message) {
+        final PokexToPokedex100Tunnel pokexToPokedex100Tunnel = spy(new PokexToPokedex100Tunnel(mock(JDA.class)));
+        doNothing().when(pokexToPokedex100Tunnel).sendMessage(anyString());
+        // Send once -> should be relayed
+        pokexToPokedex100Tunnel.onPrivateMessageReceived(new PrivateMessageReceivedEvent(userJdaReceivingPokexDm, message.getIdLong(), message));
+        // Send again -> should not be relayed since it's a duplicate
+        pokexToPokedex100Tunnel.onPrivateMessageReceived(new PrivateMessageReceivedEvent(userJdaReceivingPokexDm, message.getIdLong(), message));
+        verify(pokexToPokedex100Tunnel, times(1)).sendMessage(anyString());
+    }
+
+    private static Stream<Message> pokexBotDms() {
+        return Optional.of(userJdaReceivingPokexDm.getUserById(DiscordEntityConstants.USER_ID_POKEX_DM_BOT))
+                .map(User::openPrivateChannel)
+                .map(RestAction::complete)
+                .map(MessageStream::lookbackMessageStream)
+                .get()
+                .filter(PokexToPokedex100Tunnel::isPokexSpawnNotificationDm)
+                .limit(500);
+    }
+
+    private static Stream<Message> pokedex100BotDms() {
+        return Optional.of(userJdaReceivingPokexDm.getUserById(DiscordEntityConstants.USER_ID_PDEX100_SUPER_SHIPPER_9))
+                .map(User::openPrivateChannel)
+                .map(RestAction::complete)
+                .map(MessageStream::lookbackMessageStream)
+                .get()
+                .filter(PokexToPokedex100Tunnel::isPokedex100SpawnNotificationDm)
+                .limit(500);
     }
 }

@@ -40,7 +40,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     private final Provider<JDA> relayingUserJda;
 
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
-    private final TextChannel commandRelayChannel = relayingUserJda.get().getTextChannelById(DiscordEntityConstants.CHANNEL_ID_PDEX100P_PLAYGROUND);
+    private final TextChannel commandRelayChannel = relayingUserJda.get().getTextChannelById(DiscordEntityConstants.CHANNEL_ID_PDEX100_PLAYGROUND);
     @Getter(lazy = true, value = AccessLevel.PRIVATE)
     private final TextChannel serverLogChannel = relayingUserJda.get().getTextChannelById(DiscordEntityConstants.CHANNEL_ID_DD_BOT_TESTING);
 

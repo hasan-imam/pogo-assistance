@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_SDHVIP_SIGHTING_REPORTS;
 import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_SDHVIP;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.security.auth.login.LoginException;
@@ -17,6 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import javafx.util.Pair;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -73,7 +77,7 @@ class SDHSpawnMessageProcessorIntegrationTest {
     private static Stream<Message> SDHVIPSightingReportsCategoryMessages() {
         return jda.getGuildById(SERVER_ID_SDHVIP).getCategoryById(CATEGORY_ID_SDHVIP_SIGHTING_REPORTS).getTextChannels().stream()
                 .map(MessageStream::lookbackMessageStream)
-                .flatMap(regionalMessageStream -> regionalMessageStream.limit(500).filter(PROCESSOR::canProcess));
+                .flatMap(regionalMessageStream -> regionalMessageStream.limit(5).filter(PROCESSOR::canProcess));
     }
 
 }

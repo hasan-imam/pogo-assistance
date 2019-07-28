@@ -1,10 +1,6 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -13,6 +9,11 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * @implNote
@@ -47,12 +48,13 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
 
     @Override
     public void onPrivateMessageReceived(final PrivateMessageReceivedEvent event) {
-        if (isPokexSpawnNotificationDm(event.getMessage())) {
+        if (isPokexSpawnNotificationDm(event.getMessage()) || isPokedex100SpawnNotificationDm(event.getMessage())) {
             handlePokexSpawnNotificationDm(event.getMessage());
         }
     }
 
-    private static boolean isPokexSpawnNotificationDm(final Message message) {
+    @VisibleForTesting
+    static boolean isPokexSpawnNotificationDm(final Message message) {
         if (message.getChannelType() != ChannelType.PRIVATE
                 || message.getAuthor().getIdLong() != DiscordEntityConstants.USER_ID_POKEX_DM_BOT
                 || message.getEmbeds().isEmpty()) {
@@ -61,6 +63,13 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
 
         final String messageTitle = message.getContentDisplay().toUpperCase();
         return messageTitle.contains("CP") && messageTitle.contains("LVL");
+    }
+
+    @VisibleForTesting
+    static boolean isPokedex100SpawnNotificationDm(final Message message) {
+        return message.getChannelType() == ChannelType.PRIVATE
+                && message.getAuthor().getIdLong() == DiscordEntityConstants.USER_ID_PDEX100_SUPER_SHIPPER_9
+                && message.getContentRaw().contains("Click to get coord");
     }
 
     /**
@@ -86,18 +95,10 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
                 .replaceFirst(":Neutral:", "⚲");
 
         // Check if this was already posted
-        final boolean isDuplicate = pastMessages.stream().anyMatch(pastMessage -> {
-            // Containment check used because earlier message is likely to be from donor feed, which usually has more information
-            // such as height/weight etc. Latter repeated messages are copies from the free channel where such premium info isn't
-            // always included, so likely to result in a message contained in a past message.
-            // **Cranidos** :flag_de: __Bad Vilbel__ **HE**  100 IV  CP **1404** Level **27**  ♂
-            return pastMessage.contains(messageToRelay);
-        });
+        final boolean isDuplicate = isDuplicate(messageToRelay);
         if (!isDuplicate) {
             pastMessages.add(messageToRelay);
-            relayingUserJda.getGuildById(SERVER_ID_RELAYED_SERVER).getTextChannelById(CHANNEL_ID_RELAYED_CHANNEL)
-                    .sendMessage(messageToRelay)
-                    .complete();
+            sendMessage(messageToRelay);
             log.info("Pokex tunnel sent message: {}", messageToRelay);
         } else {
             log.info("Pokex tunnel filtering duplicate message: {}", messageToRelay);
@@ -109,4 +110,22 @@ public class PokexToPokedex100Tunnel extends ListenerAdapter {
         }
     }
 
+    @VisibleForTesting
+    boolean isDuplicate(final String messageToRelay) {
+        return pastMessages.stream().anyMatch(pastMessage -> {
+            // [Pokex specific logic] Containment check used because earlier message is likely to be from donor feed,
+            // which usually has more information such as height/weight etc. Latter repeated messages are copies from
+            // the free channel where such premium info isn't always included, so likely to result in a message
+            // contained in a past message.
+            // Example msg: **Cranidos** :flag_de: __Bad Vilbel__ **HE**  100 IV  CP **1404** Level **27**  ♂
+            return pastMessage.contains(messageToRelay);
+        });
+    }
+
+    @VisibleForTesting
+    void sendMessage(final String messageToRelay) {
+        relayingUserJda.getGuildById(SERVER_ID_RELAYED_SERVER).getTextChannelById(CHANNEL_ID_RELAYED_CHANNEL)
+                .sendMessage(messageToRelay)
+                .complete();
+    }
 }

@@ -85,6 +85,7 @@ public class DiscordEntityConstants {
     public static final long USER_ID_MUK = 237050065900797962L;
 
     public static final long USER_ID_PDEX100_SUPER_BOT_P = 336443339165532162L;
+    public static final long USER_ID_PDEX100_SUPER_SHIPPER_9 = 425688558741749775L;
     public static final long USER_ID_FLPM_ALERT_BOT = 419298077975904256L;
     public static final long USER_ID_AP_ALERT_BOT = 419631321577553921L;
     public static final Set<Long> USER_ID_SS_NOVA_BOTS = ImmutableSet.of(
@@ -105,7 +106,8 @@ public class DiscordEntityConstants {
     public static final long CHANNEL_ID_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;
 
-    public static final long CHANNEL_ID_PDEX100P_PLAYGROUND = 561519459374858245L;
+    public static final long CHANNEL_ID_PDEX100_PLAYGROUND = 561519459374858245L;
+    public static final long CHANNEL_ID_PDEX100_LEVEL_35_PLATINUM = 279400893680713728L;
 
     public static final long SERVER_ID_DD = 561529276944351243L;
     public static final long CHANNEL_ID_DD_BOT_TESTING = 561529516124536833L;
@@ -257,6 +259,7 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_PGAN = 237964415822069760L;
     public static final Set<Long> USER_ID_PGAN_BOTS = ImmutableSet.of(
+            343122881024229377L,
             343127550752587788L,
             343128185744916520L,
             290601744042295296L);
