@@ -96,7 +96,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
             rateLimiter.acquire();
 
-//            sendCommandToSuperBotP(command);
+            sendCommandToSuperBotP(command);
         } catch (final RuntimeException e) {
             log.error("Error relaying spawn: " + pokemonSpawn, e);
         }
