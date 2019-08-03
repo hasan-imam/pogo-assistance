@@ -96,7 +96,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
             rateLimiter.acquire();
 
-            sendCommandToSuperBotP(command);
+//            sendCommandToSuperBotP(command);
         } catch (final RuntimeException e) {
             log.error("Error relaying spawn: " + pokemonSpawn, e);
         }
@@ -117,9 +117,8 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
     private static boolean shouldBeExcluded(final PokemonSpawn pokemonSpawn) {
         // If any of the exclusion rules apply, return false
-        if (pokemonSpawn.getPokedexEntry().getId() == 103) {
-            return (pokemonSpawn.getCp().orElse(-1) < 2400)
-                    && (pokemonSpawn.getIv().orElse(-1.0) < 90.0);
+        if (pokemonSpawn.getPokedexEntry().getId() == 280) {
+            return (pokemonSpawn.getIv().orElse(-1.0) < 96.0);
         }
 
         if (CRAP_POKEMON_IDS.contains(pokemonSpawn.getPokedexEntry().getId())) {
