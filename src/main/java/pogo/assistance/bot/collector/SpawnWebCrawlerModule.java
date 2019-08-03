@@ -41,9 +41,9 @@ public class SpawnWebCrawlerModule {
         return ImmutableSet.of(
                 new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.NYC),
                 new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.SG),
-                new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.YVR),
+                new PokeMapSpawnDataExtractor(gson, closeableHttpClient, Region.YVR)
 //                new RadarSpawnDataExtractor(gson, closeableHttpClient, Region.CL),
-                new RadarSpawnDataExtractor(gson, closeableHttpClient, Region.FL)
+//                new RadarSpawnDataExtractor(gson, closeableHttpClient, Region.FL)
 //                new RadarSpawnDataExtractor(gson, closeableHttpClient, Region.EXTON)
         );
     }
