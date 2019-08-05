@@ -116,13 +116,13 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     }
 
     private static boolean shouldBeExcluded(final PokemonSpawn pokemonSpawn) {
-        // If any of the exclusion rules apply, return false
+        // If any of the exclusion rules apply, return true
         if (pokemonSpawn.getPokedexEntry().getId() == 280) {
             return (pokemonSpawn.getIv().orElse(-1.0) < 96.0);
         }
 
         if (CRAP_POKEMON_IDS.contains(pokemonSpawn.getPokedexEntry().getId())) {
-            return pokemonSpawn.getIv().orElse(-1.0) < 100.0;
+            return pokemonSpawn.getIv().orElse(-1.0) < 100.0 || pokemonSpawn.getLevel().orElse(-1) < 30;
         }
 
         return false;
