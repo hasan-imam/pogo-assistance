@@ -45,7 +45,7 @@ public class CandySelector {
             .add("cranidos").add("rampardos")
             .add("combee").add("vespiquen")
             .add("bronzor").add("bronzong")
-            .add("finneon").add("lumineon")
+            /*.add("finneon")*/.add("lumineon")
             .add("Uxie")
             .add("Azelf")
             .add("Mesprit")
