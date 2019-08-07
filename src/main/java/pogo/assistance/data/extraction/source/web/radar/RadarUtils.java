@@ -59,7 +59,7 @@ class RadarUtils {
             .build();
 
     public static final Map<Region, URI> BASE_URLS_OF_SOURCES = ImmutableMap.of(
-            Region.CL, URI.create("http://radarpokemon.cl"),
+            Region.CL, URI.create("https://radarpokemon.cl"),
             Region.FL, URI.create("http://map.poketrainer.club"),
             Region.EXTON, URI.create("https://www.extonpokemap.com"));
 

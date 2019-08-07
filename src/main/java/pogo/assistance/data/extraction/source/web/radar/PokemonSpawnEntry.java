@@ -69,7 +69,7 @@ interface PokemonSpawnEntry {
     int gender();
 
     @SerializedName("form")
-    int form();
+    Optional<Integer> form();
 
     @SerializedName("cp")
     Optional<Integer> cp();
@@ -117,10 +117,11 @@ interface PokemonSpawnEntry {
     @Value.Derived
     default Set<PokedexEntry.Form> forms() {
         // TODO: process this: https://www.extonpokemap.com/static/data/en.json?_=1551496519
+        final Integer formId = form().orElse(-1);
         switch (pokemonId()) {
             case 351: // castform
                 final Weather weather = weather().map(RadarUtils.WEATHER_ID_MAPPING::get).orElse(Weather.CLEAR);
-                switch (form()) {
+                switch (formId) {
                     case 29: // normal
                         Verify.verify(weather == Weather.CLOUDY);
                         return Collections.singleton(PokedexEntry.Form.CASTFORM_NORMAL);
@@ -140,7 +141,7 @@ interface PokemonSpawnEntry {
                 // 50 -> 60 diglett what form??
                 // TODO: does same form number for different pokemon mean differnt thing?
             case 19: // rattata
-                if (form() == 46) {
+                if (formId == 46) {
                     return Collections.singleton(PokedexEntry.Form.ALOLAN);
                 } else {
                     return Collections.emptySet();
