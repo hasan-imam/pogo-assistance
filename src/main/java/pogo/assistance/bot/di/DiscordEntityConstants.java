@@ -196,8 +196,8 @@ public class DiscordEntityConstants {
             532950888499642368L, // 100iv
             532954783321948182L); // 100iv rare
 
-    public static final long SERVER_ID_POGO_NINJA = 213950622473388032L;
-    public static final Set<Long> SPAWN_CHANNEL_IDS_POGO_NINJA = ImmutableSet.of(522525269760802817L);
+    public static final long SERVER_ID_ITOOLS = 493887372522684451L;
+    public static final Set<Long> SPAWN_CHANNEL_IDS_ITOOLS = ImmutableSet.of(605288653232799745L);
 
     public static final long SERVER_ID_SGV_SCANS = 532078398843912192L;
     public static final Set<Long> CATEGORY_IDS_SGV_SCANS_IV_FEED = ImmutableSet.<Long>builder()

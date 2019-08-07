@@ -13,6 +13,7 @@ import pogo.assistance.bot.responder.relay.pokedex100.SpawnStatisticsRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.articuno.ArticunoSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pgan.PGANSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
@@ -168,6 +169,7 @@ class SpawnDataExchangeModule {
     /**
      * 'chronic' user has access to:
      *  - PGAN
+     *  - iTools (Articuno bot)
      */
     @Named(CollectorJDAModule.NAME_CHRONIC_USER_SPAWN_LISTENER)
     @Provides
@@ -175,7 +177,7 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange,
             final ServerLogger serverLogger) {
         return new DiscordPokemonSpawnListener(
-                Collections.emptySet(),
+                ImmutableSet.of(new ArticunoSpawnMessageProcessor()),
                 ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger);
