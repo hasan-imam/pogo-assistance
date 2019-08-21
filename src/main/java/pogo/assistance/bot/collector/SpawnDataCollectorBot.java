@@ -25,8 +25,7 @@ import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDA.Status;
+import net.dv8tion.jda.api.JDA;
 import pogo.assistance.bot.responder.relay.pokedex100.SpawnStatisticsRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
 
@@ -85,7 +84,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
     @Override
     public void run() {
-        while (!shutdownTriggered.get() && controlUserJda.getStatus() != Status.SHUTDOWN) {
+        while (!shutdownTriggered.get() && controlUserJda.getStatus() != JDA.Status.SHUTDOWN) {
             try {
                 logJdaState(controlUserJda);
                 dataSourceJdas.forEach(SpawnDataCollectorBot::logJdaState);
@@ -134,7 +133,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
     private static void logJdaState(final JDA jda) {
         log.info("{}'s JDA status: {}, ping: {}, response count: {}",
-                jda.getSelfUser().getName(), jda.getStatus(), jda.getPing(), jda.getResponseTotal());
+                jda.getSelfUser().getName(), jda.getStatus(), jda.getGatewayPing(), jda.getResponseTotal());
     }
 
     private static boolean hasRegisteredListener(final JDA jda) {

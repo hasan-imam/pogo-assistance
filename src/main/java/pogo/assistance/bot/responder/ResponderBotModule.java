@@ -11,9 +11,9 @@ import javax.security.auth.login.LoginException;
 
 import dagger.Module;
 import dagger.Provides;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.bot.responder.relay.pokedex100.PokexToPokedex100Tunnel;
 
@@ -44,7 +44,7 @@ class ResponderBotModule {
         jdaBuilder.setToken(id);
 
         if (listenerIds.contains(ListenerId.REP_HANDLER)) {
-            jdaBuilder.addEventListener(repHandlerProvider.get());
+            jdaBuilder.addEventListeners(repHandlerProvider.get());
         }
 
         return jdaBuilder;
@@ -61,7 +61,7 @@ class ResponderBotModule {
         jdaBuilder.setToken(id);
 
         if (listenerIds.contains(ListenerId.RELAY_POKEX_TO_PDEX100)) {
-            jdaBuilder.addEventListener(pokexToPokedex100TunnelProvider.get());
+            jdaBuilder.addEventListeners(pokexToPokedex100TunnelProvider.get());
         }
 
         return jdaBuilder;

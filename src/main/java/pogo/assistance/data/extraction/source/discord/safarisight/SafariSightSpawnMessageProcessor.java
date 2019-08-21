@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Verify;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;

@@ -69,8 +69,8 @@ dependencies {
     compile 'info.picocli:picocli:3.9.3'
 
     // Communicating with Discord: https://github.com/DV8FromTheWorld/JDA
-    compile 'com.jagrosh:jda-utilities:2.1.5'
-    compile ('net.dv8tion:JDA:3.8.1_448') {
+    compile 'com.jagrosh:jda-utilities:3.0.1'
+    compile ('net.dv8tion:JDA:4.0.0_44') {
         exclude module: 'opus-java'
     }
 

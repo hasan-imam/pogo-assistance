@@ -1,11 +1,12 @@
 package pogo.assistance.bot.collector;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 
 /**

@@ -1,7 +1,5 @@
 package pogo.assistance.bot.responder;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Verify;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Optional;
@@ -10,19 +8,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Verify;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * Bot that give `!cookie` to the people who gives `!rep` to the bot running user.
@@ -31,7 +31,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
  *  - Reputation command : `!rep`
  *  - Reputation attribution message format: {@link #FORMAT_REP_ATTRIBUTION_MSG}, {@link #PATTERN_REP_ATTRIBUTION_MSG}
  *  - Reputation command format:
- *  - {@link JDA#getSelfUser()} is always mentioned in the `!rep` command and its response
+ *  - {@link net.dv8tion.jda.api.JDA#getSelfUser()} is always mentioned in the `!rep` command and its response
  *  - There are not limits for using `!cookie` command and we can give it to everyone who reps us
  *
  * Terminologies:

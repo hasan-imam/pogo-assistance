@@ -2,8 +2,9 @@ package pogo.assistance.data.extraction.source.discord;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import net.dv8tion.jda.core.entities.Message;
+
 import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  * Generic processor of {@link Message discord message}. Transforms an input message to some object {@link T}, usually

@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.api.AccountType;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 
 @Singleton

@@ -1,13 +1,14 @@
 package pogo.assistance.bot.di;
 
-import dagger.Module;
-import dagger.Provides;
 import javax.inject.Named;
 import javax.security.auth.login.LoginException;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.TextChannel;
+
+import dagger.Module;
+import dagger.Provides;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 @Module
 public class DiscordEntityModule {

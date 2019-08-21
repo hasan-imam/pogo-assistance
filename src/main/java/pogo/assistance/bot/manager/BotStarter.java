@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.api.AccountType;
 import picocli.CommandLine;
 import pogo.assistance.bot.collector.DaggerSpawnDataCollectorBotComponent;
 import pogo.assistance.bot.collector.SpawnDataCollectorBot;

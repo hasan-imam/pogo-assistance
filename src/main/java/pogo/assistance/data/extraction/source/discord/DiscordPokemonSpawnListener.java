@@ -6,15 +6,15 @@ import javax.inject.Inject;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Category;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Category;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 import pogo.assistance.utils.debug.ServerLogger;
@@ -25,7 +25,7 @@ import pogo.assistance.utils.debug.ServerLogger;
  * Processes notification message using registered channel specific processor and submits the spawn information to
  * {@link #spawnExchange exchange}, which can pass the notification to interested parties.
  *
- * This needs to be {@link net.dv8tion.jda.core.JDA#addEventListener(Object...) registered to JDA} for it to start
+ * This needs to be {@link net.dv8tion.jda.api.JDA#addEventListener(Object...) registered to JDA} for it to start
  * receiving messages from Discord channels.
  */
 @Slf4j

@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Verify;
 import io.jenetics.jpx.Point;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;

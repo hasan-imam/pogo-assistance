@@ -12,10 +12,10 @@ import javax.annotation.Nonnull;
 import io.jenetics.jpx.Point;
 import io.jenetics.jpx.WayPoint;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.entities.Category;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Category;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
@@ -69,7 +69,9 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
     @Override
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
-        final String compiledText = messageEmbed.toJSONObject().toString();
+        // TODO verify that this still works
+//        final String compiledText = messageEmbed.toJSONObject().toString();
+        final String compiledText = messageEmbed.toData().toString();
 
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
                 messageEmbed.getThumbnail().getUrl(),

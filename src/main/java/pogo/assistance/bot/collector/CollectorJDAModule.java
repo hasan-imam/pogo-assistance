@@ -33,9 +33,9 @@ import javax.security.auth.login.LoginException;
 
 import dagger.Module;
 import dagger.Provides;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 
 @Module
@@ -63,7 +63,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
         // TODO: add logging of what's being registered
 
         try {
@@ -82,7 +82,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -100,7 +100,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -118,7 +118,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -136,7 +136,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -154,7 +154,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -172,7 +172,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -190,7 +190,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -208,7 +208,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -226,7 +226,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -244,7 +244,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -262,7 +262,7 @@ class CollectorJDAModule {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(discordPokemonSpawnListener);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
 
         try {
             return jdaBuilder.build().awaitReady();
@@ -281,7 +281,7 @@ class CollectorJDAModule {
     public static JDA provideControlUserJda(@Named(NAME_USER_TOKEN_M15M) final String token) {
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT);
         jdaBuilder.setToken(token);
-        jdaBuilder.addEventListener(new KillSwitch());
+        jdaBuilder.addEventListeners(new KillSwitch());
 
         try {
             return jdaBuilder.build().awaitReady();

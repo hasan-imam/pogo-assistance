@@ -2,19 +2,20 @@ package pogo.assistance.bot.job.scraper.cooldown;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import com.google.common.base.Verify;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.google.common.base.Verify;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.extraction.source.discord.pokedex100.CooldownMessageProcessor;
 

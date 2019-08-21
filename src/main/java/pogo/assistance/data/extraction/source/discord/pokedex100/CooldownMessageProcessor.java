@@ -1,5 +1,12 @@
 package pogo.assistance.data.extraction.source.discord.pokedex100;
 
+import java.time.Duration;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Verify;
 import io.jenetics.jpx.Latitude;
@@ -7,15 +14,9 @@ import io.jenetics.jpx.Length;
 import io.jenetics.jpx.Length.Unit;
 import io.jenetics.jpx.Point;
 import io.jenetics.jpx.WayPoint;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.entities.Message;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 

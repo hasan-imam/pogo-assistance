@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import io.jenetics.jpx.Length.Unit;
 import java.time.Duration;
-import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.api.entities.Message;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;

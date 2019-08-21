@@ -11,7 +11,7 @@ import com.google.common.primitives.Ints;
 import io.jenetics.jpx.Point;
 import io.jenetics.jpx.WayPoint;
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.api.entities.Message;
 import pogo.assistance.data.model.ImmutableSourceMetadata;
 import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.CombatStats;

@@ -18,17 +18,17 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.json.JSONObject;
 import com.google.common.base.Stopwatch;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnObserver;
 import pogo.assistance.data.extraction.source.SpawnSummaryStatistics;
@@ -112,7 +112,7 @@ public class SpawnStatisticsRelay implements PokemonSpawnObserver {
             if (messageSentCount > 0) {
                 if (messageSentCount < embedList.size()) {
                     log.error("Some messages weren't sent. Logging all on console.");
-                    embedList.stream().map(MessageEmbed::toJSONObject).map(JSONObject::toString).forEach(log::info);
+                    embedList.stream().map(MessageEmbed::toData).map(DataObject::toString).forEach(log::info);
                 }
                 getStopwatch().reset().start();
                 statisticsMap.clear();

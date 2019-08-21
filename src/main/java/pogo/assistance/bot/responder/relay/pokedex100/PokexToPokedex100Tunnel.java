@@ -1,19 +1,19 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import com.google.common.annotations.VisibleForTesting;
-import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import pogo.assistance.bot.di.DiscordEntityConstants;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Deque;
 import java.util.LinkedList;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.google.common.annotations.VisibleForTesting;
+import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import pogo.assistance.bot.di.DiscordEntityConstants;
 
 /**
  * @implNote
