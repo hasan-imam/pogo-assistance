@@ -32,7 +32,7 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
     private static final Set<Integer> CRAP_POKEMON_IDS = ImmutableSet.<Integer>builder()
             .add(13).add(21).add(48)
             .add(163).add(167)
-            .add(218).add(273).add(293)
+            .add(218).add(273)/*.add(293)*/
             .add(316).add(322).add(331)/*.add(339)*/.add(399)
             .add(401)
             .build();
