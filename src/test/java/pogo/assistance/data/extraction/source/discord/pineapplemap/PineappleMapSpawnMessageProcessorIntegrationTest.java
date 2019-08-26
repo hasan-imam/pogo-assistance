@@ -12,7 +12,6 @@ import javax.security.auth.login.LoginException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import net.dv8tion.jda.api.AccountType;
@@ -25,7 +24,6 @@ import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
-@Disabled("Runs real query against server - only to be used for hand/integration testing")
 class PineappleMapSpawnMessageProcessorIntegrationTest {
 
     private static JDA ninersJda;
