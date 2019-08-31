@@ -236,6 +236,7 @@ public class DiscordEntityConstants {
             .add(584462223926231116L) // PALM HARBOR / DUNEDIN
             .add(579961624786501632L) // SARASOTA
             .add(584468866038497301L) // BRADENTON
+            .add(614025643209785354L) // STUART
             .build();
 
     public static final long SERVER_ID_VALLEY_POGO = 397624389601984523L;

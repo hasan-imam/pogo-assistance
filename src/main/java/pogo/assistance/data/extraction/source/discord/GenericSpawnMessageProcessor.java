@@ -119,7 +119,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 return Optional.empty();
             }
         } else if (isFromOCScansTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 4) {
+            if (embedDescription.split("\n").length <= 6) {
                 return Optional.empty();
             }
         }
