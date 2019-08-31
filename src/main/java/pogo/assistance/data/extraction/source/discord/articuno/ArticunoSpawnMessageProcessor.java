@@ -21,9 +21,9 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     private static final Pattern ID_PATTERN = Pattern.compile("^:(?<pokemonId>[\\d]+):");
-    private static final Pattern IV_PATTERN = Pattern.compile(":Iv:[\\s]+(?<iv>[\\d\\.]+)");
-    private static final Pattern CP_PATTERN = Pattern.compile(":Cp:[\\s]+(?<cp>[\\d]+)");
-    private static final Pattern LEVEL_PATTERN = Pattern.compile(":lv\\\\_t:[\\s]+(?<level>[\\d]+)");
+    private static final Pattern IV_PATTERN = Pattern.compile(":(Iv|indval):[\\s]+(?<iv>[\\d\\.]+)");
+    private static final Pattern CP_PATTERN = Pattern.compile(":(Cp|compow):[\\s]+(?<cp>[\\d]+)");
+    private static final Pattern LEVEL_PATTERN = Pattern.compile(":(lv\\\\_t|lev):[\\s]+(?<level>[\\d]+)");
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {

@@ -1,13 +1,5 @@
 package pogo.assistance.data.extraction.source.discord.flpokemap;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_AP_ALERT_BOT;
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT;
-
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Verify;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Category;
@@ -22,6 +14,14 @@ import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_AP_ALERT_BOT;
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_BOT;
 
 /**
  * Processes alert messages from FLPM and AP bots (although the name implies only the first).
@@ -72,21 +72,16 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
                     return false;
                 }
                 switch (message.getCategory().getId()) {
-                    case "367523728491544577":
-                        // ALPHARETTA category: target channels end with "spawns"
-                        return channelName.contains("spawn");
-                    case "367520522659168256":
-                        // DOWNTOWN ATLANTA: target channels don't end with "chat", "raid" etc. suffix
+                    case "367523728491544577": // ALPHARETTA
+                        return channelName.contains("spawn"); // target channels end with "spawns"
+                    case "367520522659168256": // DOWNTOWN ATLANTA
+                    case "367346018272018437": // AUSTIN
+                        // target channels don't end with "chat", "raid" etc. suffix
                         // Some channels have different message format but they are super old, so not filtering them out
                         return !channelName.contains("chat")
                                 && !channelName.contains("raid");
-                    case "367346018272018437":
-                        // AUSTIN: target channels don't end with "chat", "raid" etc. suffix
-                        // Some channels have different message format but they are super old, so not filtering them out
-                        return !channelName.contains("chat")
-                                && !channelName.contains("raid");
-                    case "360981255728267264":
-                        // JACKSONVILLE: target channels don't end with the filtered out suffixes below
+                    case "360981255728267264": // JACKSONVILLE
+                        // target channels don't end with the filtered out suffixes below
                         // Many channels have different message format but they are super old, so not filtering them out
                         return !channelName.contains("chat")
                                 && !channelName.contains("custom_filters")
@@ -111,8 +106,6 @@ public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonS
             // Some message contains a single description line with just the despawn time, but nothing else
             // These messages contain 1 line in FLPM alerts and 4 lines in AP alerts
             // We ignore those for now
-            log.trace("Ignoring message from '{}' with missing spawn description: {}",
-                    message.getChannel().getName(), message.getJumpUrl());
             return Optional.empty();
         }
         Verify.verify(descriptionLines.length == 7,

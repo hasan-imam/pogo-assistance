@@ -69,8 +69,6 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
     @Override
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
-        // TODO verify that this still works
-//        final String compiledText = messageEmbed.toJSONObject().toString();
         final String compiledText = messageEmbed.toData().toString();
 
         final PokedexEntry pokedexEntry = NovaBotProcessingUtils.inferPokedexEntryFromNovaBotAssetUrl(
