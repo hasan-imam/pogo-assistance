@@ -1,10 +1,5 @@
 package pogo.assistance.data.extraction.source.discord;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Verify;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
@@ -17,6 +12,11 @@ import pogo.assistance.data.model.SourceMetadata;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutableCombatStats;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @UtilityClass
 public class SpawnMessageParsingUtils {
@@ -118,7 +118,7 @@ public class SpawnMessageParsingUtils {
 
     public static Point parseGoogleMapQueryLink(final String url) {
         final Matcher mapUrlMatcher = GOOGLE_MAP_QUERY_URL.matcher(url);
-        Verify.verify(mapUrlMatcher.find());
+        Verify.verify(mapUrlMatcher.find(), "Input didn't match google map URL format. Input: %s", url);
         return WayPoint.of(Double.parseDouble(mapUrlMatcher.group("latitude")), Double.parseDouble(mapUrlMatcher.group("longitude")));
     }
 
@@ -208,7 +208,7 @@ public class SpawnMessageParsingUtils {
 
     public static Optional<Integer> extractLevel(final String text) {
         final Matcher levelMatcher = LEVEL_PATTERN.matcher(text);
-        Verify.verify(levelMatcher.find());
+        Verify.verify(levelMatcher.find(), "Nothing looked like level data in input text: %s", text);
         if (!levelMatcher.group("level").equals("?")) {
             return Optional.ofNullable(Ints.tryParse(levelMatcher.group("level")));
         }

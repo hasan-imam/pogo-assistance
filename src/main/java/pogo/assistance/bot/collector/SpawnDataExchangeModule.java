@@ -6,6 +6,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import pogo.assistance.bot.responder.relay.pokedex100.Pokedex100SpawnRelay;
@@ -41,13 +42,15 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForCorruptedUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         final FLPokeMapSpawnMessageProcessor flpmSpawnMessageProcessor = new FLPokeMapSpawnMessageProcessor();
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(flpmSpawnMessageProcessor, new GenericSpawnMessageProcessor()),
                 ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -57,12 +60,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForBeninUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -81,7 +86,8 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForNinersUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
                         new VAScansSpawnMessageProcessor(),
@@ -91,7 +97,8 @@ class SpawnDataExchangeModule {
                         new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -103,14 +110,16 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForJohnnyUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(
                         new PineappleMapSpawnMessageProcessor(),
                         new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -122,12 +131,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForTimburtyUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -141,12 +152,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForIrvin88UserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -158,12 +171,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForConnoisseurUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -175,12 +190,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForChronicUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new ArticunoSpawnMessageProcessor()),
                 ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -191,12 +208,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForCrankUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
                 ImmutableSet.of(new PGANSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -214,12 +233,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForPoGoHeroUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -230,12 +251,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForMichellexUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
                 ImmutableSet.of(new SDHSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     /**
@@ -247,12 +270,14 @@ class SpawnDataExchangeModule {
     @Provides
     public static DiscordPokemonSpawnListener provideSpawnListenerToUserForPokePeterUserJDA(
             final PokemonSpawnExchange spawnExchange,
-            final ServerLogger serverLogger) {
+            final ServerLogger serverLogger,
+            final Gson gson) {
         return new DiscordPokemonSpawnListener(
                 Collections.emptySet(),
                 ImmutableSet.of(new GenericSpawnMessageProcessor()),
                 spawnExchange,
-                serverLogger);
+                serverLogger,
+                gson);
     }
 
     @Singleton

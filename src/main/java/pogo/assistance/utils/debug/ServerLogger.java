@@ -1,13 +1,15 @@
 package pogo.assistance.utils.debug;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.Queue;
 
 @Singleton
 public class ServerLogger {
@@ -25,5 +27,12 @@ public class ServerLogger {
 
     public void sendDebugMessage(final Message message) {
         loggingUserJda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_DD_BOT_TESTING).sendMessage(message).queue();
+    }
+
+    public void sendDebugMessages(final Queue<Message> messages) {
+        final TextChannel channel = loggingUserJda.getTextChannelById(DiscordEntityConstants.CHANNEL_ID_DD_BOT_TESTING);
+        for (final Message message : messages) {
+            channel.sendMessage(message).complete();
+        }
     }
 }
