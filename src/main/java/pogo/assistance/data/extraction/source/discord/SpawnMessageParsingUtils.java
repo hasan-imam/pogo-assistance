@@ -14,7 +14,10 @@ import pogo.assistance.data.model.pokemon.ImmutableCombatStats;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Gender;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +37,7 @@ public class SpawnMessageParsingUtils {
      *  - <:checkmark:574778007441637388>
      *  - <:check_mark_2:574778007441637388>
      *
-     * https://regex101.com/r/SdOUIl/1
+     * Verify online: https://regex101.com/r/SdOUIl/1
      */
     private static final Pattern EMOJI_PATTERN = Pattern.compile("<:(?<emoji>[\\w\\d_]+):\\d+>");
 
@@ -45,7 +48,11 @@ public class SpawnMessageParsingUtils {
      *  - 1%
      *  - (100.00%)
      */
-    private static final Pattern IV_PATTERN = Pattern.compile("\\(?" + "(?<iv>[\\d\\.]{1,6}|\\?)%" + "\\)?");
+    private static final Pattern IV_PATTERN_1 = Pattern.compile("\\(?" + "(?<iv>[\\d\\.]{1,6}|\\?)%" + "\\)?");
+    /**
+     * Verify online: https://regex101.com/r/E1Ffwn/1
+     */
+    private static final Pattern IV_PATTERN_2 = Pattern.compile("IV:(?<iv>\\d{1,3}\\.\\d{1,2})");
 
     /**
      * Example matched strings:
@@ -53,20 +60,20 @@ public class SpawnMessageParsingUtils {
      *  - (15|15|15)
      *  - 15/15/15
      *  - 15 / 15 / 15
-     *  - Atk: 14 / Def: 6 / Sta: 13
+     *  - ATK: 14 / DEF: 6 / STA: 13
      *  - (Atk: 14 / Def: 6 / Sta: 13)
      *  - (14A / 6D / 13S)
      *  - A:15 D:15 S:15
      *
-     * Verify online: https://regex101.com/r/vsxUsw/2
+     * Verify online: https://regex101.com/r/vsxUsw/3
      */
     private static final Pattern ADS_STAT_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
-                    "(Atk:|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
+                    "(Atk:|ATK:|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
                     "[/\\|\\-\\s]+" +
-                    "(Def:|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
+                    "(Def:|DEF:|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
                     "[/\\|\\-\\s]+" +
-                    "(Sta:|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
+                    "(Sta:|STA:|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**
@@ -163,7 +170,7 @@ public class SpawnMessageParsingUtils {
 
     /**
      * Supported formats:
-     *  - "♂" or "♀" or "⚲"
+     *  - "♂" or "♀" or "⚲" or "⚧"
      *  - "Female" or "Male"
      *  - some combination of above, e.g. "♀Female", "♂Male"
      *
@@ -175,7 +182,7 @@ public class SpawnMessageParsingUtils {
             return Optional.of(Gender.FEMALE);
         } else if (MALE_GENDER_PATTERN.matcher(text).find()) {
             return Optional.of(Gender.MALE);
-        } else if (text.contains("⚲")) {
+        } else if (text.contains("⚲") || text.contains("⚧")) {
             return Optional.of(Gender.NONE);
         }
 
@@ -269,9 +276,30 @@ public class SpawnMessageParsingUtils {
     }
 
     private static Optional<Double> extractIv(final String text) {
-        final Matcher ivMatcher = IV_PATTERN.matcher(text);
-        if (ivMatcher.find()) {
-            return Optional.ofNullable(Doubles.tryParse(ivMatcher.group("iv")));
+        return matchAndExtract(
+                text,
+                Arrays.asList(IV_PATTERN_1, IV_PATTERN_2),
+                matcher -> Doubles.tryParse(matcher.group("iv")));
+    }
+
+    private static <T> Optional<T> matchAndExtract(
+            final String inputText,
+            final Collection<Pattern> patterns,
+            final Function<Matcher, T> extractor) {
+        return patterns.stream()
+                .map(pattern -> matchAndExtract(inputText, pattern, extractor))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
+    }
+
+    private static <T> Optional<T> matchAndExtract(
+            final String inputText,
+            final Pattern pattern,
+            final Function<Matcher, T> extractor) {
+        final Matcher matcher = pattern.matcher(inputText);
+        if (matcher.find()) {
+            return Optional.ofNullable(extractor.apply(matcher));
         }
         return Optional.empty();
     }

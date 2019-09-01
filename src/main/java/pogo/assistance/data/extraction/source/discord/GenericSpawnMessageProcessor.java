@@ -1,48 +1,5 @@
 package pogo.assistance.data.extraction.source.discord;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_CVM_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_GPGM_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGOSJ1_SPAWN_CHANNELS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POGO_ULM_KARTE_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKEMON_MAPS_FLORIDA_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_POKE_XPLORER_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_TPF_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_IDS_UTAH_POGO_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_LVRM_IV_HUNTING;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_NORTHHOUSTONTRAINERS_IV_FEED;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_OAK_PARK_IV_SCANNERS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_POGO_SOFIA_SCANNER_COORDINATES;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CATEGORY_ID_UTAH_POGO_POKEMON;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_IDS_INDIGO_PLATEAU_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_IDS_POGO_CHCH_FEEDS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_TPF_FAIRYMAPS_NEOSF90IV;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VALLEY_POGO_PERFECT_100;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_0IV;
-import static pogo.assistance.bot.di.DiscordEntityConstants.CHANNEL_ID_VCSCANS_100IV;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_BMPGO_WORLD;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_CVM;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_GPGM;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_INDIGO_PLATEAU;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_NORTHHOUSTONTRAINERS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OAK_PARK;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_OC_SCANS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGOSJ1;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ALERTS_847;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_CHCH;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_SOFIA;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POGO_ULM_KARTE;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKEMON_MAPS_FLORIDA;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_POKE_XPLORER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TOAST_MAPS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TPF_BASIC;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_TPF_PAID;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_UTAH_POGO;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VALLEY_POGO;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SERVER_ID_VCSCANS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_POKESQUAD;
-import static pogo.assistance.bot.di.DiscordEntityConstants.SPAWN_CHANNEL_IDS_TOAST_MAPS;
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_POGO_BADGERS_BOT;
-
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -60,6 +17,8 @@ import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+
+import static pogo.assistance.bot.di.DiscordEntityConstants.*;
 
 /**
  * @implNote
@@ -93,7 +52,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromOCScansTargetChannels(message)
                 || isFromPogoUlmKarteTargetChannels(message)
                 || isFromIndigoPlateauTargetChannels(message)
-                || isFromPogoChChTargetChannels(message);
+                || isFromPogoChChTargetChannels(message)
+                || isFromAzPoGoMapTargetChannels(message)
+                || isFromPokeHunterEliteTargetChannels(message);
     }
 
     @Override
@@ -122,6 +83,14 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             if (embedDescription.split("\n").length <= 6) {
                 return Optional.empty();
             }
+        } else if (isFromAzPoGoMapTargetChannels(message)) {
+            if (embedDescription.split("\n").length <= 3) {
+                return Optional.empty();
+            }
+        } else if (isFromPokeHunterEliteTargetChannels(message)) {
+            if (embedDescription.split("\n").length <= 4) {
+                return Optional.empty();
+            }
         }
 
         final String compiledText = compileMessageText(message);
@@ -144,7 +113,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final MessageEmbed messageEmbed = message.getEmbeds().get(0);
 
         final StringBuilder compiler = new StringBuilder();
-        Optional.ofNullable(message.getAuthor()).map(User::getName).ifPresent(name -> compiler.append(name).append(System.lineSeparator()));
+        Optional.of(message.getAuthor()).map(User::getName).ifPresent(name -> compiler.append(name).append(System.lineSeparator()));
         Optional.ofNullable(messageEmbed.getTitle()).ifPresent(title -> compiler.append(title).append(System.lineSeparator()));
         Optional.ofNullable(messageEmbed.getDescription()).ifPresent(description -> compiler.append(description.replaceAll("\\*", ""))
                 .append(System.lineSeparator()));
@@ -252,6 +221,29 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             default:
                 return false;
         }
+    }
+
+    private static boolean isFromPokeHunterEliteTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_POKE_HUNTER_ELITE) {
+            return false;
+        }
+
+        if (CHANNEL_IDS_POKE_HUNTER_ELITE.contains(message.getChannel().getIdLong())) {
+            return true;
+        }
+
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+        return CATEGORY_IDS_POKE_HUNTER_ELITE.contains(categoryId)
+                && message.getChannel().getName().matches("(.*-iv-pokemon)");
+    }
+
+    private static boolean isFromAzPoGoMapTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_AZ_POGO_MAP
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_AZ_POGO_MAP::contains).isPresent();
     }
 
     private static boolean isFromPoGoSJ1TargetChannels(final Message message) {

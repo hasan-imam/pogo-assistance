@@ -66,6 +66,7 @@ public class BotStarter {
                 .poGoHeroUserToken(DiscordEntityConstants.POGO_HERO_USER_TOKEN)
                 .michellexUserToken(DiscordEntityConstants.MICHELLEX_USER_TOKEN)
                 .pokePeterUserToken(DiscordEntityConstants.POKE_PETER_USER_TOKEN)
+                .amyUserToken(DiscordEntityConstants.AMY_USER_TOKEN)
                 .controlUserToken(DiscordEntityConstants.M15M_BOT_TOKEN)
                 .build()
                 .getSpawnDataCollectorBot();

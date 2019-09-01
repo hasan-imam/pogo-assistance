@@ -280,6 +280,25 @@ class SpawnDataExchangeModule {
                 gson);
     }
 
+    /**
+     * 'Amy' user has access to:
+     *  - PokeHunter Elite
+     *  - AZ PoGo Map
+     */
+    @Named(CollectorJDAModule.NAME_AMY_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForAmyUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger,
+            final Gson gson) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange,
+                serverLogger,
+                gson);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(

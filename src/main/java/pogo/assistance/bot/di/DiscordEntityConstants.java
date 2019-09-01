@@ -25,6 +25,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_POGO_HERO = "pogo_hero_user_token";
     public static final String NAME_USER_TOKEN_MICHELLEX = "michellex_user_token";
     public static final String NAME_USER_TOKEN_POKE_PETER = "poke_peter_user_token";
+    public static final String NAME_USER_TOKEN_AMY = "amy_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -46,6 +47,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_POGO_HERO_USER = "pogo_hero_user_jda";
     public static final String NAME_JDA_MICHELLEX_USER = "michellex_user_jda";
     public static final String NAME_JDA_POKE_PETER_USER = "poke_peter_user_jda";
+    public static final String NAME_JDA_AMY_USER = "amy_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -71,6 +73,7 @@ public class DiscordEntityConstants {
     public static final String POGO_HERO_USER_TOKEN = "";
     public static final String MICHELLEX_USER_TOKEN = "";
     public static final String POKE_PETER_USER_TOKEN = "";
+    public static final String AMY_USER_TOKEN = "";
 
     // Users/bots
 
@@ -352,5 +355,36 @@ public class DiscordEntityConstants {
     public static final Set<Long> CHANNEL_IDS_POGO_CHCH_FEEDS = ImmutableSet.<Long>builder()
             .add(544485199023570964L) // hundred-wild-spawn-no-chat
             .add(546063393048625152L) // 90-and-over-no-chat
+            .build();
+
+    public static final long SERVER_ID_AZ_POGO_MAP = 496611596324306945L;
+    public static final Set<Long> CATEGORY_IDS_AZ_POGO_MAP = ImmutableSet.<Long>builder()
+            .add(554576475441987585L) // ZONE 1
+            .add(554616897002274816L) // ZONE 2
+            .add(554616999037370368L) // ZONE 3
+            .add(554617063344439298L) // ZONE 4
+            .add(558585812745322496L) // ZONE 5
+            .add(558585857620180993L) // ZONE 6
+            .add(596473001684238356L) // ZONE 7
+            .add(599136689318920193L) // ZONE 8
+            .add(596017757984784399L) // FLAGSTAFF
+            .add(596017834119659531L) // PRESCOTT
+            .build();
+
+    public static final long SERVER_ID_POKE_HUNTER_ELITE = 265616752308649995L;
+    public static final Set<Long> CATEGORY_IDS_POKE_HUNTER_ELITE = ImmutableSet.<Long>builder()
+            .add(526229120288555018L) // CINCY NW POKEMON
+            .add(526232264787492903L) // CINCY NE POKEMON
+            .add(526232656829087804L) // CINCY CENTRAL POKEMON
+            .add(526233033452421130L) // CINCY EAST POKEMON
+            .add(526233097507700767L) // CINCY SE POKEMON
+            .add(526233147457667095L) // CINCY SOUTH POKEMON
+            .add(526233191627882522L) // CINCY WEST POKEMON
+            .add(526233271319920650L) // NKY POKEMON
+            .build();
+    public static final Set<Long> CHANNEL_IDS_POKE_HUNTER_ELITE = ImmutableSet.<Long>builder()
+            .add(298607633751867393L) // unown-spottings
+            .add(520304182847209487L) // 90iv-plus-spottings
+            .add(386200368180101120L) // 100iv-only-spottings
             .build();
 }

@@ -1,19 +1,5 @@
 package pogo.assistance.bot.collector;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_BENIN_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CHRONIC_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CONNOISSEUR_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CORRUPTED_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_CRANK_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_IRVIN88_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_JOHNNY_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_M15M_BOT;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_MICHELLEX_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_NINERS_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_POGO_HERO_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_POKE_PETER_USER;
-import static pogo.assistance.bot.di.DiscordEntityConstants.NAME_JDA_TIMBURTY_USER;
-
 import java.time.Duration;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import pogo.assistance.bot.responder.relay.pokedex100.SpawnStatisticsRelay;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnWebCrawler;
+
+import static pogo.assistance.bot.di.DiscordEntityConstants.*;
 
 @Slf4j
 public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
@@ -58,13 +46,14 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_POGO_HERO_USER) final JDA poGoHeroUserJda,
             @Named(NAME_JDA_MICHELLEX_USER) final JDA michellexUserJda,
             @Named(NAME_JDA_POKE_PETER_USER) final JDA pokePeterUserJda,
+            @Named(NAME_JDA_AMY_USER) final JDA amyUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
         Verify.verify(hasRegisteredListener(m15mBotJda), "Control user JDA is expected to have at least one listener (kill switch)");
         this.controlUserJda = m15mBotJda;
 
-        this.dataSourceJdas = ImmutableSet.of(corruptedUserJda, beninUserJda, ninersUserJda,
+        this.dataSourceJdas = ImmutableSet.of(amyUserJda, corruptedUserJda, beninUserJda, ninersUserJda,
                 johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda, poGoHeroUserJda,
                 chronicUserJda, crankUserJda, michellexUserJda, pokePeterUserJda);
         this.dataSourceJdas.forEach(jda -> Verify.verify(
