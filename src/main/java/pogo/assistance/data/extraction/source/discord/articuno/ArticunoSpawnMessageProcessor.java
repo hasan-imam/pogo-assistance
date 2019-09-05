@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Verify;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
+import io.jenetics.jpx.WayPoint;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
@@ -24,6 +25,8 @@ public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSp
     private static final Pattern IV_PATTERN = Pattern.compile(":(Iv|indval):[\\s]+(?<iv>[\\d\\.]+)");
     private static final Pattern CP_PATTERN = Pattern.compile(":(Cp|compow):[\\s]+(?<cp>[\\d]+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile(":(lv\\\\_t|lev):[\\s]+(?<level>[\\d]+)");
+    private static final Pattern IPA_URL_PATTERN =
+            Pattern.compile("www\\.pogoipa\\.com/dplnk\\.html\\?(?<latitude>[-\\d\\.]+),(?<longitude>[-\\d\\.]+)(.*)");
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
@@ -37,7 +40,11 @@ public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSp
         final String messageText = message.getContentStripped().trim();
 
         final ImmutablePokemonSpawn.Builder builder = ImmutablePokemonSpawn.builder();
-        builder.from(SpawnMessageParsingUtils.parseGoogleMapQueryLink(messageText));
+
+        final Matcher mapUrlMatcher = IPA_URL_PATTERN.matcher(messageText);
+        Verify.verify(mapUrlMatcher.find(), "Input didn't match IPA URL format. Input: %s", messageText);
+        builder.from(WayPoint.of(Double.parseDouble(mapUrlMatcher.group("latitude")), Double.parseDouble(mapUrlMatcher.group("longitude"))));
+
         builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
 
         final Matcher idMatcher = ID_PATTERN.matcher(messageText);
