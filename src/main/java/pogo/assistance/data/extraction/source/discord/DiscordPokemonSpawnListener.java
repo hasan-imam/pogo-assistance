@@ -97,7 +97,7 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
                 .append(messageThatFailedProcessing.getAuthor().toString())
                 .append(System.lineSeparator());
         Optional.of(messageThatFailedProcessing.getJDA().getSelfUser())
-                .map(selfUser -> String.format("%s (%s)", selfUser, selfUser.getEmail()))
+                .map(selfUser -> String.format("%s (%s)", selfUser.getName(), selfUser.getEmail()))
                 .ifPresent(receiver -> errorSummaryMsgBuilder.append("Receiver: ", MessageBuilder.Formatting.BOLD)
                         .append(receiver)
                         .append(System.lineSeparator()));

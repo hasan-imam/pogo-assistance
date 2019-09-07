@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import pogo.assistance.data.extraction.source.discord.DespawnTimeParserUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
@@ -87,6 +88,7 @@ public class PineappleMapSpawnMessageProcessor implements MessageProcessor<Pokem
         extractCp(compiledText).ifPresent(builder::cp);
         extractIv(compiledText).ifPresent(builder::iv);
 
+        DespawnTimeParserUtils.extractDespawnTime(compiledText).ifPresent(builder::despawnTime);
         // TODO: handle unown character detection
         // TODO: parse duration
         // TODO: parse ADS stats

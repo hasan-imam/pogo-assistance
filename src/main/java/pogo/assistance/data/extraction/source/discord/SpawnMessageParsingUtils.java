@@ -229,8 +229,8 @@ public class SpawnMessageParsingUtils {
             return Optional.empty();
         }
 
-        if (extractedIv.filter(iv -> iv == 100.0).isPresent() && !combatStats.isPresent()) {
-            // Some sources (e.g. PoGoSJ1) don't put the detailed stats if the IV is 100%
+        if (extractedIv.filter(iv -> iv == 100.0 || iv == 0.0).isPresent() && !combatStats.isPresent()) {
+            // Some sources (e.g. PoGoSJ1) don't put the detailed stats if the IV is 100% or 0%
             // Prepare combat stats POJO with only the extracted IV value
             return Optional.of(ImmutableCombatStats.builder()
                     .combinedIv(extractedIv)

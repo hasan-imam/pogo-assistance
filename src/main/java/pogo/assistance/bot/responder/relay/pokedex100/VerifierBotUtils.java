@@ -1,22 +1,18 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.ALOLAN;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.EAST_SEA;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.OVERCAST;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.PLANT_CLOAK;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.SANDY_CLOAK;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.SUNSHINE;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.TRASH_CLOAK;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.WEST_SEA;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.FEMALE;
-import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.MALE;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
 import lombok.experimental.UtilityClass;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokedexEntry.Form;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Form.*;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.FEMALE;
+import static pogo.assistance.data.model.pokemon.PokedexEntry.Gender.MALE;
 
 /**
  * Example commands:
@@ -33,14 +29,23 @@ public class VerifierBotUtils {
     static String toPerfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster, final boolean isForDonors) {
         Preconditions.checkArgument(pokemonSpawn.getIv().isPresent() && pokemonSpawn.getIv().get() == 100.0);
         Preconditions.checkArgument(pokemonSpawn.getCp().isPresent());
-        return String.format("%s cp%d %s %f,%f%s%s",
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("%s cp%d %s %f,%f",
                 getNameSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getCp().get(),
                 getGenderSegment(pokemonSpawn.getPokedexEntry()),
                 pokemonSpawn.getLatitude().toDegrees(),
-                pokemonSpawn.getLongitude().toDegrees(),
-                mentionPoster ? " n" : "",
-                isForDonors ? " d" : "");
+                pokemonSpawn.getLongitude().toDegrees()));
+        if (mentionPoster) {
+            stringBuilder.append(" n");
+        }
+        if (isForDonors) {
+            stringBuilder.append(" d");
+        }
+        if (pokemonSpawn.getDespawnTime().isPresent()) {
+            stringBuilder.append(" ").append(getDespawnTimeSegment(pokemonSpawn.getDespawnTime().get()));
+        }
+        return stringBuilder.toString();
     }
 
     static String toImperfectIvSpawnCommand(final PokemonSpawn pokemonSpawn, final boolean mentionPoster, final boolean isForDonors) {
@@ -74,6 +79,10 @@ public class VerifierBotUtils {
 
         if (isForDonors) {
             stringBuilder.append(" d");
+        }
+
+        if (pokemonSpawn.getDespawnTime().isPresent()) {
+            stringBuilder.append(" ").append(getDespawnTimeSegment(pokemonSpawn.getDespawnTime().get()));
         }
 
         return stringBuilder.toString();
@@ -180,6 +189,10 @@ public class VerifierBotUtils {
             case NONE: case UNKNOWN: return "";
             default: throw new UnsupportedOperationException("Unsupported gender: " + pokedexEntry.getGender());
         }
+    }
+
+    private static String getDespawnTimeSegment(final Instant dspTime) {
+        return String.format("dsp%dm", Instant.now().until(dspTime, ChronoUnit.MINUTES));
     }
 
 }

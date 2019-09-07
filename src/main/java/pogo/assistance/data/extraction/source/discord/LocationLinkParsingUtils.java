@@ -46,6 +46,14 @@ public class LocationLinkParsingUtils {
      */
     private static final Pattern WAZE_MAP_URL = Pattern.compile("http.+waze.+ll=(?<latitude>[-\\d\\.]+),(?<longitude>[-\\d\\.]+)");
 
+    /**
+     * @param compiledText
+     *      Text to extract latitude-longitude data from. This text is expected to contain various map URLs (Google map,
+     *      Apple map, Waze map etc.) where the URLs query parameters would have parsable lat-long details.
+     * @return
+     * @throws com.google.common.base.VerifyException
+     *      if it fails to find geo location info in the input
+     */
     public static Point extractLocation(final String compiledText) {
         final AtomicInteger countPointsExtracted = new AtomicInteger(0);
         final Map<Point, Long> pointToOccurrence = Stream.of(GOOGLE_MAP_URL, APPLE_MAP_URL, WAZE_MAP_URL)
