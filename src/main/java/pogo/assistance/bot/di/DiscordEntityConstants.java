@@ -57,24 +57,24 @@ public class DiscordEntityConstants {
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
 
-    public static final String M15M_BOT_TOKEN = "";
-    public static final String OWNING_USER_TOKEN = "";
-    public static final String M15MV1_USER_TOKEN = "";
+    public static final String M15M_BOT_TOKEN = "***REMOVED***";
+    public static final String OWNING_USER_TOKEN = "***REMOVED***";
+    public static final String M15MV1_USER_TOKEN = "***REMOVED***";
 
-    public static final String CORRUPTED_USER_TOKEN = "";
-    public static final String BENIN_USER_TOKEN = "";
-    public static final String NINERS_USER_TOKEN = "";
-    public static final String JOHNNY_USER_TOKEN = "";
-    public static final String TIMBURTY_USER_TOKEN = "";
-    public static final String IRVIN88_USER_TOKEN = "";
-    public static final String HORUSEUS_USER_TOKEN = "";
-    public static final String CONNOISSEUR_USER_TOKEN = "";
-    public static final String CHRONIC_USER_TOKEN = "";
-    public static final String CRANK_USER_TOKEN = "";
-    public static final String POGO_HERO_USER_TOKEN = "";
-    public static final String MICHELLEX_USER_TOKEN = "";
-    public static final String POKE_PETER_USER_TOKEN = "";
-    public static final String AMY_USER_TOKEN = "";
+    public static final String CORRUPTED_USER_TOKEN = "***REMOVED***";
+    public static final String BENIN_USER_TOKEN = "***REMOVED***";
+    public static final String NINERS_USER_TOKEN = "***REMOVED***";
+    public static final String JOHNNY_USER_TOKEN = "***REMOVED***";
+    public static final String TIMBURTY_USER_TOKEN = "***REMOVED***";
+    public static final String IRVIN88_USER_TOKEN = "***REMOVED***";
+    public static final String HORUSEUS_USER_TOKEN = "***REMOVED***";
+    public static final String CONNOISSEUR_USER_TOKEN = "***REMOVED***";
+    public static final String CHRONIC_USER_TOKEN = "***REMOVED***";
+    public static final String CRANK_USER_TOKEN = "***REMOVED***";
+    public static final String POGO_HERO_USER_TOKEN = "***REMOVED***";
+    public static final String MICHELLEX_USER_TOKEN = "***REMOVED***";
+    public static final String POKE_PETER_USER_TOKEN = "***REMOVED***";
+    public static final String AMY_USER_TOKEN = "***REMOVED***";
 
     // Users/bots
 
@@ -145,6 +145,13 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_ALPHAPOKES = 273572648519204866L;
     public static final long CHANNEL_ID_ALPHAPOKES_ULTRARARE_TEST = 504760808358674452L;
+    public static final Set<Long> CATEGORY_IDS_ALPHAPOKES = ImmutableSet.<Long>builder()
+            .add(367523728491544577L) // ALPHARETTA
+            .add(367520522659168256L) // DOWNTOWN ATLANTA
+            .add(367346018272018437L) // AUSTIN
+            .add(360981255728267264L) // JACKSONVILLE
+            .add(382579319119020042L) // NEW ORLEANS
+            .build();
 
     public static final long SERVER_ID_VASCANS = 528443479077158915L;
     public static final long CHANNEL_ID_VASCANS_HUNDOS = 538849532901851137L;
@@ -391,4 +398,45 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_POGO_SA = 514959502336983055L;
     public static final Set<Long> CATEGORY_IDS_POGO_SA = Collections.singleton(601771958484598804L);
+
+    public static final Set<Long> SPAWN_SOURCE_SERVER_IDS = ImmutableSet.<Long>builder()
+            .add(SERVER_ID_ALPHAPOKES)
+            .add(SERVER_ID_AZ_POGO_MAP)
+            .add(SERVER_ID_BMPGO_WORLD)
+            .add(SERVER_ID_CHICAGOLAND_POGO)
+            .add(SERVER_ID_CVM)
+            .add(SERVER_ID_GPGM)
+            .add(SERVER_ID_INDIGO_PLATEAU)
+            .add(SERVER_ID_ITOOLS)
+            .add(SERVER_ID_LVRM)
+            .add(SERVER_ID_NORTHHOUSTONTRAINERS)
+            .add(SERVER_ID_NYCPOKEMAP)
+            .add(SERVER_ID_OAK_PARK)
+            .add(SERVER_ID_OC_SCANS)
+            .add(SERVER_ID_PGAN)
+            .add(SERVER_ID_PINEAPPLE)
+            .add(SERVER_ID_POGO_ALERTS_847)
+            .add(SERVER_ID_POGO_BADGERS)
+            .add(SERVER_ID_POGO_CHCH)
+            .add(SERVER_ID_POGO_SA)
+            .add(SERVER_ID_POGO_SOFIA)
+            .add(SERVER_ID_POGO_ULM_KARTE)
+            .add(SERVER_ID_POGOSJ1)
+            .add(SERVER_ID_POKE_XPLORER)
+            .add(SERVER_ID_POKE_HUNTER_ELITE)
+            .add(SERVER_ID_POKEMON_MAPS_FLORIDA)
+            .add(SERVER_ID_POKESQUAD)
+            .add(SERVER_ID_SANDIEGOHILLS)
+            .add(SERVER_ID_SDHVIP)
+            .add(SERVER_ID_SGV_SCANS)
+            .add(SERVER_ID_SOUTHWEST_POKEMON)
+            .add(SERVER_ID_TOAST_MAPS)
+            .add(SERVER_ID_TPF_BASIC)
+            .add(SERVER_ID_TPF_PAID)
+            .add(SERVER_ID_UTAH_POGO)
+            .add(SERVER_ID_VALLEY_POGO)
+            .add(SERVER_ID_VASCANS)
+            .add(SERVER_ID_VCSCANS)
+            .add(SERVER_ID_WECATCH)
+            .build();
 }

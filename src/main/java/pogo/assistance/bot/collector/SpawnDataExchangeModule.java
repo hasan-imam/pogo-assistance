@@ -15,7 +15,6 @@ import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.extraction.source.discord.DiscordPokemonSpawnListener;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.articuno.ArticunoSpawnMessageProcessor;
-import pogo.assistance.data.extraction.source.discord.flpokemap.FLPokeMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pgan.PGANSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.pineapplemap.PineappleMapSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.safarisight.SafariSightSpawnMessageProcessor;
@@ -44,10 +43,9 @@ class SpawnDataExchangeModule {
             final PokemonSpawnExchange spawnExchange,
             final ServerLogger serverLogger,
             final Gson gson) {
-        final FLPokeMapSpawnMessageProcessor flpmSpawnMessageProcessor = new FLPokeMapSpawnMessageProcessor();
         return new DiscordPokemonSpawnListener(
-                ImmutableSet.of(flpmSpawnMessageProcessor, new GenericSpawnMessageProcessor()),
-                ImmutableSet.of(flpmSpawnMessageProcessor, new SafariSightSpawnMessageProcessor()),
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                ImmutableSet.of(new GenericSpawnMessageProcessor(), new SafariSightSpawnMessageProcessor()),
                 spawnExchange,
                 serverLogger,
                 gson);

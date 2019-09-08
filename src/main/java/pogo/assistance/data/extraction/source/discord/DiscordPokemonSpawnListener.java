@@ -2,15 +2,14 @@ package pogo.assistance.data.extraction.source.discord;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.exchange.spawn.PokemonSpawnExchange;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
 import pogo.assistance.utils.debug.ServerLogger;
@@ -20,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles pokemon spawn notification events from various Discord channels.
@@ -56,7 +56,13 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
     @Override
     public void onReady(final ReadyEvent event) {
         // TODO: Add some validation?
-        log.info("'{}' listening to pokemon spawns posted in discord channels...", event.getJDA().getSelfUser().getName());
+        final JDA jda = event.getJDA();
+        final String accessibleSpawnSources = jda.getTextChannels().stream()
+                .filter(textChannel -> DiscordEntityConstants.SPAWN_SOURCE_SERVER_IDS.contains(textChannel.getIdLong()))
+                .map(TextChannel::getName)
+                .collect(Collectors.joining(", "));
+        log.info("'{}' listening to pokemon spawns posted in discord channels: {}",
+                jda.getSelfUser().getName(), accessibleSpawnSources);
     }
 
     @Override

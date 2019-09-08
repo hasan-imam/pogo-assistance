@@ -25,7 +25,9 @@ import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_FLPM_ALERT_B
 
 /**
  * Processes alert messages from FLPM and AP bots (although the name implies only the first).
+ * TODO: remove since this has been moved to the generic parser
  */
+@Deprecated
 @Slf4j
 public class FLPokeMapSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 

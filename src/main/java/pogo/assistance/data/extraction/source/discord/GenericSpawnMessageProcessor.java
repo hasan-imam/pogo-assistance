@@ -31,7 +31,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
-        return isFromSouthwestPokemonTargetChannel(message)
+        return isFromAlphaPokesTargetChannel(message)
+                || isFromFLPokeMapTargetChannel(message)
+                || isFromSouthwestPokemonTargetChannel(message)
                 || isFromVcPokeScanTargetChannels(message)
                 || isFromPoGoSJ1TargetChannels(message)
                 || isFromNHTTargetChannels(message)
@@ -63,13 +65,29 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
         // Ignore messages from this source that doesn't contain iv/cp/level etc.
         // This is based on length check since messages that lack information has known number of lines in them.
+        if (message.getEmbeds().isEmpty()) {
+            return Optional.empty();
+        }
+        Verify.verify(
+                message.getEmbeds().size() == 1,
+                "Spawn messages are expected to have only one embed, but this has %s",
+                message.getEmbeds().size());
         final String embedDescription = message.getEmbeds().get(0).getDescription();
-        if (isFromPoGoBadgersDmBot(message)) {
-            if (embedDescription.split("\n").length <= 2) {
+        final int embedDescriptionLength = embedDescription.split("\n").length;
+        if (isFromAlphaPokesTargetChannel(message)) {
+            if (embedDescriptionLength == 4 || message.getEmbeds().get(0).getTitle().contains("(?/?/?)")) {
+                return Optional.empty();
+            }
+        } else if (isFromFLPokeMapTargetChannel(message)) {
+            if (embedDescriptionLength == 1) {
+                return Optional.empty();
+            }
+        } else if (isFromPoGoBadgersDmBot(message)) {
+            if (embedDescriptionLength <= 2) {
                 return Optional.empty();
             }
         } else if (isFromPokemonMapsFloridaTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 5) {
+            if (embedDescriptionLength <= 8) {
                 return Optional.empty();
             }
         } else if (isFromPoGoSJ1TargetChannels(message)) {
@@ -82,15 +100,15 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 return Optional.empty();
             }
         } else if (isFromOCScansTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 6) {
+            if (embedDescriptionLength <= 6) {
                 return Optional.empty();
             }
         } else if (isFromAzPoGoMapTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 3) {
+            if (embedDescriptionLength <= 3) {
                 return Optional.empty();
             }
         } else if (isFromPokeHunterEliteTargetChannels(message)) {
-            if (embedDescription.split("\n").length <= 4) {
+            if (embedDescriptionLength <= 4) {
                 return Optional.empty();
             }
         }
@@ -136,10 +154,51 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPogoChChTargetChannels(message)
                 || isFromPoGoAlerts847TargetChannels(message)
                 || isFromPokeHunterEliteTargetChannels(message)
-                || isFromAzPoGoMapTargetChannels(message)) {
+                || isFromAzPoGoMapTargetChannels(message)
+                || isFromPokemonMapsFloridaTargetChannels(message)
+                || isFromFLPokeMapTargetChannel(message)
+                || isFromAlphaPokesTargetChannel(message)) {
             return DespawnTimeParserUtils.extractDespawnTime(compiledText);
         }
         return Optional.empty();
+    }
+
+    private static boolean isFromFLPokeMapTargetChannel(@Nonnull final Message message) {
+        return message.getChannelType() == ChannelType.PRIVATE
+                && message.getAuthor().getIdLong() == USER_ID_FLPM_ALERT_BOT;
+    }
+
+    private static boolean isFromAlphaPokesTargetChannel(@Nonnull final Message message) {
+        if (message.getChannel().getType() == ChannelType.PRIVATE) {
+            return message.getAuthor().getIdLong() == USER_ID_AP_ALERT_BOT;
+        } else if (!message.getAuthor().isBot() || message.getChannel().getType() != ChannelType.TEXT
+                || message.getGuild().getIdLong() != SERVER_ID_ALPHAPOKES) {
+            return false;
+        }
+
+        // Target some specific channels
+        final long channelId = message.getChannel().getIdLong();
+        if (channelId == DiscordEntityConstants.CHANNEL_ID_ALPHAPOKES_ULTRARARE_TEST) {
+            return true;
+        }
+
+        // Broader set of channels for which we don't want to manage channel IDs by hand, but instead match
+        // based on channel name and category it's under.
+        final String channelName = message.getChannel().getName();
+        final String categoryId = Optional.ofNullable(message.getCategory()).map(Category::getId).orElse("");
+        switch (categoryId) {
+            case "367523728491544577": // ALPHARETTA
+                return channelName.contains("spawn"); // target channels end with "spawns"
+            case "367520522659168256": // DOWNTOWN ATLANTA
+            case "367346018272018437": // AUSTIN
+            case "360981255728267264": // JACKSONVILLE
+                return !channelName.matches(".*(chat|raid|custom_filters|vacation).*");
+//            case "382579319119020042":
+//                // NEW ORLEANS: looks dead - commenting out
+//                return false;
+            default:
+                return false;
+        }
     }
 
     private static boolean isFromSouthwestPokemonTargetChannel(final Message message) {
@@ -278,7 +337,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
     }
 
     private static boolean isFromNHTTargetChannels(final Message message) {
-        return message.getAuthor().isBot()
+        return message.getChannelType() == ChannelType.TEXT
+                && message.getAuthor().isBot()
                 && Optional.ofNullable(message.getGuild()).map(Guild::getIdLong).filter(id -> id == SERVER_ID_NORTHHOUSTONTRAINERS).isPresent()
                 && Optional.ofNullable(message.getCategory())
                 .map(Category::getIdLong)
