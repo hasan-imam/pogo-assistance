@@ -54,7 +54,8 @@ class SpawnDataExchangeModule {
     }
 
     /**
-     * 'Benin' user has access to: (none at the moment)
+     * 'Benin' user has access to:
+     *  - Pogo SA
      */
     @Named(CollectorJDAModule.NAME_BENIN_USER_SPAWN_LISTENER)
     @Provides
@@ -63,7 +64,7 @@ class SpawnDataExchangeModule {
             final ServerLogger serverLogger,
             final Gson gson) {
         return new DiscordPokemonSpawnListener(
-                Collections.emptySet(),
+                Collections.singleton(new GenericSpawnMessageProcessor()),
                 Collections.emptySet(),
                 spawnExchange,
                 serverLogger,

@@ -1,5 +1,6 @@
 package pogo.assistance.data.extraction.source.discord;
 
+import java.time.Instant;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
@@ -54,7 +55,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromIndigoPlateauTargetChannels(message)
                 || isFromPogoChChTargetChannels(message)
                 || isFromAzPoGoMapTargetChannels(message)
-                || isFromPokeHunterEliteTargetChannels(message);
+                || isFromPokeHunterEliteTargetChannels(message)
+                || isFromPogoSaTargetChannels(message);
     }
 
     @Override
@@ -104,6 +106,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 .level(SpawnMessageParsingUtils.extractLevel(compiledText))
                 .cp(SpawnMessageParsingUtils.extractCp(compiledText))
                 .sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message))
+                .despawnTime(extractDespawnTime(message, compiledText))
                 .build();
         return Optional.of(pokemonSpawn);
     }
@@ -125,6 +128,14 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         });
         Optional.ofNullable(messageEmbed.getUrl()).ifPresent(mapUrl -> compiler.append(mapUrl).append(System.lineSeparator()));
         return SpawnMessageParsingUtils.replaceEmojiWithPlainText(compiler.toString());
+    }
+
+    private static Optional<Instant> extractDespawnTime(final Message message, final String compiledText) {
+        // TODO: enable despawn parsing for all servers and remove this gating method
+        if (isFromPogoSaTargetChannels(message)) {
+            return DespawnTimeParserUtils.extractDespawnTime(compiledText);
+        }
+        return Optional.empty();
     }
 
     private static boolean isFromSouthwestPokemonTargetChannel(final Message message) {
@@ -417,6 +428,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_POGO_CHCH
                 && Optional.ofNullable(message.getChannel()).map(MessageChannel::getIdLong).filter(CHANNEL_IDS_POGO_CHCH_FEEDS::contains).isPresent();
+    }
+
+    private static boolean isFromPogoSaTargetChannels(final Message message) {
+        return message.getAuthor().isBot()
+                && message.getChannelType() == ChannelType.TEXT
+                && message.getGuild().getIdLong() == SERVER_ID_POGO_SA
+                && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POGO_SA::contains).isPresent();
     }
 
 }

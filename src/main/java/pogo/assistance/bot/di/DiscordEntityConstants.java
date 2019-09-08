@@ -1,5 +1,6 @@
 package pogo.assistance.bot.di;
 
+import java.util.Collections;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -387,4 +388,7 @@ public class DiscordEntityConstants {
             .add(520304182847209487L) // 90iv-plus-spottings
             .add(386200368180101120L) // 100iv-only-spottings
             .build();
+
+    public static final long SERVER_ID_POGO_SA = 514959502336983055L;
+    public static final Set<Long> CATEGORY_IDS_POGO_SA = Collections.singleton(601771958484598804L);
 }
