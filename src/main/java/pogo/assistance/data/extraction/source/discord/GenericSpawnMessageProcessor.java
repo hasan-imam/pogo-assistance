@@ -132,7 +132,11 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
 
     private static Optional<Instant> extractDespawnTime(final Message message, final String compiledText) {
         // TODO: enable despawn parsing for all servers and remove this gating method
-        if (isFromPogoSaTargetChannels(message)) {
+        if (isFromPogoSaTargetChannels(message)
+                || isFromPogoChChTargetChannels(message)
+                || isFromPoGoAlerts847TargetChannels(message)
+                || isFromPokeHunterEliteTargetChannels(message)
+                || isFromAzPoGoMapTargetChannels(message)) {
             return DespawnTimeParserUtils.extractDespawnTime(compiledText);
         }
         return Optional.empty();
@@ -299,7 +303,7 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         return message.getAuthor().isBot()
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_POGO_ALERTS_847
-                && message.getChannel().getIdLong() == 553598599670398983L;
+                && message.getChannel().getIdLong() == 553598599670398983L; // channel: best-of-the-best
     }
 
     private static boolean isFromPokemonMapsFloridaTargetChannels(final Message message) {

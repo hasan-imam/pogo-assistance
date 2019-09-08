@@ -69,7 +69,7 @@ public class DespawnTimeParserUtils {
         periodMatcher.appendTail(sb);
 
         final String lineWithoutPeriodSection = sb.toString();
-        if (!doesMessageContainSignsOfConfirmation(lineWithoutPeriodSection)) {
+        if (!doesLineLookLikeItHasDespawnTime(lineWithoutPeriodSection)) {
             return Optional.empty();
         }
 
@@ -81,16 +81,14 @@ public class DespawnTimeParserUtils {
      *      Input of {@link DespawnTimeParserUtils#extractSpawnDurationFromLine(String)} or that input mutated to remove
      *      the period segment.
      * @return
-     *      True if prefix or suffix indicates that the despawn time is confirmed. It checks for things like check
-     *      marks or other indications of confirmation.
+     *      True if the input line looks like it has despawn time information. It checks for things like check marks,
+     *      other icons or specific strings.
      */
-    private static boolean doesMessageContainSignsOfConfirmation(final String line) {
+    private static boolean doesLineLookLikeItHasDespawnTime(final String line) {
+        final boolean indicatesDespawnTimeInfo = line.matches(".*((?i)Available until|left).*");
         final boolean indicatesConfirmed = line.matches(".*((?i)check_yes|white_check_mark).*");
         final boolean indicatesUnconfirmed = line.matches(".*((?i)yellow_question).*");
-        if (!indicatesConfirmed && !indicatesUnconfirmed) {
-            log.warn("No indication about despawn time confirmation found on line: {}", line);
-        }
-        return indicatesConfirmed || indicatesUnconfirmed;
+        return indicatesDespawnTimeInfo || indicatesConfirmed || indicatesUnconfirmed;
     }
 
 }

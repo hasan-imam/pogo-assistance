@@ -57,6 +57,7 @@ class GenericSpawnMessageProcessorPogoChChIntegrationTest {
                 () -> assertTrue(pokemonSpawn.getLevel().isPresent(), "missing level"),
                 () -> assertTrue(pokemonSpawn.getCp().isPresent(), "missing cp"),
                 () -> assertTrue(pokemonSpawn.getIv().isPresent(), "missing iv"),
+                () -> assertTrue(pokemonSpawn.getDespawnTime().isPresent(), "missing despawn time"),
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN)));
 
         final String channelName = message.getChannel().getName();
