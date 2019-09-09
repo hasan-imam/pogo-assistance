@@ -123,10 +123,9 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
         }
 
         // Reduce certain pokemons since they are spawning more due to an event
-        if (pokemonId == 147 || pokemonId == 366 || pokemonId == 349 || pokemonId == 374) {
+        if (pokemonId == 147 || pokemonId == 366 || pokemonId == 349 || pokemonId == 374 || pokemonId == 280
+                || pokemonId == 415 || pokemonId == 436) {
             return pokemonSpawn.getIv().orElse(-1.0) < 85.0;
-        } else if (pokemonId == 280) {
-            return pokemonSpawn.getIv().orElse(-1.0) < 60.0;
         }
 
         return false;
