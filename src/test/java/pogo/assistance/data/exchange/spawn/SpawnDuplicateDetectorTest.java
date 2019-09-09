@@ -2,7 +2,7 @@ package pogo.assistance.data.exchange.spawn;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -15,13 +15,33 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
+
+import io.jenetics.jpx.WayPoint;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pogo.assistance.data.model.pokemon.PokemonSpawn;
+import pogo.assistance.data.model.ImmutableSourceMetadata;
+import pogo.assistance.data.model.pokemon.*;
 
 class SpawnDuplicateDetectorTest {
 
     private static final Instant NOW = Instant.now();
+
+    @Test
+    void isUnique_WithDuplicate_DetectsDuplication() {
+        final SpawnDuplicateDetector spawnDuplicateDetector = spy(new SpawnDuplicateDetector());
+        final PokemonSpawn testSpawn1 = ImmutablePokemonSpawn.builder()
+                .from(WayPoint.of(-1.0, -1.0))
+                .pokedexEntry(Pokedex.getPokedexEntryFor(1, PokedexEntry.Gender.FEMALE).get())
+                .cp(1)
+                .iv(1.0)
+                .level(1)
+                .sourceMetadata(ImmutableSourceMetadata.builder().sourceName("test").build())
+                .build();
+        final PokemonSpawn testSpawn2 = ImmutablePokemonSpawn.copyOf(testSpawn1);
+        assertTrue(spawnDuplicateDetector.isUnique(testSpawn1));
+        assertFalse(spawnDuplicateDetector.isUnique(testSpawn2));
+        assertFalse(spawnDuplicateDetector.isUnique(testSpawn1));
+    }
 
     @Test
     void isUnique_BreachMapSizeThreshold_EvictsExpected() {
