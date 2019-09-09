@@ -73,22 +73,22 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
 
             if (pokemonSpawn.getIv().orElse(-1.0) == 100.0) {
                 command = VerifierBotUtils.toPerfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
-                log.info("Sending 100 IV command: {}", command);
+                log.info("Sending 100 IV command from {}: {}", pokemonSpawn.getSourceMetadata().sourceName(), command);
             } else if (pokemonSpawn.getIv().orElse(-1.0) >= 90.0) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
-                log.info("Sending 90+ IV command: {}", command);
+                log.info("Sending 90+ IV command from {}: {}", pokemonSpawn.getSourceMetadata().sourceName(), command);
             } else if (pokemonSpawn.getIv().orElse(-1.0) == 0.0) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
-                log.info("Sending 0 IV command: {}", command);
+                log.info("Sending 0 IV command from {}: {}", pokemonSpawn.getSourceMetadata().sourceName(), command);
             } else if (CandySelector.isCandy(pokemonSpawn.getPokedexEntry()) && pokemonSpawn.getIv().isPresent()) {
                 // Check presence of IV on the candies. This is to limit the number of posts since most of the spawns
                 // don't have IV info on them (especially the spawns coming from pokemaps).
                 // TODO: Can we do this in a better way?
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
-                log.info("Sending candy command: {}", command);
+                log.info("Sending candy command from {}: {}", pokemonSpawn.getSourceMetadata().sourceName(), command);
             } else if (pokemonSpawn.getCp().orElse(0) >= 2000) {
                 command = VerifierBotUtils.toImperfectIvSpawnCommand(pokemonSpawn, false, isForDonors);
-                log.info("Sending high CP command: {}", command);
+                log.info("Sending high CP command from {}: {}", pokemonSpawn.getSourceMetadata().sourceName(), command);
             } else {
                 log.trace("Ignoring spawn that didn't match posting criteria: " + pokemonSpawn);
                 return;
