@@ -57,9 +57,9 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
     public void onReady(final ReadyEvent event) {
         // TODO: Add some validation?
         final JDA jda = event.getJDA();
-        final String accessibleSpawnSources = jda.getTextChannels().stream()
-                .filter(textChannel -> DiscordEntityConstants.SPAWN_SOURCE_SERVER_IDS.contains(textChannel.getIdLong()))
-                .map(TextChannel::getName)
+        final String accessibleSpawnSources = jda.getGuilds().stream()
+                .filter(guild -> DiscordEntityConstants.SPAWN_SOURCE_SERVER_IDS.contains(guild.getIdLong()))
+                .map(Guild::getName)
                 .collect(Collectors.joining(", "));
         log.info("'{}' listening to pokemon spawns posted in discord channels: {}",
                 jda.getSelfUser().getName(), accessibleSpawnSources);
@@ -108,8 +108,7 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
                         .append(receiver)
                         .append(System.lineSeparator()));
         errorSummaryMsgBuilder.append("Jump URL: ", MessageBuilder.Formatting.BOLD)
-                // TODO: Update after this is resolved: https://github.com/DV8FromTheWorld/JDA/issues/1091
-                .append(messageThatFailedProcessing.isFromGuild() ? messageThatFailedProcessing.getJumpUrl() : null)
+                .append(messageThatFailedProcessing.getJumpUrl())
                 .append(System.lineSeparator());
 
         final MessageBuilder exceptionInfoMsgBuilder = new MessageBuilder()
