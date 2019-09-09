@@ -121,6 +121,11 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             return pokemonSpawn.getIv().orElse(-1.0) < 100.0 || pokemonSpawn.getLevel().orElse(-1) < 30;
         }
 
+        if (pokemonSpawn.getPokedexEntry().getId() == 147 || pokemonSpawn.getPokedexEntry().getId() == 366) {
+            // Reduce dratini and clamperl since they are spawning more due to an event
+            return pokemonSpawn.getIv().orElse(-1.0) < 85.0;
+        }
+
         return false;
     }
 
