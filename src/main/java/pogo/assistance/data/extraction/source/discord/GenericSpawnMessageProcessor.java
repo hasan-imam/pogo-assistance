@@ -1,23 +1,17 @@
 package pogo.assistance.data.extraction.source.discord;
 
-import java.time.Instant;
-import java.util.Optional;
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Verify;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
 import pogo.assistance.data.model.pokemon.PokedexEntry;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+
+import javax.annotation.Nonnull;
+import java.time.Instant;
+import java.util.Optional;
 
 import static pogo.assistance.bot.di.DiscordEntityConstants.*;
 
@@ -72,10 +66,13 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 message.getEmbeds().size() == 1,
                 "Spawn messages are expected to have only one embed, but this has %s",
                 message.getEmbeds().size());
-        final String embedDescription = message.getEmbeds().get(0).getDescription();
+        final String embedDescription = Optional.ofNullable(message.getEmbeds().get(0))
+                .map(MessageEmbed::getDescription)
+                .orElse("");
         final int embedDescriptionLength = embedDescription.split("\n").length;
+        final String embedTitle = Optional.ofNullable(message.getEmbeds().get(0).getTitle()).orElse("");
         if (isFromAlphaPokesTargetChannel(message)) {
-            if (embedDescriptionLength == 4 || message.getEmbeds().get(0).getTitle().contains("(?/?/?)")) {
+            if (embedDescriptionLength == 4 || embedTitle.contains("(?/?/?)")) {
                 return Optional.empty();
             }
         } else if (isFromFLPokeMapTargetChannel(message)) {
@@ -91,12 +88,12 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 return Optional.empty();
             }
         } else if (isFromPoGoSJ1TargetChannels(message)) {
-            if (message.getEmbeds().get(0).getTitle().contains("(?/?/?)")
+            if (embedTitle.contains("(?/?/?)")
                     || embedDescription.contains("(?/?/?)") || embedDescription.contains("CP:?") || embedDescription.contains("(L?)")) {
                 return Optional.empty();
             }
         } else if (isFromCVMTargetChannels(message)) {
-            if (message.getEmbeds().get(0).getTitle().contains("?% ?cp (L?)") || embedDescription.contains("?% ?/ ?/ ?")) {
+            if (embedTitle.contains("?% ?cp (L?)") || embedDescription.contains("?% ?/ ?/ ?")) {
                 return Optional.empty();
             }
         } else if (isFromOCScansTargetChannels(message)) {

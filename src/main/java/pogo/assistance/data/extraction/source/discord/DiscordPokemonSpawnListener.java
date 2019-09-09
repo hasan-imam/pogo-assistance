@@ -60,7 +60,7 @@ public class DiscordPokemonSpawnListener extends ListenerAdapter {
         final String accessibleSpawnSources = jda.getGuilds().stream()
                 .filter(guild -> DiscordEntityConstants.SPAWN_SOURCE_SERVER_IDS.contains(guild.getIdLong()))
                 .map(Guild::getName)
-                .map(name -> String.format("%n\t%s", name))
+                .map(name -> String.format("%n    ✓ %s", name))
                 .collect(Collectors.joining());
         log.info("'{}' listening to pokemon spawns posted in discord channels: {}",
                 jda.getSelfUser().getName(), accessibleSpawnSources);
