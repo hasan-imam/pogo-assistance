@@ -14,6 +14,8 @@ import pogo.assistance.data.model.pokemon.PokedexEntry;
 @UtilityClass
 public class CandySelector {
 
+    // Case doesn't matter in the sets below
+
     private static final Set<String> MAX_EVOLVED = ImmutableSet.<String>builder()
             .add("Charizard").add("Venusaur").add("Blastoise").add("Meganium").add("Typhlosion").add("Feraligatr")
             .add("Hariyama")
@@ -28,23 +30,23 @@ public class CandySelector {
             .add("lickitung")
             .add("chansey").add("blissey")
             .add("snorlax")
-            .add("dratini").add("dragonair").add("dragonite")
+            /*.add("dratini")*/.add("dragonair").add("dragonite")
             /*.add("mareep")*/
             .add("unown")
             .add("pineco").add("forretress")
             .add("larvitar").add("pupitar").add("tyranitar")
-            .add("ralts").add("kirlia").add("gardevoir").add("gallade")
+            /*.add("ralts")*/.add("kirlia").add("gardevoir").add("gallade")
             .add("slakoth").add("vigoroth").add("slaking")
             .add("trapinch")
             .add("lunatone").add("solrock")
-            .add("feebas")
+            /*.add("feebas")*/
             .add("chimecho")
-            .add("clamperl")
+            /*.add("clamperl")*/
             .add("bagon").add("shelgon").add("salamence")
-            .add("beldum").add("metang")
+            /*.add("beldum")*/.add("metang")
             .add("cranidos").add("rampardos")
-            .add("combee").add("vespiquen")
-            .add("bronzor").add("bronzong")
+            /*.add("combee")*/.add("vespiquen")
+            /*.add("bronzor")*/.add("bronzong")
             /*.add("finneon")*/.add("lumineon")
             .add("Uxie")
             .add("Azelf")
