@@ -1,14 +1,5 @@
 package pogo.assistance.data.extraction.source.discord.pgan;
 
-import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_PGAN_BOTS;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Verify;
 import com.google.common.primitives.Longs;
 import io.jenetics.jpx.Point;
@@ -19,11 +10,16 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
-import pogo.assistance.data.model.pokemon.CombatStats;
-import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
-import pogo.assistance.data.model.pokemon.Pokedex;
-import pogo.assistance.data.model.pokemon.PokedexEntry;
-import pogo.assistance.data.model.pokemon.PokemonSpawn;
+import pogo.assistance.data.model.pokemon.*;
+
+import javax.annotation.Nonnull;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static pogo.assistance.bot.di.DiscordEntityConstants.USER_ID_PGAN_BOTS;
 
 public class PGANSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
@@ -47,8 +43,11 @@ public class PGANSpawnMessageProcessor implements MessageProcessor<PokemonSpawn>
     public Optional<PokemonSpawn> process(@Nonnull final Message message) {
         final String compiledText = GenericSpawnMessageProcessor.compileMessageText(message);
         final String pokemonName = extractPokemonName(message);
-        final PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(pokemonName, SpawnMessageParsingUtils.extractGender(compiledText).orElse(null))
+        PokedexEntry pokedexEntry = Pokedex.getPokedexEntryFor(pokemonName, SpawnMessageParsingUtils.extractGender(compiledText).orElse(null))
                 .orElseThrow(() -> new IllegalArgumentException("Failed to infer pokedex entry from pokemon name: " + pokemonName));
+        if (isAlolan(pokemonName, compiledText)) {
+            pokedexEntry = ImmutablePokedexEntry.builder().from(pokedexEntry).addForms(PokedexEntry.Form.ALOLAN).build();
+        }
         final PokemonSpawn pokemonSpawn = ImmutablePokemonSpawn.builder()
                 .from(extractLocationFromPganMapUrl(message.getEmbeds().get(0).getUrl()))
                 .pokedexEntry(pokedexEntry)
@@ -92,6 +91,23 @@ public class PGANSpawnMessageProcessor implements MessageProcessor<PokemonSpawn>
             }
         }
         return Optional.empty();
+    }
+
+    private static boolean isAlolan(final String pokemonName, final String compiledText) {
+        final String movesetPattern;
+        if (pokemonName.equalsIgnoreCase("Rattata")) {
+            movesetPattern = ".*Moves.*((?i)dark|ghost).*";
+        } else if (pokemonName.equalsIgnoreCase("Sandshrew")) {
+            movesetPattern = ".*((?i)steel|ice).*((?i)steel|ice|dark).*";
+        } else if (pokemonName.equalsIgnoreCase("Vulpix")) {
+            movesetPattern = ".*((?i)ice|psychic).*((?i)ice|dark).*";
+        } else if (pokemonName.equalsIgnoreCase("Geodude")) {
+            movesetPattern = ".*Moves.*((?i)electric).*";
+        } else {
+            return false;
+        }
+
+        return Pattern.compile(movesetPattern, Pattern.DOTALL).asPredicate().test(compiledText);
     }
 
 }
