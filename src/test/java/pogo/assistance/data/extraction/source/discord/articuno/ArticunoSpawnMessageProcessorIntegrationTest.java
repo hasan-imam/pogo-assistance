@@ -1,23 +1,22 @@
 package pogo.assistance.data.extraction.source.discord.articuno;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.stream.Stream;
-import javax.security.auth.login.LoginException;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.opentest4j.TestAbortedException;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.opentest4j.TestAbortedException;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
 import pogo.assistance.data.model.pokemon.PokemonSpawn;
+
+import javax.security.auth.login.LoginException;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArticunoSpawnMessageProcessorIntegrationTest {
 
@@ -39,9 +38,10 @@ class ArticunoSpawnMessageProcessorIntegrationTest {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
                 .orElseThrow(() -> new TestAbortedException("Produced empty - probably because the message contains no gender info - " + message.getJumpUrl()));
-        assertTrue(pokemonSpawn.getLevel().isPresent(), failureMsgWithJumpUrl);
-        assertTrue(pokemonSpawn.getCp().isPresent(), failureMsgWithJumpUrl);
-        assertEquals(Double.valueOf(100), pokemonSpawn.getIv().orElse(-1.0), failureMsgWithJumpUrl);
+        assertAll(failureMsgWithJumpUrl,
+                () -> assertTrue(pokemonSpawn.getLevel().isPresent(), "missing level"),
+                () -> assertTrue(pokemonSpawn.getCp().isPresent(), "missing cp"),
+                () -> assertEquals(Double.valueOf(100), pokemonSpawn.getIv().orElse(-1.0), "expected 100 iv"));
     }
 
     private static Stream<Message> iToolsSpawnMessages() {

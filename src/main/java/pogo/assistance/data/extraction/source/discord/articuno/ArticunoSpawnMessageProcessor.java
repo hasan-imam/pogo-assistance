@@ -12,6 +12,7 @@ import io.jenetics.jpx.WayPoint;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+import pogo.assistance.data.extraction.source.discord.DespawnTimeParserUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -21,7 +22,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
-    private static final Pattern ID_PATTERN = Pattern.compile("^:(?<pokemonId>[\\d]+):");
+    private static final Pattern ID_PATTERN = Pattern.compile("^(@100iv\n)?:(?<pokemonId>[\\d]+):");
     private static final Pattern IV_PATTERN = Pattern.compile(":(Iv|indval):[\\s]+(?<iv>[\\d\\.]+)");
     private static final Pattern CP_PATTERN = Pattern.compile(":(Cp|compow):[\\s]+(?<cp>[\\d]+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile(":(lv\\\\_t|lev):[\\s]+(?<level>[\\d]+)");
@@ -64,6 +65,9 @@ public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSp
         final Matcher levelMatcher = LEVEL_PATTERN.matcher(messageText);
         Verify.verify(levelMatcher.find(), "Could not find level in message: %s", messageText);
         builder.level(Ints.tryParse(levelMatcher.group("level")));
+
+//        // Disabled since their depsawn time is very inaccurate
+//        DespawnTimeParserUtils.extractDespawnTime(messageText).ifPresent(builder::despawnTime);
 
         final PokemonSpawn pokemonSpawn = builder.build();
         return pokemonSpawn.getPokedexEntry().getGender().equals(PokedexEntry.Gender.UNKNOWN) ? Optional.empty() : Optional.of(pokemonSpawn);
