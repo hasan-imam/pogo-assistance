@@ -54,7 +54,7 @@ public class CandySelector {
             .add("Gible").add("Gabite").add("Garchomp")
             .add("Absol")
             .add("Mawile")
-            .add("Kangaskhan") // temporarily added due to event
+            .add("Kangaskhan") // temporarily added since they became shiny and we don't have many source for them
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()

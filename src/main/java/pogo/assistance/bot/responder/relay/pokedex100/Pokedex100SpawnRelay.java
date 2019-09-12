@@ -123,9 +123,6 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
         if (CRAP_POKEMON_IDS.contains(pokemonId)) {
             return iv < 100.0 || pokemonSpawn.getLevel().orElse(-1) < 30;
         }
-        if (pokemonName.equalsIgnoreCase("Kangaskhan") && iv < 80.0) {
-            return true;
-        }
 
         return false;
     }
