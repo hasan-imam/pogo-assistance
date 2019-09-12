@@ -54,6 +54,7 @@ public class CandySelector {
             .add("Gible").add("Gabite").add("Garchomp")
             .add("Absol")
             .add("Mawile")
+            .add("Kangaskhan") // temporarily added due to event
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
@@ -84,8 +85,20 @@ public class CandySelector {
     }
 
     public static boolean isCandy(final PokedexEntry pokedexEntry) {
-        return (pokedexEntry.getId() > 0 && CANDY_POKEMON_IDS.contains(pokedexEntry.getId()))
-                || CANDY_POKEMON_NAMES.contains(pokedexEntry.getName().toLowerCase());
+        final int pokemonId = pokedexEntry.getId();
+        return (pokemonId > 0 && CANDY_POKEMON_IDS.contains(pokemonId))
+                || CANDY_POKEMON_NAMES.contains(pokedexEntry.getName().toLowerCase())
+                || isCandyDueToEvent(pokedexEntry);
+    }
+
+    private static boolean isCandyDueToEvent(final PokedexEntry pokedexEntry) {
+        final int pokemonId = pokedexEntry.getId();
+        // New alolan launches
+        if ((pokemonId == 27 || pokemonId == 37) && pokedexEntry.getForms().contains(PokedexEntry.Form.ALOLAN)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
