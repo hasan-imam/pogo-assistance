@@ -86,7 +86,7 @@ public class DespawnTimeParserUtils {
      */
     private static boolean doesLineLookLikeItHasDespawnTime(final String line) {
         final boolean indicatesDespawnTimeInfo = line.matches(".*((?i)Available until|left|DSP|Expires|Despawn).*");
-        final boolean indicatesConfirmed = line.matches(".*((?i)check_yes|white_check_mark).*");
+        final boolean indicatesConfirmed = line.matches(".*((?i)check_yes|white_check_mark|✅).*");
         final boolean indicatesUnconfirmed = line.matches(".*((?i)yellow_question).*");
         return indicatesDespawnTimeInfo || indicatesConfirmed || indicatesUnconfirmed;
     }
