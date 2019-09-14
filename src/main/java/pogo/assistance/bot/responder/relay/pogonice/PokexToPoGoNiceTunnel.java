@@ -24,7 +24,7 @@ import java.util.LinkedList;
 @Slf4j
 public class PokexToPoGoNiceTunnel extends ListenerAdapter {
 
-    private static final long SERVER_ID_RELAYED_SERVER = 622515631216132115L; // pokemon go nice
+    private static final long SERVER_ID_RELAYED_SERVER = 486603808609271819L; // pokemon go nice
     public static final long CHANNEL_ID_RELAYED_CHANNEL = 622520415625019403L; // coords
 
     private static final int MESSAGE_HISTORY_QUEUE_SIZE_LIMIT = 30;
