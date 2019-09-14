@@ -29,11 +29,13 @@ public class ResponderBot extends AbstractIdleService {
     @Inject
     public ResponderBot(
             @Named(DiscordEntityConstants.NAME_JDA_BUILDER_OWNING_USER) final JDABuilder owningUserJdaBuilder,
-            @Named(DiscordEntityConstants.NAME_JDA_BUILDER_HORUSEUS_USER) final JDABuilder horuseusUserJdaBuilder) {
+            @Named(DiscordEntityConstants.NAME_JDA_BUILDER_HORUSEUS_USER) final JDABuilder horuseusUserJdaBuilder,
+            @Named(DiscordEntityConstants.NAME_JDA_BUILDER_COPERNICUS_USER) final JDABuilder copernicusUserJdaBuilder) {
         jdas = new ArrayList<>();
         jdaBuilders = new ArrayList<>();
         jdaBuilders.add(owningUserJdaBuilder);
         jdaBuilders.add(horuseusUserJdaBuilder);
+        jdaBuilders.add(copernicusUserJdaBuilder);
     }
 
     @Override

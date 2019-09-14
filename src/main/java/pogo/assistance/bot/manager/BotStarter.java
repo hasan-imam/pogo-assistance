@@ -87,6 +87,7 @@ public class BotStarter {
                 .accountType(ACCOUNT_TYPE)
                 .owningUserToken(DiscordEntityConstants.OWNING_USER_TOKEN)
                 .horuseusUserToken(DiscordEntityConstants.HORUSEUS_USER_TOKEN)
+                .copernicusUserToken(DiscordEntityConstants.COPERNICUS_USER_TOKEN)
                 .controlUserToken(DiscordEntityConstants.M15M_BOT_TOKEN)
                 .listenerIds(listenerIds)
                 .build()

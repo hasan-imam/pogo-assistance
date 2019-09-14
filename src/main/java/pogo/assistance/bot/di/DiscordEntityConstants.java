@@ -27,6 +27,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_MICHELLEX = "michellex_user_token";
     public static final String NAME_USER_TOKEN_POKE_PETER = "poke_peter_user_token";
     public static final String NAME_USER_TOKEN_AMY = "amy_user_token";
+    public static final String NAME_USER_TOKEN_COPERNICUS = "copernicus_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -53,6 +54,9 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
 
+    public static final String NAME_JDA_BUILDER_COPERNICUS_USER = "copernicus_user_jda_builder";
+    public static final String NAME_JDA_COPERNICUS_USER = "copernicus_user_jda";
+
     public static final String NAME_PDEX100_BOT_COMMAND_CHANNEL = "pokedex100_bot_command_channel";
 
     // User tokens. Secret stuff. Real values should not be pushed to repo.
@@ -75,6 +79,7 @@ public class DiscordEntityConstants {
     public static final String MICHELLEX_USER_TOKEN = "***REMOVED***";
     public static final String POKE_PETER_USER_TOKEN = "***REMOVED***";
     public static final String AMY_USER_TOKEN = "***REMOVED***";
+    public static final String COPERNICUS_USER_TOKEN = "***REMOVED***";
 
     // Users/bots
 

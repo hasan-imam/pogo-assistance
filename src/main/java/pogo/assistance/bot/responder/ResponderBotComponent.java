@@ -25,6 +25,9 @@ public interface ResponderBotComponent {
         Builder horuseusUserToken(@Named(DiscordEntityConstants.NAME_USER_TOKEN_HORUSEUS) final String owningUserToken);
 
         @BindsInstance
+        Builder copernicusUserToken(@Named(DiscordEntityConstants.NAME_USER_TOKEN_COPERNICUS) final String copernicusUserToken);
+
+        @BindsInstance
         Builder controlUserToken(@Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 
         @BindsInstance

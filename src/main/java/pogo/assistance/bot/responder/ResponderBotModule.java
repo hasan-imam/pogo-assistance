@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import pogo.assistance.bot.di.DiscordEntityConstants;
+import pogo.assistance.bot.responder.relay.pogonice.PokexToPoGoNiceTunnel;
 import pogo.assistance.bot.responder.relay.pokedex100.PokexToPokedex100Tunnel;
 
 @Module
@@ -62,6 +63,23 @@ class ResponderBotModule {
 
         if (listenerIds.contains(ListenerId.RELAY_POKEX_TO_PDEX100)) {
             jdaBuilder.addEventListeners(pokexToPokedex100TunnelProvider.get());
+        }
+
+        return jdaBuilder;
+    }
+
+    @Provides
+    @Named(DiscordEntityConstants.NAME_JDA_BUILDER_COPERNICUS_USER)
+    public static JDABuilder provideCopernicusUserJdaBuilder(
+            @Named(DiscordEntityConstants.NAME_USER_TOKEN_COPERNICUS) final String id,
+            final AccountType accountType,
+            final Set<ListenerId> listenerIds,
+            final Provider<PokexToPoGoNiceTunnel> pokexToPoGoNiceTunnelProvider) {
+        final JDABuilder jdaBuilder = new JDABuilder(accountType);
+        jdaBuilder.setToken(id);
+
+        if (listenerIds.contains(ListenerId.RELAY_POKEX_TO_POGONICE)) {
+            jdaBuilder.addEventListeners(pokexToPoGoNiceTunnelProvider.get());
         }
 
         return jdaBuilder;
