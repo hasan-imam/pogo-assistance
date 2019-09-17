@@ -30,7 +30,7 @@ public class CandySelector {
             .add("lickitung")
             .add("chansey").add("blissey")
             .add("snorlax")
-            /*.add("dratini")*/.add("dragonair").add("dragonite")
+            .add("dratini").add("dragonair").add("dragonite")
             /*.add("mareep")*/
             .add("unown")
             .add("pineco").add("forretress")
@@ -45,7 +45,7 @@ public class CandySelector {
             .add("bagon").add("shelgon").add("salamence")
             /*.add("beldum")*/.add("metang")
             .add("cranidos").add("rampardos")
-            /*.add("combee")*/.add("vespiquen")
+            .add("combee").add("vespiquen")
             /*.add("bronzor")*/.add("bronzong")
             /*.add("finneon")*/.add("lumineon")
             .add("Uxie")
@@ -55,6 +55,12 @@ public class CandySelector {
             .add("Absol")
             .add("Mawile")
             .add("Kangaskhan") // temporarily added since they became shiny and we don't have many source for them
+            .add("Ferroseed")
+            .add("Deino")
+            .add("Litwick")
+            .add("Golett")
+            .add("Durant")
+            .add("Heatmor")
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
