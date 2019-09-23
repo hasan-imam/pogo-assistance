@@ -12,7 +12,7 @@ import io.jenetics.jpx.WayPoint;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.data.extraction.source.discord.DespawnTimeParserUtils;
+//import pogo.assistance.data.extraction.source.discord.DespawnTimeParserUtils;
 import pogo.assistance.data.extraction.source.discord.MessageProcessor;
 import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -23,6 +23,7 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
 
     private static final Pattern ID_PATTERN = Pattern.compile("^(@100iv\n)?:(?<pokemonId>[\\d]+):");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^(@100iv\n)?(?<pokemonName>[\\w]+)");
     private static final Pattern IV_PATTERN = Pattern.compile(":(Iv|indval):[\\s]+(?<iv>[\\d\\.]+)");
     private static final Pattern CP_PATTERN = Pattern.compile(":(Cp|compow):[\\s]+(?<cp>[\\d]+)");
     private static final Pattern LEVEL_PATTERN = Pattern.compile(":(lv\\\\_t|lev):[\\s]+(?<level>[\\d]+)");
@@ -48,11 +49,17 @@ public class ArticunoSpawnMessageProcessor implements MessageProcessor<PokemonSp
 
         builder.sourceMetadata(SpawnMessageParsingUtils.buildSourceMetadataFromMessage(message));
 
+        final PokedexEntry.Gender gender = SpawnMessageParsingUtils.extractGender(messageText).orElse(null);
         final Matcher idMatcher = ID_PATTERN.matcher(messageText);
-        Verify.verify(idMatcher.find(), "Could not find ID in message: %s", messageText);
-
-        Pokedex.getPokedexEntryFor(Ints.tryParse(idMatcher.group("pokemonId")), SpawnMessageParsingUtils.extractGender(messageText).orElse(null))
-                .ifPresent(builder::pokedexEntry);
+        if (idMatcher.find()) {
+            Pokedex.getPokedexEntryFor(Ints.tryParse(idMatcher.group("pokemonId")), gender)
+                    .ifPresent(builder::pokedexEntry);
+        } else {
+            final Matcher nameMatcher = NAME_PATTERN.matcher(messageText);
+            Verify.verify(nameMatcher.find(), "Could not find pokemon ID or name in message: %s", messageText);
+            Pokedex.getPokedexEntryFor(nameMatcher.group("pokemonName"), gender)
+                    .ifPresent(builder::pokedexEntry);
+        }
 
         final Matcher ivMatcher = IV_PATTERN.matcher(messageText);
         Verify.verify(ivMatcher.find(), "Could not find IV in message: %s", messageText);

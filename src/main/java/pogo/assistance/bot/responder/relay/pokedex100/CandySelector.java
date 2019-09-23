@@ -37,7 +37,7 @@ public class CandySelector {
             .add("larvitar").add("pupitar").add("tyranitar")
             /*.add("ralts")*/.add("kirlia").add("gardevoir").add("gallade")
             .add("slakoth").add("vigoroth").add("slaking")
-            .add("trapinch")
+            /*.add("trapinch")*/
             .add("lunatone").add("solrock")
             /*.add("feebas")*/
             .add("chimecho")
@@ -61,6 +61,7 @@ public class CandySelector {
             .add("Golett")
             .add("Durant")
             .add("Heatmor")
+            .add("Zweilous")
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
