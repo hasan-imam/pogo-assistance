@@ -28,6 +28,7 @@ public class CandySelector {
             .add("lapras")
             .add("hitmonlee").add("hitmonchan")
             .add("lickitung")
+            .add("Porygon")
             .add("chansey").add("blissey")
             .add("snorlax")
             .add("dratini").add("dragonair").add("dragonite")
@@ -38,15 +39,15 @@ public class CandySelector {
             /*.add("ralts")*/.add("kirlia").add("gardevoir").add("gallade")
             .add("slakoth").add("vigoroth").add("slaking")
             /*.add("trapinch")*/
-            .add("lunatone").add("solrock")
-            /*.add("feebas")*/
+            /*.add("lunatone").add("solrock")*/
+            .add("feebas")
             .add("chimecho")
             /*.add("clamperl")*/
             .add("bagon").add("shelgon").add("salamence")
-            /*.add("beldum")*/.add("metang")
+            .add("beldum").add("metang")
             .add("cranidos").add("rampardos")
-            .add("combee").add("vespiquen")
-            /*.add("bronzor")*/.add("bronzong")
+            /*.add("combee")*/.add("vespiquen")
+            .add("bronzor").add("bronzong")
             /*.add("finneon")*/.add("lumineon")
             .add("Uxie")
             .add("Azelf")
@@ -54,7 +55,6 @@ public class CandySelector {
             .add("Gible").add("Gabite").add("Garchomp")
             .add("Absol")
             .add("Mawile")
-            .add("Kangaskhan") // temporarily added since they became shiny and we don't have many source for them
             .add("Ferroseed")
             .add("Deino")
             .add("Litwick")
@@ -62,6 +62,8 @@ public class CandySelector {
             .add("Durant")
             .add("Heatmor")
             .add("Zweilous")
+            .add("Lampent")
+            .add("Excadrill")
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
