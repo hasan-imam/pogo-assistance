@@ -15,6 +15,7 @@ public enum  Region {
     NYC(":flag_us:"),
     EXTON(":flag_us:"),
     SG(":flag_sg:"),
+    SYD(":flag_au:"),
     YVR(":flag_ca:");
 
     @Getter
