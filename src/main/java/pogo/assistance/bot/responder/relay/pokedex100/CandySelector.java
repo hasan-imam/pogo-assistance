@@ -33,7 +33,7 @@ public class CandySelector {
             .add("snorlax")
             .add("dratini").add("dragonair").add("dragonite")
             /*.add("mareep")*/
-            .add("unown")
+            /*.add("unown")*/
             .add("pineco").add("forretress")
             .add("larvitar").add("pupitar").add("tyranitar")
             /*.add("ralts")*/.add("kirlia").add("gardevoir").add("gallade")
