@@ -13,14 +13,14 @@ class DespawnTimeParserUtilsTest {
     @ParameterizedTest
     @MethodSource(value = { "validDespawnTimeInputs" })
     void extractDespawnTime_HappyCases_ExtractsSuccessfully(final String compiledText, final Duration despawnTime) {
-        assertEquals(despawnTime, DespawnTimeParserUtils.extractSpawnDuration(compiledText).get());
+        assertEquals(despawnTime, DespawnTimeParserUtils.extractSpawnDuration(compiledText, true).get());
     }
 
     @ParameterizedTest
     @MethodSource(value = { "invalidDespawnTimeInputs" })
     void extractDespawnTime_InvalidCases_ReturnsEmpty(final String compiledText, final String invalidReason) {
         assertFalse(
-                DespawnTimeParserUtils.extractSpawnDuration(compiledText).isPresent(),
+                DespawnTimeParserUtils.extractSpawnDuration(compiledText, true).isPresent(),
                 "Parsing should have failed. Reason: " + invalidReason);
     }
 
