@@ -404,6 +404,16 @@ public class DiscordEntityConstants {
     public static final long SERVER_ID_POGO_SA = 514959502336983055L;
     public static final Set<Long> CATEGORY_IDS_POGO_SA = Collections.singleton(601771958484598804L);
 
+    public static final long SERVER_ID_POKEMON_ON_TRENT = 335874288957652992L;
+    public static final Set<Long> CATEGORY_IDS_POKEMON_ON_TRENT = ImmutableSet.<Long>builder()
+            .add(360685405592616960L) // NESTS, QUESTS & BESTS
+            .build();
+
+    public static final long SERVER_ID_TALLY_POKEMON_HUNTERS = 266738315380785152L;
+    public static final Set<Long> CATEGORY_IDS_TALLY_POKEMON_HUNTERS = ImmutableSet.<Long>builder()
+            .add(507622769689755660L) // HUNTING
+            .build();
+
     public static final Set<Long> SPAWN_SOURCE_SERVER_IDS = ImmutableSet.<Long>builder()
             .add(SERVER_ID_ALPHAPOKES)
             .add(SERVER_ID_AZ_POGO_MAP)
@@ -430,11 +440,13 @@ public class DiscordEntityConstants {
             .add(SERVER_ID_POKE_XPLORER)
             .add(SERVER_ID_POKE_HUNTER_ELITE)
             .add(SERVER_ID_POKEMON_MAPS_FLORIDA)
+            .add(SERVER_ID_POKEMON_ON_TRENT)
             .add(SERVER_ID_POKESQUAD)
             .add(SERVER_ID_SANDIEGOHILLS)
             .add(SERVER_ID_SDHVIP)
             .add(SERVER_ID_SGV_SCANS)
             .add(SERVER_ID_SOUTHWEST_POKEMON)
+            .add(SERVER_ID_TALLY_POKEMON_HUNTERS)
             .add(SERVER_ID_TOAST_MAPS)
             .add(SERVER_ID_TPF_BASIC)
             .add(SERVER_ID_TPF_PAID)

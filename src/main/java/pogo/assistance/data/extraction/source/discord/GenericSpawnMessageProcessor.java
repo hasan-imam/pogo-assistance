@@ -52,7 +52,9 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPogoChChTargetChannels(message)
                 || isFromAzPoGoMapTargetChannels(message)
                 || isFromPokeHunterEliteTargetChannels(message)
-                || isFromPogoSaTargetChannels(message);
+                || isFromPogoSaTargetChannels(message)
+                || isFromPokemonOnTrentTargetChannels(message)
+                || isFromTallyPokemonHuntersTargetChannels(message);
     }
 
     @Override
@@ -154,8 +156,11 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromAzPoGoMapTargetChannels(message)
                 || isFromPokemonMapsFloridaTargetChannels(message)
                 || isFromFLPokeMapTargetChannel(message)
-                || isFromAlphaPokesTargetChannel(message)) {
+                || isFromAlphaPokesTargetChannel(message)
+                || isFromTallyPokemonHuntersTargetChannels(message)) {
             return DespawnTimeParserUtils.extractDespawnTime(compiledText);
+        } else if (isFromPokemonOnTrentTargetChannels(message)) {
+            return DespawnTimeParserUtils.extractLowConfidenceDespawnTime(compiledText);
         }
         return Optional.empty();
     }
@@ -510,6 +515,36 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 && message.getChannelType() == ChannelType.TEXT
                 && message.getGuild().getIdLong() == SERVER_ID_POGO_SA
                 && Optional.ofNullable(message.getCategory()).map(Category::getIdLong).filter(CATEGORY_IDS_POGO_SA::contains).isPresent();
+    }
+
+    private static boolean isFromPokemonOnTrentTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_POKEMON_ON_TRENT) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+
+        return CATEGORY_IDS_POKEMON_ON_TRENT.contains(categoryId)
+                && channelName.matches("(.*spawns|heroes|pvp|rare-spawns|rares.*)");
+    }
+
+    private static boolean isFromTallyPokemonHuntersTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_TALLY_POKEMON_HUNTERS) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+
+        // TODO: Add ditto parsing for this source (channel: ditto_feed)
+        // Not bothering to exclude the ditto channel though
+        return CATEGORY_IDS_TALLY_POKEMON_HUNTERS.contains(categoryId)
+                && channelName.matches("(.*feed.*)");
     }
 
 }
