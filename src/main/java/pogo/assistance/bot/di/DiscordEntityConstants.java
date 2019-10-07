@@ -107,7 +107,9 @@ public class DiscordEntityConstants {
             409786475564105728L,
             409780035470360576L);
     public static final long USER_ID_POGO_BADGERS_BOT = 508688611898687498L;
-    public static final long USER_ID_POKEX_DM_BOT = 271388742558679040L;
+    public static final Set<Long> USER_ID_POKEX_DM_BOTS = ImmutableSet.of(
+            271388742558679040L,  // Coords
+            630384904282177548L); // PokeX
 
     // IDs for discord servers/channels
 

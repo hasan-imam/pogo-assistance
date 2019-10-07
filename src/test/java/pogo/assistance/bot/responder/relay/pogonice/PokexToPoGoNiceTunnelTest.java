@@ -51,12 +51,12 @@ class PokexToPoGoNiceTunnelTest {
     }
 
     private static Stream<Message> pokexBotDms() {
-        return Optional.ofNullable(userJdaReceivingPokexDm.getUserById(DiscordEntityConstants.USER_ID_POKEX_DM_BOT))
+        return DiscordEntityConstants.USER_ID_POKEX_DM_BOTS.stream()
+                .map(userId -> userJdaReceivingPokexDm.getUserById(userId))
                 .map(User::openPrivateChannel)
                 .map(RestAction::complete)
-                .map(MessageStream::lookbackMessageStream)
-                .get()
+                .flatMap(MessageStream::lookbackMessageStream)
                 .filter(PokexToPoGoNiceTunnel::isPokexSpawnNotificationDm)
-                .limit(5);
+                .limit(500);
     }
 }

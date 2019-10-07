@@ -53,7 +53,7 @@ public class PokexToPoGoNiceTunnel extends ListenerAdapter {
     @VisibleForTesting
     static boolean isPokexSpawnNotificationDm(final Message message) {
         if (message.getChannelType() != ChannelType.PRIVATE
-                || message.getAuthor().getIdLong() != DiscordEntityConstants.USER_ID_POKEX_DM_BOT
+                || DiscordEntityConstants.USER_ID_POKEX_DM_BOTS.contains(message.getAuthor().getIdLong())
                 || message.getEmbeds().isEmpty()) {
             return false;
         }

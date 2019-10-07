@@ -1,20 +1,5 @@
 package pogo.assistance.bot.responder.relay.pokedex100;
 
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-import javax.security.auth.login.LoginException;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -22,8 +7,18 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import pogo.assistance.bot.di.DiscordEntityConstants;
 import pogo.assistance.data.extraction.source.discord.MessageStream;
+
+import javax.security.auth.login.LoginException;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static org.mockito.Mockito.*;
 
 class PokexToPokedex100TunnelTest {
 
@@ -55,11 +50,11 @@ class PokexToPokedex100TunnelTest {
     }
 
     private static Stream<Message> pokexBotDms() {
-        return Optional.of(userJdaReceivingPokexDm.getUserById(DiscordEntityConstants.USER_ID_POKEX_DM_BOT))
+        return DiscordEntityConstants.USER_ID_POKEX_DM_BOTS.stream()
+                .map(userId -> userJdaReceivingPokexDm.getUserById(userId))
                 .map(User::openPrivateChannel)
                 .map(RestAction::complete)
-                .map(MessageStream::lookbackMessageStream)
-                .get()
+                .flatMap(MessageStream::lookbackMessageStream)
                 .filter(PokexToPokedex100Tunnel::isPokexSpawnNotificationDm)
                 .limit(500);
     }
