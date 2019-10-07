@@ -145,7 +145,14 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
             compiler.append(System.lineSeparator());
         });
         Optional.ofNullable(messageEmbed.getUrl()).ifPresent(mapUrl -> compiler.append(mapUrl).append(System.lineSeparator()));
-        return SpawnMessageParsingUtils.replaceEmojiWithPlainText(compiler.toString());
+
+        final String compiledText = SpawnMessageParsingUtils.replaceEmojiWithPlainText(compiler.toString());
+        // Sources that has non-map links that needs to be resolved using redirection, needs to be passed to this
+        // replacement process
+        if (isFromUtahPoGoTargetChannels(message)) {
+            return LocationLinkParsingUtils.replaceMapRedirectingUrls(compiledText);
+        }
+        return compiledText;
     }
 
     private static Optional<Instant> extractDespawnTime(final Message message, final String compiledText) {
