@@ -64,16 +64,17 @@ public class SpawnMessageParsingUtils {
      *  - (Atk: 14 / Def: 6 / Sta: 13)
      *  - (14A / 6D / 13S)
      *  - A:15 D:15 S:15
+     *  - A(15)/D(15)/S(13)
      *
-     * Verify online: https://regex101.com/r/vsxUsw/3
+     * Verify online: https://regex101.com/r/vsxUsw/4
      */
     private static final Pattern ADS_STAT_PATTERN = Pattern.compile(
             "(^|\\(|\\|/|\\s+)" + // expects some delimiting things at the beginning, such as: white space, '(', '/', '|' etc. separators at the beginning
-                    "(Atk:|ATK:|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "A?" +
+                    "(Atk:|ATK:|A\\(|A[:]?)?\\s?" + "(?<attack>[\\d?]{1,2})" + "(A|\\))?" +
                     "[/\\|\\-\\s]+" +
-                    "(Def:|DEF:|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "D?" +
+                    "(Def:|DEF:|D\\(|D[:]?)?\\s?" + "(?<defense>[\\d?]{1,2})" + "(D|\\))?" +
                     "[/\\|\\-\\s]+" +
-                    "(Sta:|STA:|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "S?" +
+                    "(Sta:|STA:|S\\(|S[:]?)?\\s?" + "(?<stamina>[\\d?]{1,2})" + "(S|\\))?" +
                     "($|\\)|\\|/|\\s+)"); // expects some delimiting things at the end
 
     /**

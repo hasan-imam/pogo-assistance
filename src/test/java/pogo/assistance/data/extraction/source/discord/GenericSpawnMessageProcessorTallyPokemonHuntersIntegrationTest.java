@@ -78,7 +78,6 @@ class GenericSpawnMessageProcessorTallyPokemonHuntersIntegrationTest {
                 .filter(category -> CATEGORY_IDS_TALLY_POKEMON_HUNTERS.contains(category.getIdLong()))
                 .map(Category::getTextChannels)
                 .flatMap(Collection::stream)
-                .filter(textChannel -> textChannel.getIdLong() == 622060846989836288L) // ditto
                 .map(messageChannel -> {
                     try {
                         return MessageStream.lookbackMessageStream(messageChannel);

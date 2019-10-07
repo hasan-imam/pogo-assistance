@@ -28,6 +28,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_POKE_PETER = "poke_peter_user_token";
     public static final String NAME_USER_TOKEN_AMY = "amy_user_token";
     public static final String NAME_USER_TOKEN_COPERNICUS = "copernicus_user_token";
+    public static final String NAME_USER_TOKEN_ALEXA = "alexa_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -50,6 +51,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_MICHELLEX_USER = "michellex_user_jda";
     public static final String NAME_JDA_POKE_PETER_USER = "poke_peter_user_jda";
     public static final String NAME_JDA_AMY_USER = "amy_user_jda";
+    public static final String NAME_JDA_ALEXA_USER = "alexa_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -80,6 +82,7 @@ public class DiscordEntityConstants {
     public static final String POKE_PETER_USER_TOKEN = "***REMOVED***";
     public static final String AMY_USER_TOKEN = "***REMOVED***";
     public static final String COPERNICUS_USER_TOKEN = "***REMOVED***";
+    public static final String ALEXA_USER_TOKEN = "***REMOVED***";
 
     // Users/bots
 
@@ -414,6 +417,16 @@ public class DiscordEntityConstants {
             .add(507622769689755660L) // HUNTING
             .build();
 
+    public static final long SERVER_ID_POGO_SOUTHERN_MASS = 400890476082757632L;
+    public static final Set<Long> CATEGORY_IDS_POGO_SOUTHERN_MASS = ImmutableSet.<Long>builder()
+            .add(400922754976841728L) // NEW BEDFORD
+            .add(404153256185430018L) // FALL RIVER
+            .add(406723260764389376L) // TAUNTON
+            .add(410341479844937728L) // CAPE COD
+            .add(605835338174431262L) // WAREHAM-&-SANDWICH
+            .add(408316630226042911L) // PLYMOUTH
+            .build();
+
     public static final Set<Long> SPAWN_SOURCE_SERVER_IDS = ImmutableSet.<Long>builder()
             .add(SERVER_ID_ALPHAPOKES)
             .add(SERVER_ID_AZ_POGO_MAP)
@@ -435,6 +448,7 @@ public class DiscordEntityConstants {
             .add(SERVER_ID_POGO_CHCH)
             .add(SERVER_ID_POGO_SA)
             .add(SERVER_ID_POGO_SOFIA)
+            .add(SERVER_ID_POGO_SOUTHERN_MASS)
             .add(SERVER_ID_POGO_ULM_KARTE)
             .add(SERVER_ID_POGOSJ1)
             .add(SERVER_ID_POKE_XPLORER)

@@ -298,6 +298,24 @@ class SpawnDataExchangeModule {
                 gson);
     }
 
+    /**
+     * 'Alexa' user has access to:
+     *  - PoGo Southern Mass
+     */
+    @Named(CollectorJDAModule.NAME_ALEXA_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForAlexaUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger,
+            final Gson gson) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new GenericSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange,
+                serverLogger,
+                gson);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(

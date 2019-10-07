@@ -54,7 +54,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPokeHunterEliteTargetChannels(message)
                 || isFromPogoSaTargetChannels(message)
                 || isFromPokemonOnTrentTargetChannels(message)
-                || isFromTallyPokemonHuntersTargetChannels(message);
+                || isFromTallyPokemonHuntersTargetChannels(message)
+                || isFromPoGoSouthernMassTargetChannels(message);
     }
 
     @Override
@@ -157,7 +158,8 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
                 || isFromPokemonMapsFloridaTargetChannels(message)
                 || isFromFLPokeMapTargetChannel(message)
                 || isFromAlphaPokesTargetChannel(message)
-                || isFromTallyPokemonHuntersTargetChannels(message)) {
+                || isFromTallyPokemonHuntersTargetChannels(message)
+                || isFromPoGoSouthernMassTargetChannels(message)) {
             return DespawnTimeParserUtils.extractDespawnTime(compiledText);
         } else if (isFromPokemonOnTrentTargetChannels(message)) {
             return DespawnTimeParserUtils.extractLowConfidenceDespawnTime(compiledText);
@@ -545,6 +547,22 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         // Not bothering to exclude the ditto channel though
         return CATEGORY_IDS_TALLY_POKEMON_HUNTERS.contains(categoryId)
                 && channelName.matches("(.*feed.*)");
+    }
+
+    private static boolean isFromPoGoSouthernMassTargetChannels(final Message message) {
+        if (!message.getAuthor().isBot() || message.getChannelType() != ChannelType.TEXT || message.getGuild().getIdLong() != SERVER_ID_POGO_SOUTHERN_MASS) {
+            return false;
+        }
+
+        final String channelName = message.getChannel().getName();
+        final Long categoryId = Optional.ofNullable(message.getCategory())
+                .map(Category::getIdLong)
+                .orElse(null);
+
+        // TODO: This source has special channel for high attack spawns. If we add combat stats to be part of spawn
+        // entry, we can verify that stats are parsing properly, not just the overall IV.
+        return CATEGORY_IDS_POGO_SOUTHERN_MASS.contains(categoryId)
+                && channelName.matches("(.*scans-rare-spawns.*)|(.*-scans-\\d+iv.*)");
     }
 
 }

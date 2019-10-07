@@ -47,13 +47,14 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_MICHELLEX_USER) final JDA michellexUserJda,
             @Named(NAME_JDA_POKE_PETER_USER) final JDA pokePeterUserJda,
             @Named(NAME_JDA_AMY_USER) final JDA amyUserJda,
+            @Named(NAME_JDA_ALEXA_USER) final JDA alexaUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
         Verify.verify(hasRegisteredListener(m15mBotJda), "Control user JDA is expected to have at least one listener (kill switch)");
         this.controlUserJda = m15mBotJda;
 
-        this.dataSourceJdas = ImmutableSet.of(amyUserJda, corruptedUserJda, beninUserJda, ninersUserJda,
+        this.dataSourceJdas = ImmutableSet.of(amyUserJda, alexaUserJda, corruptedUserJda, beninUserJda, ninersUserJda,
                 johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda, poGoHeroUserJda,
                 chronicUserJda, crankUserJda, michellexUserJda, pokePeterUserJda);
         this.dataSourceJdas.forEach(jda -> Verify.verify(
