@@ -196,7 +196,7 @@ public class DiscordEntityConstants {
 
     public static final long SERVER_ID_SANDIEGOHILLS = 520776622887141388L;
 
-    public static final long SERVER_ID_SOUTHWEST_POKEMON = 489168292301373452L;
+    public static final long SERVER_ID_SOUTHWEST_POKEMON = 628436277573845024L;
 
     public static final long SERVER_ID_VCSCANS = 334404466948177922L;
     public static final long CHANNEL_ID_VCSCANS_100IV = 516049924195090442L;

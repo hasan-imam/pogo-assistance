@@ -221,52 +221,49 @@ public class GenericSpawnMessageProcessor implements MessageProcessor<PokemonSpa
         final String channelName = message.getChannel().getName();
         final String categoryId = Optional.ofNullable(message.getCategory()).map(Category::getId).orElse("");
         switch (categoryId) {
-            case "501877862878674944": // ILLINOIS POKEMON
-            case "514347470801862667": // WISCONSIN POKEMON
-            case "615378844714663966": // KENTUCKY NORTHEAST
-            case "615381887942131712": // KENTUCKY SOUTHEAST
-            case "556256006858866689": // LONDON CANARY WHARF
-            case "556256886287106058": // LONDON CENTRAL EAST
-            case "556256853353431040": // LONDON CENTRAL WEST
-            case "556256280184881154": // LONDON NORTHEAST
-            case "556256342923411456": // LONDON NORTHWEST
-            case "556257052549316619": // LONDON SOUTHEAST
-            case "556255782547488775": // LONDON SOUTHWEST
-            case "621529156194140186": // LONDON BALHAM
-            case "556257301452030003": // LONDON BARNET
-            case "556257350458277890": // LONDON BROMLEY
-            case "556256621634781185": // LONDON CHINGFORD
-            case "565427412561559552": // LONDON CHARLTON
-            case "560667251955466250": // LONDON CLAPTON
-            case "621529441557938196": // LONDON CROYDON
-            case "621529534625349672": // LONDON CROYDON SOUTH
-            case "556271357013524481": // LONDON DULWICH
-            case "556256427149361212": // LONDON EALING
-            case "556256462914060291": // LONDON ENFIELD
-            case "610289194601807907": // LONDON EPPING CM5
-            case "556271396242718743": // LONDON GREENWICH
-            case "560667326043783178": // LONDON HAMPSTEAD
-            case "556256125952196608": // LONDON HARROW
-            case "560667395526492170": // LONDON HOLLOWAY
-            case "556271445441773588": // LONDON LEWISHAM
-            case "621529253225431040": // LONDON MITCHAM
-            case "610292985636061185": // LONDON ONGAR CM16
-            case "621529489154899988": // LONDON PURLEY
-            case "560667528519745536": // LONDON STOKE NEWINGTON WOODBERRY
-            case "621529314864660510": // LONDON STRATHAM
-            case "621529576442560512": // LONDON THORNTON HEATH
-            case "621529355407065114": // LONDON TOOTING
-            case "580261123551395840": // LONDON WALTHAMSTOW
-            case "621529386763419658": // LONDON WIMBLEDON
-            case "556256551392903169": // LONDON WOODGREEN & HARINGEY
-            case "610304249447841812": // LONDON WOODLEY
-            case "556256673333903360": // LONDON WOOLWICH
+            case "628441307391590401": // Balham
+            case "628441732429774878": // Bromley
+            case "628465220599152650": // Canary Wharf
+            case "628438147046572042": // Central East
+            case "628438559992446977": // Central West
+            case "628442194801328168": // Charlton
+            case "628442157195198505": // Chingford
+            case "628442601082716166": // Clapton
+            case "628442653473636352": // Croydon
+            case "628442991832465418": // Croydon South
+            case "628443206626836511": // Dulwich
+            case "628443541286420501": // Ealing
+            case "628443616121061430": // Earley
+            case "628443914596122624": // Enfield
+            case "628443955192922113": // Epping CM5
+            case "628444283178844171": // Greenwich
+            case "628444801536098335": // Hampstead
+            case "628445336293212180": // Harrow
+            case "628445364759822346": // Holloway
+            case "628445848606474241": // Lewisham
+            case "632000177183653888": // Leyton
+            case "632000210490621953": // Leytonstone
+            case "628445905258938378": // Mitcham
+            case "629198438038372352": // Northeast
+            case "628438863710388244": // Northwest
+            case "628446208762970112": // Ongar CM16
+            case "628446248499806218": // Purley
+            case "628440154767622164": // Southeast
+            case "628447082310664212": // Stoke Newington Woodberry
+            case "632000237719912458": // Stratford
+            case "628448185299370003": // Stratham
+            case "628448657414422548": // Tooting
+            case "628448944049094666": // Wimbledon
+            case "628449183447384064": // Woodgreen & Haringey
+            case "628449277890265108": // Woodley
+            case "628450305129840650": // Woolwich
+            case "628441645095976960": // barnet
+            case "628440788073971736": // southwest
+            case "628448904631025674": // wathamstow
                 return !channelName.contains("quest")
                         && !channelName.contains("raid")
                         && !channelName.contains("egg")
                         && !channelName.contains("lure");
-            case "546137025430945803": // LONDON CD
-                return !channelName.contains("zee");
             default:
                 return false;
         }

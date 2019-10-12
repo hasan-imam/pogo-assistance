@@ -43,7 +43,7 @@ class GenericSpawnMessageProcessorSouthwestPokemonIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = {"Illinois100ivMessages"})
+    @MethodSource(value = {"woolwich100ivMessages"})
     void process_Illinois100ivMessages_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
@@ -56,7 +56,7 @@ class GenericSpawnMessageProcessorSouthwestPokemonIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = {"Wisconsin95ivMessages", "LondonCanaryWharf95ivMessages", "LondonCentralWest95ivMessages"})
+    @MethodSource(value = {"lewisham95ivMessages", "hampstead95ivMessages", "northeast95ivMessages"})
     void process_Sample95ivMessages_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
@@ -70,7 +70,7 @@ class GenericSpawnMessageProcessorSouthwestPokemonIntegrationTest {
     }
 
     @ParameterizedTest
-    @MethodSource(value = {"londonCentralEastRareSpawnMessages", "londonCentralWestRareSpawnMessages", "londonNorthEastRareSpawnMessages"})
+    @MethodSource(value = {"northwestRareSpawnMessages", "centraleastRareSpawnMessages", "barnetRareSpawnMessages"})
     void process_SampleRareSpawnMessages_ReturnsExpected(final Message message) {
         final String failureMsgWithJumpUrl = "Failed to parse message: " + message.getJumpUrl();
         final PokemonSpawn pokemonSpawn = PROCESSOR.processWithoutThrowing(message)
@@ -82,44 +82,44 @@ class GenericSpawnMessageProcessorSouthwestPokemonIntegrationTest {
                 () -> assertThat(pokemonSpawn.getPokedexEntry().getGender(), not(PokedexEntry.Gender.UNKNOWN)));
     }
 
-    private static Stream<Message> Illinois100ivMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(517197579855986691L))
+    private static Stream<Message> woolwich100ivMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628450346947051520L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> Wisconsin95ivMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(514347821759987732L))
+    private static Stream<Message> lewisham95ivMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628446244137861130L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> LondonCanaryWharf95ivMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(553761036776243201L))
+    private static Stream<Message> hampstead95ivMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628444879978102794L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> LondonCentralWest95ivMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(553760465466163210L))
+    private static Stream<Message> northeast95ivMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(629198817526415360L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> londonCentralEastRareSpawnMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(553760810166648842L))
+    private static Stream<Message> northwestRareSpawnMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628439140446502963L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> londonCentralWestRareSpawnMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(553760611046129665L))
+    private static Stream<Message> centraleastRareSpawnMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628438282316808242L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
 
-    private static Stream<Message> londonNorthEastRareSpawnMessages() {
-        return MessageStream.lookbackMessageStream(jda.getTextChannelById(553761776664313857L))
+    private static Stream<Message> barnetRareSpawnMessages() {
+        return MessageStream.lookbackMessageStream(jda.getTextChannelById(628441916370845707L))
                 .filter(PROCESSOR::canProcess)
                 .limit(2000);
     }
