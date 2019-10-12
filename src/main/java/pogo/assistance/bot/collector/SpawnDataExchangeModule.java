@@ -316,6 +316,24 @@ class SpawnDataExchangeModule {
                 gson);
     }
 
+    /**
+     * 'Shadow' user has access to:
+     *  - UPM
+     */
+    @Named(CollectorJDAModule.NAME_SHADOW_USER_SPAWN_LISTENER)
+    @Provides
+    public static DiscordPokemonSpawnListener provideSpawnListenerToUserForShadowUserJDA(
+            final PokemonSpawnExchange spawnExchange,
+            final ServerLogger serverLogger,
+            final Gson gson) {
+        return new DiscordPokemonSpawnListener(
+                ImmutableSet.of(new SDHSpawnMessageProcessor()),
+                Collections.emptySet(),
+                spawnExchange,
+                serverLogger,
+                gson);
+    }
+
     @Singleton
     @Provides
     public static PokemonSpawnExchange providePokemonSpawnExchange(

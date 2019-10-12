@@ -48,6 +48,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
             @Named(NAME_JDA_POKE_PETER_USER) final JDA pokePeterUserJda,
             @Named(NAME_JDA_AMY_USER) final JDA amyUserJda,
             @Named(NAME_JDA_ALEXA_USER) final JDA alexaUserJda,
+            @Named(NAME_JDA_SHADOW_USER) final JDA shadowUserJda,
             final PokemonSpawnWebCrawler pokemonSpawnWebCrawler,
             final SpawnStatisticsRelay spawnStatisticsRelay) {
 
@@ -56,7 +57,7 @@ public class SpawnDataCollectorBot extends AbstractExecutionThreadService {
 
         this.dataSourceJdas = ImmutableSet.of(amyUserJda, alexaUserJda, corruptedUserJda, beninUserJda, ninersUserJda,
                 johnnyUserJda, timburtyUserJda, irvin88UserJda, connoisseurUserJda, poGoHeroUserJda,
-                chronicUserJda, crankUserJda, michellexUserJda, pokePeterUserJda);
+                chronicUserJda, crankUserJda, michellexUserJda, pokePeterUserJda, shadowUserJda);
         this.dataSourceJdas.forEach(jda -> Verify.verify(
                 hasRegisteredListener(jda),
                 "%s user JDA is expected to have registered listener(s)",

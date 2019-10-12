@@ -29,6 +29,7 @@ public class DiscordEntityConstants {
     public static final String NAME_USER_TOKEN_AMY = "amy_user_token";
     public static final String NAME_USER_TOKEN_COPERNICUS = "copernicus_user_token";
     public static final String NAME_USER_TOKEN_ALEXA = "alexa_user_token";
+    public static final String NAME_USER_TOKEN_SHADOW = "shadow_user_token";
 
     public static final String NAME_JDA_BUILDER_OWNING_USER = "owning_user_jda_builder";
     public static final String NAME_JDA_OWNING_USER = "owning_user_jda";
@@ -52,6 +53,7 @@ public class DiscordEntityConstants {
     public static final String NAME_JDA_POKE_PETER_USER = "poke_peter_user_jda";
     public static final String NAME_JDA_AMY_USER = "amy_user_jda";
     public static final String NAME_JDA_ALEXA_USER = "alexa_user_jda";
+    public static final String NAME_JDA_SHADOW_USER = "shadow_user_jda";
 
     public static final String NAME_JDA_BUILDER_HORUSEUS_USER = "horuseus_user_jda_builder";
     public static final String NAME_JDA_HORUSEUS_USER = "horuseus_user_jda";
@@ -83,6 +85,7 @@ public class DiscordEntityConstants {
     public static final String AMY_USER_TOKEN = "***REMOVED***";
     public static final String COPERNICUS_USER_TOKEN = "***REMOVED***";
     public static final String ALEXA_USER_TOKEN = "***REMOVED***";
+    public static final String SHADOW_USER_TOKEN = "***REMOVED***";
 
     // Users/bots
 
@@ -116,6 +119,12 @@ public class DiscordEntityConstants {
     public static final Long SERVER_ID_SDHVIP = 433736422932086786L;
     public static final Set<Long> USER_IDS_SDHVIP_BOT = ImmutableSet.of(520698304200310785L, 520699525216731146L);
     public static final long CATEGORY_ID_SDHVIP_SIGHTING_REPORTS = 433736798166974467L;
+
+    public static final long SERVER_ID_UPM = 492468024981323776L;
+    public static final Set<Long> CATEGORY_IDS_UPM = ImmutableSet.of(
+            512710059164303360L, // GLOBAL IV
+            610958243694379048L  // SUPPORTER FEEDS
+    );
 
     public static final long CHANNEL_ID_TEST_LIST_ROUTE_PREVIEW = 543431296211484672L;
     public static final long CHANNEL_ID_PDEX100_BOT_COMMAND = 252776251708801024L;
@@ -466,6 +475,7 @@ public class DiscordEntityConstants {
             .add(SERVER_ID_TOAST_MAPS)
             .add(SERVER_ID_TPF_BASIC)
             .add(SERVER_ID_TPF_PAID)
+            .add(SERVER_ID_UPM)
             .add(SERVER_ID_UTAH_POGO)
             .add(SERVER_ID_VALLEY_POGO)
             .add(SERVER_ID_VASCANS)

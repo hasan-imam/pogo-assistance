@@ -6,7 +6,11 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import pogo.assistance.bot.di.DiscordEntityConstants;
-import pogo.assistance.data.extraction.source.discord.*;
+import pogo.assistance.data.extraction.source.discord.DespawnTimeParserUtils;
+import pogo.assistance.data.extraction.source.discord.GenericSpawnMessageProcessor;
+import pogo.assistance.data.extraction.source.discord.LocationLinkParsingUtils;
+import pogo.assistance.data.extraction.source.discord.MessageProcessor;
+import pogo.assistance.data.extraction.source.discord.SpawnMessageParsingUtils;
 import pogo.assistance.data.extraction.source.discord.novabot.NovaBotProcessingUtils;
 import pogo.assistance.data.model.pokemon.CombatStats;
 import pogo.assistance.data.model.pokemon.ImmutablePokemonSpawn;
@@ -15,15 +19,9 @@ import pogo.assistance.data.model.pokemon.PokemonSpawn;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Slf4j
 public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> {
-
-    /**
-     * Verify online: https://regex101.com/r/V10pLh/1
-     */
-    private static final Pattern URL_PATTERN = Pattern.compile("\\[(?<description>.*)]\\((?<url>.*http.*\\.com.*)\\)");
 
     @Override
     public boolean canProcess(@Nonnull final Message message) {
@@ -34,7 +32,8 @@ public class SDHSpawnMessageProcessor implements MessageProcessor<PokemonSpawn> 
         if (message.getAuthor().isBot() && message.getChannel().getType() == ChannelType.TEXT) {
             return Optional.ofNullable(message.getCategory())
                     .map(Category::getIdLong)
-                    .filter(categoryId -> categoryId == DiscordEntityConstants.CATEGORY_ID_SDHVIP_SIGHTING_REPORTS)
+                    .filter(categoryId -> categoryId == DiscordEntityConstants.CATEGORY_ID_SDHVIP_SIGHTING_REPORTS
+                            || DiscordEntityConstants.CATEGORY_IDS_UPM.contains(categoryId))
                     .isPresent();
         }
 

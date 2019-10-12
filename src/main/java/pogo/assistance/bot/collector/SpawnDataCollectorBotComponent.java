@@ -74,6 +74,10 @@ public interface SpawnDataCollectorBotComponent {
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_ALEXA) final String alexaUserToken);
 
         @BindsInstance
+        SpawnDataCollectorBotComponent.Builder shadowUserToken(
+                @Named(DiscordEntityConstants.NAME_USER_TOKEN_SHADOW) final String shadowUserToken);
+
+        @BindsInstance
         SpawnDataCollectorBotComponent.Builder controlUserToken(
                 @Named(DiscordEntityConstants.NAME_USER_TOKEN_M15M) final String controlUserToken);
 

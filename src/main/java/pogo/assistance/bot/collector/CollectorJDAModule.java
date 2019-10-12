@@ -30,6 +30,7 @@ class CollectorJDAModule {
     static final String NAME_POKE_PETER_USER_SPAWN_LISTENER = "poke_peter_user_spawn_listener";
     static final String NAME_AMY_USER_SPAWN_LISTENER = "amy_user_spawn_listener";
     static final String NAME_ALEXA_USER_SPAWN_LISTENER = "alexa_user_spawn_listener";
+    static final String NAME_SHADOW_USER_SPAWN_LISTENER = "shadow_user_spawn_listener";
 
     @Singleton
     @Provides
@@ -272,6 +273,24 @@ class CollectorJDAModule {
     public static JDA provideAlexaUserJda(
             @Named(NAME_USER_TOKEN_ALEXA) final String token,
             @Named(NAME_ALEXA_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
+
+        final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
+        jdaBuilder.setToken(token);
+        jdaBuilder.addEventListeners(discordPokemonSpawnListener);
+
+        try {
+            return jdaBuilder.build().awaitReady();
+        } catch (final InterruptedException | LoginException e) {
+            throw new RuntimeException("Failed to setup JDA", e);
+        }
+    }
+
+    @Singleton
+    @Provides
+    @Named(NAME_JDA_SHADOW_USER)
+    public static JDA provideShadowUserJda(
+            @Named(NAME_USER_TOKEN_SHADOW) final String token,
+            @Named(NAME_SHADOW_USER_SPAWN_LISTENER) final DiscordPokemonSpawnListener discordPokemonSpawnListener) {
 
         final JDABuilder jdaBuilder = new JDABuilder(AccountType.CLIENT);
         jdaBuilder.setToken(token);
