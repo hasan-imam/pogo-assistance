@@ -124,6 +124,11 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             return iv < 100.0 || pokemonSpawn.getLevel().orElse(-1) < 30;
         }
 
+        // Exclude lower CP pinsir since they spawn too much
+        if (pokemonId == 127 && iv < 90.0 && pokemonSpawn.getCp().orElse(-1) < 2700) {
+            return true;
+        }
+
         return false;
     }
 

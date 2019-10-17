@@ -17,8 +17,10 @@ public class CandySelector {
     // Case doesn't matter in the sets below
 
     private static final Set<String> MAX_EVOLVED = ImmutableSet.<String>builder()
-            .add("Charizard").add("Venusaur").add("Blastoise").add("Meganium").add("Typhlosion").add("Feraligatr")
-            .add("Hariyama")
+            .add("Aggron").add("Blastoise").add("Charizard").add("Feraligatr").add("Flygon")
+            .add("Blaziken").add("Hariyama").add("Medicham").add("Meganium").add("Metagross")
+            .add("Salamence").add("Sceptile").add("Shiftry").add("Slaking").add("Swampert")
+            .add("Typhlosion").add("Venusaur")
             .build();
 
     private static final Set<String> NON_NESTING = ImmutableSet.<String>builder()
@@ -33,7 +35,7 @@ public class CandySelector {
             .add("snorlax")
             .add("dratini").add("dragonair").add("dragonite")
             /*.add("mareep")*/
-            /*.add("unown")*/
+            .add("unown")
             .add("pineco").add("forretress")
             .add("larvitar").add("pupitar").add("tyranitar")
             /*.add("ralts")*/.add("kirlia").add("gardevoir").add("gallade")
@@ -67,6 +69,7 @@ public class CandySelector {
             .build();
 
     private static final Set<String> MISC_RARE = ImmutableSet.<String>builder()
+            .add("Eevee")
             .add("Pachirisu")
             .build();
 
