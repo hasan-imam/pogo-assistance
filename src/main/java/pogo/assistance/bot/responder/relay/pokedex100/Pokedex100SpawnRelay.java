@@ -129,6 +129,10 @@ public class Pokedex100SpawnRelay implements PokemonSpawnObserver {
             return true;
         }
 
+        if (pokemonId == 607 && iv < 95.0) {
+            return true;
+        }
+
         return false;
     }
 
