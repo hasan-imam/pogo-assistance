@@ -52,7 +52,7 @@ public class BotStarter {
         log.info("Done setting up bot!");
     }
 
-    private static void runPokemonSpawnExchange() {
+    private static SpawnDataCollectorBot runPokemonSpawnExchange() {
         final SpawnDataCollectorBot bot = DaggerSpawnDataCollectorBotComponent.builder()
                 .corruptedUserToken(DiscordEntityConstants.CORRUPTED_USER_TOKEN)
                 .beninUserToken(DiscordEntityConstants.BENIN_USER_TOKEN)
@@ -73,9 +73,10 @@ public class BotStarter {
                 .build()
                 .getSpawnDataCollectorBot();
         bot.startAsync().awaitRunning();
+        return bot;
     }
 
-    private static void startResponder(final Set<ListenerId> inputListenerIds) {
+    private static ResponderBot startResponder(final Set<ListenerId> inputListenerIds) {
         final Set<ListenerId> listenerIds;
         if (inputListenerIds == null || inputListenerIds.isEmpty()) {
             log.info("No lister explicitly mentioned - registering all of them!");
@@ -95,9 +96,10 @@ public class BotStarter {
                 .build()
                 .getResponderBot();
         responderBot.startAsync();
+        return responderBot;
     }
 
-    private static void startJobs(final Set<WorkflowId> inputWorkflowIds) {
+    private static JobExecutionBot startJobs(final Set<WorkflowId> inputWorkflowIds) {
         final Set<WorkflowId> workflowIds;
         if (inputWorkflowIds == null || inputWorkflowIds.isEmpty()) {
             log.info("No workflow explicitly mentioned - registering all of them!");
@@ -114,6 +116,7 @@ public class BotStarter {
                 .build()
                 .getJobExecutionBot();
         jobExecutionBot.run();
+        return jobExecutionBot;
     }
 
     // For reference: https://stackoverflow.com/questions/9117030/jul-to-slf4j-bridge
